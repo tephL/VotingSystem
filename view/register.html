@@ -2,32 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="view/jquery.js"></script>
+    <script src="jquery.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="view/styles/register.css">
+    <link rel="stylesheet" href="styles/register.css">
     <title>Document</title>
 </head>
 <body>
     <h1 id="title">Brainrot School Voting System</h1>
-    <div id="registerform">
-
-
+    <div id="registerform" class="register-form">
         <input type="hidden" id="id">
-        <label>First Name</label>
-        <input type="text" id="firstname" placeholder="FirstName">   
-        <label>Middle Name</label>
-        <input type="text" id="middlename" placeholder="MiddleName"> 
-        <labe>Last Name</label>
-        <input type="text" id="lastname" placeholder="LastName"> 
-        <labe>Password</label>
-        <input type="text" id="password" placeholder="Password">
-        <label>Course</label>
-        <input type="text" id="studentcourse" placeholder="Course">
-        <label>StudentID</label>
-        <input type="text" id="studentid" placeholder="StudentID">
+
+        <div class="field">
+            <label for="studentid">Student ID</label>
+            <input type="text" id="studentid" placeholder="Student ID">
+        </div>
+
+        <div class="field">
+            <label for="firstname">First Name</label>
+            <input type="text" id="firstname" placeholder="First Name">
+        </div>
+
+        <div class="field">
+            <label for="middlename">Middle Name</label>
+            <input type="text" id="middlename" placeholder="Middle Name">
+        </div>
+
+        <div class="field">
+            <label for="lastname">Last Name</label>
+            <input type="text" id="lastname" placeholder="Last Name">
+        </div>
+
+        <div class="field">
+            <label for="password">Password</label>
+            <input type="text" id="password" placeholder="Password">
+        </div>
+
+        <div class="field">
+            <label for="studentcourse">Course</label>
+            <input type="text" id="studentcourse" placeholder="Course">
+        </div>
+
         <button id="registerBtn">Register</button>
     </div>
 
-    <script src="control/auth.js"></script>
+    <script src="auth.js"></script>
 </body>
 </html>
