@@ -38,30 +38,63 @@ function login(){
 
 // register
 $("#registerBtn").click(function(){
-    let username = $("#username").val();
-    let firstname = $("#firstname").val();
-    let middlename = $("#middlename").val();
-    let lastname = $("#lastname").val();
-    let password = $("#password").val();
-    let studentcourse = $("#studentcourse").val();
-    
+    let studentid = $("#studentid").val().trim();
+    let email = $("#email").val().trim();
+    let username = $("#username").val().trim();
+    let password = $("#password").val().trim();
+    let confirmpassword = $("#confirmpassword").val().trim();
+
+    // student id
+    if (studentid.length === 0) {
+        $("#hint").text("Student ID is required!"); return;
+    }
+    if (studentid.length < 11 || !/^\d+$/.test(studentid)) {
+        $("#hint").text("Invalid Student ID format!"); return;
+    }
+    // username
+    if (username.length === 0) {
+        $("#hint").text("Username is required!"); return;
+    }
+    if (username.length < 3) {
+        $("#hint").text("Username must be at least 3 characters!"); return;
+    }
+    if (/\s/.test(username)) {
+        $("#hint").text("Username cannot contain spaces!"); return;
+    }
+    // password
+    if (password.length === 0) {
+        $("#hint").text("Password is required!"); return;
+    }
+    if (password.length < 8) {
+        $("#hint").text("Password must be at least 8 characters!"); return;
+    }
+    // confirm password
+    if (confirmpassword.length === 0) {
+        $("#hint").text("Please confirm your password!"); return;
+    }
+    if (password !== confirmpassword) {
+        $("#hint").text("Passwords do not match!"); return;
+    }
 
     $.ajax({
-        url: "register.php",
+        url: "../control/register.php",
         type: "POST",
+        dataType: "json",
         data: {
+            studentid: studentid,
+            email: email,
             username: username,
-            firstname: firstname,
-            middlename: middlename,
-            lastname: lastname,
-            password: password,
-            studentcourse: studentcourse
+            password: password
         },
-        success: function(){
-            alert("success register");
+        success: function(res){
+            if (res.success) {
+                alert("Registered successfully!");
+            } else {
+                alert(res.message); 
+            }
         },
-        error: function(){
-            alert("error register");
+        error: function(xhr) {
+            alert("Error: " + xhr.responseText); 
         }
     });
 });
