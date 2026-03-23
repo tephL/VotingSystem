@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+<form>
+
+  <h2>Election Form</h2>
+
+  <div class="position-row">
+    <div class="position-title">President (Select 1)</div>
+
+    <div class="candidate">
+      <input type="checkbox" name="president" value="pres1" onclick="disableButton('president', this)">
+      <label>Partylist 1 - President 1</label>
+    </div>
+
+    <div class="candidate">
+      <input type="checkbox" name="president" value="pres2" onclick="disableButton('president', this)">
+      <label>Partylist 2 - President 2</label>
+    </div>
+  </div>
+
+  <div class="position-row">
+    <div class="position-title">Vice Mayor (Select 1)</div>
+
+    <div class="candidate">
+      <input type="checkbox" name="vice_mayor" value="vm1" onclick="disableButton('vice_mayor', this)">
+      <label>Partylist 1 - Vice Mayor 1</label>
+    </div>
+
+    <div class="candidate">
+      <input type="checkbox" name="vice_mayor" value="vm2" onclick="disableButton('vice_mayor', this)">
+      <label>Partylist 2 - Vice Mayor 2</label>
+    </div>
+  </div>
+
+
+  <div class="position-row">
+    <div class="position-title">Senator (Select 2)</div>
+
+    <div class="candidate">
+      <input type="checkbox" name="senator" value="sen1" onclick="disableButton('senator', this)">
+      <label>Partylist 1 - BM 1</label>
+    </div>
+
+    <div class="candidate">
+      <input type="checkbox" name="senator" value="sen2" onclick="disableButton('senator', this)">
+      <label>Partylist 1 - BM 2</label>
+    </div>
+
+    <div class="candidate">
+      <input type="checkbox" name="senator" value="sen3" onclick="disableButton('senator', this)">
+      <label>Partylist 2 - BM 1</label>
+    </div>
+
+    <div class="candidate">
+      <input type="checkbox" name="senator" value="sen4" onclick="disableButton('senator', this)">
+      <label>Partylist 2 - BM 2</label>
+    </div>
+  </div>
+
+  <button type="submit">Submit Vote</button>
+
+</form>
+
+<script src="./assets/js/electionForm.js"></script>
+
+</body>
+</html>
