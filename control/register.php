@@ -46,7 +46,6 @@ if (userExists($username)){
 }
 
 $result = registerStudent($conn, $studentid, $username, $email, $password);
-
 if ($result) {
     echo json_encode([
         'success' => true,
