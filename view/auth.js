@@ -48,8 +48,11 @@ $("#registerBtn").click(function(){
     if (studentid.length === 0) {
         $("#hint").text("Student ID is required!"); return;
     }
-    if (studentid.length < 11 || !/^\d+$/.test(studentid)) {
-        $("#hint").text("Invalid Student ID format!"); return;
+    if (studentid.length != 10) {
+        $("#hint").text("Student ID must be exactly 10 digits."); return;
+    }
+    if (!/^\d+$/.test(studentid)) {
+        $("#hint").text("Student ID must contain numbers only (no letters allowed)."); return;
     }
     // username
     if (username.length === 0) {
