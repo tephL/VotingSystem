@@ -45,7 +45,16 @@ if ($confirmpassword != $password) {
     echo json_encode(['success' => false, 'message' => 'Must have matching password!']);
     exit;
 }
+
 // duplication 
+if (studentIDExists($studentid)) {
+    echo json_encode(['success' => false, 'message' => 'Student ID already registered']);
+    exit;
+}
+if (emailExists($email)) {
+    echo json_encode(['success' => false, 'message' => 'Email already registered']);
+    exit;
+}
 if (userExists($username)){
     echo json_encode(['success' => false, 'message' => 'Student with this username already exist']);
     exit;

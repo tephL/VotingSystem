@@ -2,7 +2,7 @@
 
     include(__DIR__ . "/dbconn.php");
 
-    function userExists($username){
+     function userExists($username){
         global $conn;
         
         $sql = "SELECT * FROM Users WHERE username = '$username'";
@@ -13,6 +13,22 @@
         } else{
             return false;
         }
+    }
+     
+    function studentIDExists($studentid){
+        global $conn;
+        
+        $sql = "SELECT * FROM Users WHERE student_id = '$studentid'";
+        $r_sql = $conn->query($sql);
+        return $r_sql -> num_rows > 0;
+    }
+
+    function emailExists($email){
+        global $conn;
+        
+        $sql = "SELECT * FROM Users WHERE email = '$email'";
+        $r_sql = $conn->query($sql);
+        return $r_sql -> num_rows > 0;
     }
 
     function passwordValidation($username, $password){
@@ -33,7 +49,6 @@
         
         return true;
     }
-
     function getUserID($username){
         global $conn;
         

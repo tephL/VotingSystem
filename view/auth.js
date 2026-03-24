@@ -58,6 +58,7 @@ $("#registerBtn").click(function(){
         success: function(response){
             if (response.success) {
                 alert("Registered successfully!");
+                window.location.href = "../index.html"
             } else {
                 $("#hint").text(response.message);
             }
