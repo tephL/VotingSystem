@@ -8,6 +8,7 @@ $studentid = trim($_POST['studentid']);
 $email = trim($_POST['email']);
 $username  = trim($_POST['username']);
 $password  = trim($_POST['password']);
+$confirmpassword  = trim($_POST['confirmpassword']);
 
 // empty checks
 if (empty($studentid)) {
@@ -37,6 +38,11 @@ if (strlen($username) < 3) {
 }
 if (strlen($password) < 8) {
     echo json_encode(['success' => false, 'message' => 'Password too short']);
+    exit;
+}
+// match password 
+if ($confirmpassword != $password) {
+    echo json_encode(['success' => false, 'message' => 'Must have matching password!']);
     exit;
 }
 // duplication 
