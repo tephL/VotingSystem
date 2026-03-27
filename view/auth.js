@@ -38,30 +38,33 @@ function login(){
 
 // register
 $("#registerBtn").click(function(){
-    let username = $("#username").val();
-    let firstname = $("#firstname").val();
-    let middlename = $("#middlename").val();
-    let lastname = $("#lastname").val();
-    let password = $("#password").val();
-    let studentcourse = $("#studentcourse").val();
-    
+    let studentid = $("#studentid").val().trim();
+    let email = $("#email").val().trim();
+    let username = $("#username").val().trim();
+    let password = $("#password").val().trim();
+    let confirmpassword = $("#confirmpassword").val().trim();
 
     $.ajax({
-        url: "register.php",
+        url: "../control/register.php",
         type: "POST",
+        dataType: "json",
         data: {
+            studentid: studentid,
+            email: email,
             username: username,
-            firstname: firstname,
-            middlename: middlename,
-            lastname: lastname,
             password: password,
-            studentcourse: studentcourse
+            confirmpassword: confirmpassword
         },
-        success: function(){
-            alert("success register");
+        success: function(response){
+            if (response.success) {
+                alert("Registered successfully!");
+                window.location.href = "../index.html"
+            } else {
+                $("#hint").text(response.message[0]);
+            }
         },
-        error: function(){
-            alert("error register");
+        error: function(xhr) {
+            alert("Error: " + xhr.responseText); 
         }
     });
 });
