@@ -26,7 +26,9 @@ function login(){
             $("#message_box").text(response.message);
             $("#message_box").fadeIn(3000);
             if(response.status == "success"){
-                window.location.href = response.redirect;
+                setTimeout(()=>{
+                    window.location.href = response.redirect; 
+                }, 3000);
             }
         },
         error: function(){

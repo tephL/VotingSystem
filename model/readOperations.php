@@ -77,4 +77,29 @@
         return $role_id;
     }
 
+    function getUserActivatedStatus($username){
+        global $conn;
+        
+        $sql = "SELECT * FROM Users WHERE username = '$username'";
+        $r_sql = $conn->query($sql);
+
+        $row = $r_sql->fetch_assoc();
+        $activated_status = $row["activated_status"];
+        return $activated_status;
+    }
+
+    function getDeactivatedUsers(){
+        global $conn;
+
+        $sql = "SELECT 
+                user_id, 
+                username, 
+                created_date 
+                FROM Users 
+                WHERE activated_status = 0;";
+        $r_sql = $conn->query($sql);
+
+        return $r_sql;
+    }
+
 ?>

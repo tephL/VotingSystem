@@ -6,11 +6,11 @@
     $action = $_POST["action"];
 
     switch($action){
-        case 'registerUser':
-            registerUser();
-            break;
         case 'loginUser':
             loginUser();
+            break;
+        case 'signOut':
+            signOut();
             break;
         default:
             echo "action doesnt exist";
@@ -68,19 +68,42 @@
             return;
         }
 
+        $activated_status = getUserActivatedStatus($username);
+        if($activated_status == 0){
+            echo json_encode([
+                "message" => "your account is not yet activated" 
+            ]);
+            return;
+        }
+
         // final output since they passed everything
         session_start();
         $_SESSION["user_id"] = getUserID($username);
         $_SESSION["username"] = $username;
         $_SESSION["role"] = getUserRoleID($username);
 
+        $role_id = getUserRoleID($username);
+        if($role_id == "1000"){
+            $landing_page = "adminUI";
+        } else if($role_id == "1001"){
+            $landing_page = "voterUI";
+        }
         
         echo json_encode([
             "message" => "youve successfully logged in",
             "status" => "success",
-            "redirect" => "view/adminUI.php",
+            "redirect" => "view/$landing_page/dashboard.php",
             "role" => getUserRoleID($username)
         ]);
+    }
+
+    function signOut(){
+        session_start();
+        session_unset();
+        session_destroy();
+
+        echo json_encode(["message" => "signed out"]);
+        return;
     }
 
 ?>
