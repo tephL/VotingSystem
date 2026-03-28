@@ -4,7 +4,8 @@ function decodeVoteString($voteStr) {
     return json_decode($voteStr, true);
 }
 
-function insertVote($conn, $studentvoter_id, $candidate_id, $position_id) {
+function insertVote($studentvoter_id, $candidate_id, $position_id) {
+    global $conn;
     $pid = intval($position_id);
     $svid = intval($studentvoter_id);
     
@@ -16,7 +17,8 @@ function insertVote($conn, $studentvoter_id, $candidate_id, $position_id) {
     return mysqli_query($conn, $sql);
 }
 
-function processVotes($conn, $studentvoter_id, $votes) {
+function processVotes($studentvoter_id, $votes) {
+    global $conn;
     $voted_positions = [];
     $vote_counts = []; // Track count of votes per position
     
@@ -24,7 +26,7 @@ function processVotes($conn, $studentvoter_id, $votes) {
         $cid = $vote['candidate_id'];
         $pid = $vote['position_id'];
         
-        if (!insertVote($conn, $studentvoter_id, $cid, $pid)) {
+        if (!insertVote($studentvoter_id, $cid, $pid)) {
             return ['success' => false, 'message' => 'Error inserting vote'];
         }
         
@@ -50,7 +52,8 @@ function validateRequiredPositions($voted_positions) {
     return true;
 }
 
-function autoAbstainUnusedPositions($conn, $studentvoter_id, $voted_positions, $vote_counts = []) {
+function autoAbstainUnusedPositions($studentvoter_id, $voted_positions, $vote_counts = []) {
+    global $conn;
     $svid = intval($studentvoter_id);
     
     // Handle senators: max 4 votes allowed
@@ -69,7 +72,8 @@ function autoAbstainUnusedPositions($conn, $studentvoter_id, $voted_positions, $
     }
 }
 
-function markVoterAsVoted($conn, $studentvoter_id) {
+function markVoterAsVoted($studentvoter_id) {
+    global $conn;
     $svid = intval($studentvoter_id);
     $sql = "UPDATE StudentVoters SET has_voted = 1 WHERE studentvoter_id = $svid";
     return mysqli_query($conn, $sql);

@@ -5,15 +5,9 @@ ini_set('display_startup_errors', 1);
 include(__DIR__ . "/../../../model/dbconn.php");
 session_start();
 
-if (isset($_SESSION['studentvoter_id'])) {
-    $voter_id = intval($_SESSION['studentvoter_id']);
-    $result = mysqli_query($conn, "SELECT has_voted FROM StudentVoters WHERE studentvoter_id = $voter_id");
-    $row = mysqli_fetch_assoc($result);
-    
-    if ($row['has_voted'] == 1) {
-        header('Location: alreadyVoted.html');
-        exit;
-    }
+if (isset($_SESSION['has_voted']) && $_SESSION['has_voted']) {
+    header('Location: alreadyVoted.html');
+    exit;
 }
 ?>
 

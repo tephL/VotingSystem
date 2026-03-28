@@ -86,18 +86,16 @@
 
         // final output since they passed everything
         session_start();
-        $user_id = getUserID($username);
-        $_SESSION["user_id"] = $user_id;
+        $_SESSION["user_id"] = getUserID($username);
         $_SESSION["username"] = $username;
         $_SESSION["role"] = getUserRoleID($username);
-        
-        // Get studentvoter_id if user is a student voter (role_id = 1001)
-        $role_id = getUserRoleID($username);
-        if($role_id == 1001){
-            $_SESSION["studentvoter_id"] = getStudentVoterID($user_id);
-        }
 
         $role_id = getUserRoleID($username);
+
+        if($role_id == 1001) {
+            $_SESSION["studentvoter_id"] = getStudentVoterID($_SESSION["user_id"]);
+        }
+
         if($role_id == "1000"){
             $landing_page = "adminUI";
         } else if($role_id == "1001"){

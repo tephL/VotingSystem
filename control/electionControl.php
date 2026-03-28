@@ -53,7 +53,7 @@ function handleSubmitVote($conn) {
     $studentvoter_id = $voterResult['voter_id'];
 
     // Process votes
-    $result = processVotes($conn, $studentvoter_id, $votes);
+    $result = processVotes($studentvoter_id, $votes);
     if (!$result['success']) {
         return $result;
     }
@@ -66,10 +66,11 @@ function handleSubmitVote($conn) {
     }
 
     // Auto-abstain unused positions and unfilled senator slots
-    autoAbstainUnusedPositions($conn, $studentvoter_id, $voted_positions, $vote_counts);
+    autoAbstainUnusedPositions($studentvoter_id, $voted_positions, $vote_counts);
 
     // Mark voter as voted
-    markVoterAsVoted($conn, $studentvoter_id);
+    markVoterAsVoted($studentvoter_id);
+    $_SESSION['has_voted'] = true;
 
     return ['success' => true, 'votes_count' => count($votes)];
 }
