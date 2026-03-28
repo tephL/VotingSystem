@@ -42,10 +42,18 @@
             ]);
             return;
         }
-        // is it less than minimum char of the usern and passw (6)
-        if(strlen($username) <= 4 || strlen($password) <= 4){
+        // is it less than minimum char of the usern (5)
+        if(strlen($username) <= 4){
             echo json_encode([
-                "message" => "username or password must be more than 4 characters" 
+                "message" => "username must be more than 4 characters" 
+            ]);
+            return;
+        };
+
+        // is it less than minimum char of the passw (8)
+        if(strlen($password) <= 7){
+            echo json_encode([
+                "message" => "password must be more or equal than 8 characters" 
             ]);
             return;
         };
