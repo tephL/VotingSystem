@@ -4,132 +4,28 @@ USE VotingSystem;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
-
 -- ============================================================
--- ACCOUNTS
--- ============================================================
-
-CREATE TABLE `VotingSystem`.`Roles` (
-    `role_id`   INT          NOT NULL AUTO_INCREMENT,
-    `role_name` VARCHAR(255) NOT NULL,
-    PRIMARY KEY (`role_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1000;
-
-CREATE TABLE `VotingSystem`.`Users` (
-    `user_id`          INT          NOT NULL AUTO_INCREMENT,
-    `username`         VARCHAR(255) NOT NULL,
-    `email`            VARCHAR(255) NOT NULL,
-    `password`         VARCHAR(255) NOT NULL,
-    `role_id`          INT          NOT NULL,
-    `activated_status` TINYINT(1)   NOT NULL DEFAULT 0,
-    `created_date`     DATETIME              DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`user_id`),
-    FOREIGN KEY (`role_id`) REFERENCES `Roles`(`role_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1000;
-
-CREATE TABLE `VotingSystem`.`StudentVoters` (
-    `studentvoter_id` INT        NOT NULL AUTO_INCREMENT,
-    `user_id`         INT        NOT NULL,
-    `student_id`      INT        NOT NULL,
-    `has_voted`       TINYINT(1) NOT NULL DEFAULT 0,
-    PRIMARY KEY (`studentvoter_id`),
-    FOREIGN KEY (`user_id`)    REFERENCES `Users`(`user_id`),
-    FOREIGN KEY (`student_id`) REFERENCES `Students`(`student_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1000;
-
-CREATE TABLE `VotingSystem`.`Admins` (
-    `admin_id`       INT          NOT NULL AUTO_INCREMENT,
-    `first_name`     VARCHAR(255) NOT NULL,
-    `middle_name`    VARCHAR(255),
-    `last_name`      VARCHAR(255) NOT NULL,
-    `contact_number` VARCHAR(20),
-    `user_id`        INT          NOT NULL,
-    PRIMARY KEY (`admin_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1000;
-
-
--- ============================================================
--- VOTING PROCESS
--- ============================================================
-
-CREATE TABLE `VotingSystem`.`Elections` (
-    `election_id`    INT          NOT NULL AUTO_INCREMENT,
-    `election_title` VARCHAR(255) NOT NULL,
-    `status`         VARCHAR(50)  NOT NULL,
-    `start_date`     DATETIME     NOT NULL,
-    `end_date`       DATETIME     NOT NULL,
-    PRIMARY KEY (`election_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1000;
-
-CREATE TABLE `VotingSystem`.`Positions` (
-    `position_id`   INT          NOT NULL AUTO_INCREMENT,
-    `position_name` VARCHAR(255) NOT NULL,
-    `election_id`   INT          NOT NULL,
-    PRIMARY KEY (`position_id`),
-    FOREIGN KEY (`election_id`) REFERENCES `Elections`(`election_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1000;
-
-CREATE TABLE `VotingSystem`.`Partylists` (
-    `partylist_id`   INT          NOT NULL AUTO_INCREMENT,
-    `partylist_name` VARCHAR(255) NOT NULL,
-    `election_id`    INT          NOT NULL,
-    PRIMARY KEY (`partylist_id`),
-    FOREIGN KEY (`election_id`) REFERENCES `Elections`(`election_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1000;
-
-CREATE TABLE `VotingSystem`.`Candidates` (
-    `candidate_id` INT NOT NULL AUTO_INCREMENT,
-    `partylist_id` INT NOT NULL,
-    `student_id`   INT NOT NULL,
-    `position_id`  INT NOT NULL,
-    PRIMARY KEY (`candidate_id`),
-    FOREIGN KEY (`partylist_id`) REFERENCES `Partylists`(`partylist_id`),
-    FOREIGN KEY (`student_id`)   REFERENCES `Students`(`student_id`),
-    FOREIGN KEY (`position_id`)  REFERENCES `Positions`(`position_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1000;
-
-CREATE TABLE `VotingSystem`.`Votes` (
-    `vote_id`         INT      NOT NULL AUTO_INCREMENT,
-    `vote_date`       DATETIME          DEFAULT CURRENT_TIMESTAMP,
-    `studentvoter_id` INT      NOT NULL,
-    `candidate_id`    INT      NULL,
-    `position_id`     INT      NOT NULL,
-    PRIMARY KEY (`vote_id`),
-    UNIQUE (`studentvoter_id`, `position_id`, `candidate_id`),
-    FOREIGN KEY (`studentvoter_id`) REFERENCES `StudentVoters`(`studentvoter_id`),
-    FOREIGN KEY (`candidate_id`)    REFERENCES `Candidates`(`candidate_id`),
-    FOREIGN KEY (`position_id`)     REFERENCES `Positions`(`position_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1;
-
-
--- ============================================================
--- EXTERNAL INFO
+-- EXTERNAL INFO 
 -- ============================================================
 
 CREATE TABLE `VotingSystem`.`College` (
-    `college_id`   INT          NOT NULL AUTO_INCREMENT,
-    `college_name` VARCHAR(255) NOT NULL,
-    PRIMARY KEY (`college_id`)
+`college_id`   INT          NOT NULL AUTO_INCREMENT,
+`college_name` VARCHAR(255) NOT NULL,
+PRIMARY KEY (`college_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1000;
 
 CREATE TABLE `VotingSystem`.`Students` (
-    `student_id`  INT          NOT NULL AUTO_INCREMENT,
-    `first_name`  VARCHAR(255) NOT NULL,
-    `middle_name` VARCHAR(255),
-    `last_name`   VARCHAR(255) NOT NULL,
-    `college_id`  INT          NOT NULL,
-    PRIMARY KEY (`student_id`),
-    FOREIGN KEY (`college_id`) REFERENCES `College`(`college_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1000;
-
-
-SET FOREIGN_KEY_CHECKS = 1;
-
+`student_id`  INT          NOT NULL AUTO_INCREMENT,
+`first_name`  VARCHAR(255) NOT NULL,
+`middle_name` VARCHAR(255),
+`last_name`   VARCHAR(255) NOT NULL,
+`college_id`  INT          NOT NULL,
+PRIMARY KEY (`student_id`),
+FOREIGN KEY (`college_id`) REFERENCES `College`(`college_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 2024000000;
 
 -- ============================================================
--- DATA: EXTERNAL INFO
--- inserted first — referenced by ACCOUNTS and VOTING PROCESS
+-- EXTERNAL INFO : DATA
 -- ============================================================
 
 -- Colleges (college_id: 1000–1004)
@@ -159,9 +55,51 @@ INSERT INTO Students (first_name, middle_name, last_name, college_id) VALUES
 ('Rafael',    'Mercado',    'Salazar',   1004),          -- student_id: 1014
 ('Camille',   'Ocampo',     'Fuentes',   1000);          -- student_id: 1015
 
+-- ============================================================
+-- ACCOUNTS 
+-- ============================================================
+
+CREATE TABLE `VotingSystem`.`Roles` (
+`role_id`   INT          NOT NULL AUTO_INCREMENT,
+`role_name` VARCHAR(255) NOT NULL,
+PRIMARY KEY (`role_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1000;
+
+CREATE TABLE `VotingSystem`.`Users` (
+`user_id`          INT          NOT NULL AUTO_INCREMENT,
+`username`         VARCHAR(255) NOT NULL,
+`email`            VARCHAR(255) NOT NULL,
+`password`         VARCHAR(255) NOT NULL,
+`role_id`          INT          NOT NULL,
+`activated_status` TINYINT(1)   NOT NULL DEFAULT 0,
+`created_date`     DATETIME              DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY (`user_id`),
+FOREIGN KEY (`role_id`) REFERENCES `Roles`(`role_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1000;
+
+CREATE TABLE `VotingSystem`.`Admins` (
+`admin_id`       INT          NOT NULL AUTO_INCREMENT,
+`first_name`     VARCHAR(255) NOT NULL,
+`middle_name`    VARCHAR(255),
+`last_name`      VARCHAR(255) NOT NULL,
+`contact_number` VARCHAR(20),
+`user_id`        INT          NOT NULL,
+PRIMARY KEY (`admin_id`),
+FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1000;
+
+CREATE TABLE `VotingSystem`.`StudentVoters` (
+`studentvoter_id` INT        NOT NULL AUTO_INCREMENT,
+`user_id`         INT        NOT NULL,
+`student_id`      INT        NOT NULL,
+`has_voted`       TINYINT(1) NOT NULL DEFAULT 0,
+PRIMARY KEY (`studentvoter_id`),
+FOREIGN KEY (`user_id`)    REFERENCES `Users`(`user_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1000;
+
 
 -- ============================================================
--- DATA: ACCOUNTS
+-- ACCOUNTS : DATA
 -- ============================================================
 
 -- Roles (role_id: 1000 = admin, 1001 = student_voter)
@@ -170,26 +108,26 @@ INSERT INTO Roles (role_name) VALUES ('student_voter');  -- role_id: 1001
 
 -- Users: Admin (user_id: 1000)
 INSERT INTO Users (username, email, password, role_id, activated_status) VALUES
-('tephL', 'tephL@example.com', '123456', 1000, 1);      -- user_id: 1000
+('tephL', 'tephL@example.com', '1234567878', 1000, 1);      -- user_id: 1000
 
 -- Users: Student Voters (user_id: 1001–1016)
 INSERT INTO Users (username, email, password, role_id) VALUES
-('juan.delacruz',    'juan@example.com',       '123456', 1001),  -- user_id: 1001
-('maria.garcia',     'maria@example.com',      '123456', 1001),  -- user_id: 1002
-('carlos.lopez',     'carlos@example.com',     '123456', 1001),  -- user_id: 1003
-('ana.martinez',     'ana@example.com',        '123456', 1001),  -- user_id: 1004
-('jose.rodriguez',   'jose@example.com',       '123456', 1001),  -- user_id: 1005
-('luisa.hernandez',  'luisa@example.com',      '123456', 1001),  -- user_id: 1006
-('miguel.gonzales',  'miguel@example.com',     '123456', 1001),  -- user_id: 1007
-('sofia.perez',      'sofia@example.com',      '123456', 1001),  -- user_id: 1008
-('ramon.castillo',   'ramon@example.com',      '123456', 1001),  -- user_id: 1009
-('elena.morales',    'elena@example.com',      '123456', 1001),  -- user_id: 1010
-('diego.navarro',    'diego@example.com',      '123456', 1001),  -- user_id: 1011
-('isabella.reyes',   'isabella@example.com',   '123456', 1001),  -- user_id: 1012
-('marco.santiago',   'marco@example.com',      '123456', 1001),  -- user_id: 1013
-('gabrielle.valdez', 'gabrielle@example.com',  '123456', 1001),  -- user_id: 1014
-('rafael.salazar',   'rafael@example.com',     '123456', 1001),  -- user_id: 1015
-('camille.fuentes',  'camille@example.com',    '123456', 1001);  -- user_id: 1016
+('juan.delacruz',    'juan@example.com',       '12345678', 1001),  -- user_id: 1001
+('maria.garcia',     'maria@example.com',      '12345678', 1001),  -- user_id: 1002
+('carlos.lopez',     'carlos@example.com',     '12345678', 1001),  -- user_id: 1003
+('ana.martinez',     'ana@example.com',        '12345678', 1001),  -- user_id: 1004
+('jose.rodriguez',   'jose@example.com',       '12345678', 1001),  -- user_id: 1005
+('luisa.hernandez',  'luisa@example.com',      '12345678', 1001),  -- user_id: 1006
+('miguel.gonzales',  'miguel@example.com',     '12345678', 1001),  -- user_id: 1007
+('sofia.perez',      'sofia@example.com',      '12345678', 1001),  -- user_id: 1008
+('ramon.castillo',   'ramon@example.com',      '12345678', 1001),  -- user_id: 1009
+('elena.morales',    'elena@example.com',      '12345678', 1001),  -- user_id: 1010
+('diego.navarro',    'diego@example.com',      '12345678', 1001),  -- user_id: 1011
+('isabella.reyes',   'isabella@example.com',   '12345678', 1001),  -- user_id: 1012
+('marco.santiago',   'marco@example.com',      '12345678', 1001),  -- user_id: 1013
+('gabrielle.valdez', 'gabrielle@example.com',  '12345678', 1001),  -- user_id: 1014
+('rafael.salazar',   'rafael@example.com',     '12345678', 1001),  -- user_id: 1015
+('camille.fuentes',  'camille@example.com',    '12345678', 1001);  -- user_id: 1016
 
 -- Admins (admin_id: 1000)
 INSERT INTO Admins (first_name, middle_name, last_name, contact_number, user_id) VALUES
@@ -214,9 +152,64 @@ INSERT INTO StudentVoters (user_id, student_id) VALUES
 (1015, 1014),                                            -- studentvoter_id: 1014 | Rafael Salazar
 (1016, 1015);                                            -- studentvoter_id: 1015 | Camille Fuentes
 
+-- ============================================================
+-- VOTING PROCESS 
+-- ============================================================
+
+CREATE TABLE `VotingSystem`.`Elections` (
+`election_id`    INT          NOT NULL AUTO_INCREMENT,
+`election_title` VARCHAR(255) NOT NULL,
+`status`         VARCHAR(50)  NOT NULL,
+`start_date`     DATETIME     NOT NULL,
+`end_date`       DATETIME     NOT NULL,
+PRIMARY KEY (`election_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1000;
+
+CREATE TABLE `VotingSystem`.`Positions` (
+`position_id`   INT          NOT NULL AUTO_INCREMENT,
+`position_name` VARCHAR(255) NOT NULL,
+`election_id`   INT          NOT NULL,
+PRIMARY KEY (`position_id`),
+FOREIGN KEY (`election_id`) REFERENCES `Elections`(`election_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1000;
+
+CREATE TABLE `VotingSystem`.`Partylists` (
+`partylist_id`   INT          NOT NULL AUTO_INCREMENT,
+`partylist_name` VARCHAR(255) NOT NULL,
+`election_id`    INT          NOT NULL,
+PRIMARY KEY (`partylist_id`),
+FOREIGN KEY (`election_id`) REFERENCES `Elections`(`election_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1000;
+
+CREATE TABLE `VotingSystem`.`Candidates` (
+`candidate_id` INT NOT NULL AUTO_INCREMENT,
+`partylist_id` INT NOT NULL,
+`student_id`   INT NOT NULL,
+`position_id`  INT NOT NULL,
+PRIMARY KEY (`candidate_id`),
+FOREIGN KEY (`partylist_id`) REFERENCES `Partylists`(`partylist_id`),
+FOREIGN KEY (`student_id`)   REFERENCES `Students`(`student_id`),
+FOREIGN KEY (`position_id`)  REFERENCES `Positions`(`position_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1000;
+
+CREATE TABLE `VotingSystem`.`Votes` (
+`vote_id`         INT      NOT NULL AUTO_INCREMENT,
+`vote_date`       DATETIME          DEFAULT CURRENT_TIMESTAMP,
+`studentvoter_id` INT      NOT NULL,
+`candidate_id`    INT      NOT NULL,
+`position_id`     INT      NOT NULL,
+PRIMARY KEY (`vote_id`),
+UNIQUE (`studentvoter_id`, `position_id`, `candidate_id`),
+FOREIGN KEY (`studentvoter_id`) REFERENCES `StudentVoters`(`studentvoter_id`),
+FOREIGN KEY (`candidate_id`)    REFERENCES `Candidates`(`candidate_id`),
+FOREIGN KEY (`position_id`)     REFERENCES `Positions`(`position_id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1;
+
+
+SET FOREIGN_KEY_CHECKS = 1;
 
 -- ============================================================
--- DATA: VOTING PROCESS
+-- VOTING PROCESS: DATA
 -- ============================================================
 
 -- Elections (election_id: 1000)
@@ -239,18 +232,18 @@ INSERT INTO Partylists (partylist_name, election_id) VALUES
 -- Candidates (candidate_id: 1000–1013)
 INSERT INTO Candidates (partylist_id, student_id, position_id) VALUES
 -- Partido Uno (partylist_id: 1000)
-(1000, 1000, 1000),                                     -- candidate_id: 1000 | Juan Dela Cruz   -> President
-(1000, 1001, 1001),                                     -- candidate_id: 1001 | Maria Garcia     -> Vice-President
-(1000, 1002, 1002),                                     -- candidate_id: 1002 | Carlos Lopez     -> Senator
-(1000, 1003, 1002),                                     -- candidate_id: 1003 | Ana Martinez     -> Senator
-(1000, 1004, 1002),                                     -- candidate_id: 1004 | Jose Rodriguez   -> Senator
-(1000, 1005, 1003),                                     -- candidate_id: 1005 | Luisa Hernandez  -> Vice-Governor
-(1000, 1006, 1002),                                     -- candidate_id: 1006 | Miguel Gonzales  -> Senator
+(1000, 2024000000, 1000),                               -- candidate_id: 1000 | Juan Dela Cruz   -> President
+(1000, 2024000001, 1001),                               -- candidate_id: 1001 | Maria Garcia     -> Vice-President
+(1000, 2024000002, 1002),                               -- candidate_id: 1002 | Carlos Lopez     -> Senator
+(1000, 2024000003, 1002),                               -- candidate_id: 1003 | Ana Martinez     -> Senator
+(1000, 2024000004, 1002),                               -- candidate_id: 1004 | Jose Rodriguez   -> Senator
+(1000, 2024000005, 1003),                               -- candidate_id: 1005 | Luisa Hernandez  -> Vice-Governor
+(1000, 2024000006, 1002),                               -- candidate_id: 1006 | Miguel Gonzales  -> Senator
 -- Partido Dos (partylist_id: 1001)
-(1001, 1008, 1000),                                     -- candidate_id: 1007 | Ramon Castillo   -> President
-(1001, 1009, 1001),                                     -- candidate_id: 1008 | Elena Morales    -> Vice-President
-(1001, 1010, 1002),                                     -- candidate_id: 1009 | Diego Navarro    -> Senator
-(1001, 1011, 1002),                                     -- candidate_id: 1010 | Isabella Reyes   -> Senator
-(1001, 1012, 1002),                                     -- candidate_id: 1011 | Marco Santiago   -> Senator
-(1001, 1013, 1003),                                     -- candidate_id: 1012 | Gabrielle Valdez -> Vice-Governor
-(1001, 1015, 1002);                                     -- candidate_id: 1013 | Camille Fuentes  -> Senator
+(1001, 2024000008, 1000),                               -- candidate_id: 1007 | Ramon Castillo   -> President
+(1001, 2024000009, 1001),                               -- candidate_id: 1008 | Elena Morales    -> Vice-President
+(1001, 2024000010, 1002),                               -- candidate_id: 1009 | Diego Navarro    -> Senator
+(1001, 2024000011, 1002),                               -- candidate_id: 1010 | Isabella Reyes   -> Senator
+(1001, 2024000012, 1002),                               -- candidate_id: 1011 | Marco Santiago   -> Senator
+(1001, 2024000013, 1003),                               -- candidate_id: 1012 | Gabrielle Valdez -> Vice-Governor
+(1001, 2024000015, 1002);                               -- candidate_id: 1013 | Camille Fuentes  -> Senator 
