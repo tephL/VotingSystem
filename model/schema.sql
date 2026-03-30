@@ -198,18 +198,18 @@ CREATE TABLE `VotingSystem`.`Candidates` (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1000;
 
 CREATE TABLE `VotingSystem`.`Votes` (
-  `vote_id`         INT      NOT NULL AUTO_INCREMENT,
-  `vote_date`       DATETIME          DEFAULT CURRENT_TIMESTAMP,
-  `studentvoter_id` INT      NOT NULL,
-  `candidate_id`    INT      NOT NULL,
-  `position_id`     INT      NOT NULL,
-  `election_id`     INT      NOT NULL,
-  PRIMARY KEY (`vote_id`),
-  UNIQUE (`studentvoter_id`, `position_id`, `candidate_id`, `election_id`),
-  FOREIGN KEY (`studentvoter_id`) REFERENCES `StudentVoters`(`studentvoter_id`),
-  FOREIGN KEY (`candidate_id`)    REFERENCES `Candidates`(`candidate_id`),
-  FOREIGN KEY (`position_id`)     REFERENCES `Positions`(`position_id`),
-  FOREIGN KEY (`election_id`)     REFERENCES `Elections`(`election_id`)
+`vote_id`         INT      NOT NULL AUTO_INCREMENT,
+`vote_date`       DATETIME          DEFAULT CURRENT_TIMESTAMP,
+`studentvoter_id` INT      NOT NULL,
+`candidate_id`    INT      NOT NULL,
+`position_id`     INT      NOT NULL,
+`election_id`     INT      NOT NULL,
+PRIMARY KEY (`vote_id`),
+UNIQUE (`studentvoter_id`, `position_id`, `candidate_id`),
+FOREIGN KEY (`studentvoter_id`) REFERENCES `StudentVoters`(`studentvoter_id`),
+FOREIGN KEY (`candidate_id`)    REFERENCES `Candidates`(`candidate_id`),
+FOREIGN KEY (`position_id`)     REFERENCES `Positions`(`position_id`),
+FOREIGN KEY (`election_id`)     REFERENCES `Elections`(`election_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1;
 
 
