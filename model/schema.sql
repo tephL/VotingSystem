@@ -173,36 +173,40 @@ PRIMARY KEY (`position_id`),
 FOREIGN KEY (`election_id`) REFERENCES `Elections`(`election_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1000;
 
-CREATE TABLE `VotingSystem`.`Partylists` (
-`partylist_id`   INT          NOT NULL AUTO_INCREMENT,
-`partylist_name` VARCHAR(255) NOT NULL,
-`election_id`    INT          NOT NULL,
-PRIMARY KEY (`partylist_id`),
-FOREIGN KEY (`election_id`) REFERENCES `Elections`(`election_id`)
+CREATE TABLE `VotingSystem`.`PoliticalParties` (
+  `party_id`      INT          NOT NULL AUTO_INCREMENT,
+  `party_name`    VARCHAR(255) NOT NULL,
+  `status`        ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+  `creation_date` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `election_id`   INT          NOT NULL,
+  PRIMARY KEY (`party_id`),
+  FOREIGN KEY (`election_id`) REFERENCES `Elections`(`election_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1000;
 
 CREATE TABLE `VotingSystem`.`Candidates` (
 `candidate_id` INT NOT NULL AUTO_INCREMENT,
-`partylist_id` INT NOT NULL,
+`party_id` INT NOT NULL,
 `student_id`   INT NOT NULL,
 `position_id`  INT NOT NULL,
 PRIMARY KEY (`candidate_id`),
-FOREIGN KEY (`partylist_id`) REFERENCES `Partylists`(`partylist_id`),
+FOREIGN KEY (`party_id`) REFERENCES `PoliticalParties`(`party_id`),
 FOREIGN KEY (`student_id`)   REFERENCES `Students`(`student_id`),
 FOREIGN KEY (`position_id`)  REFERENCES `Positions`(`position_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1000;
 
 CREATE TABLE `VotingSystem`.`Votes` (
-`vote_id`         INT      NOT NULL AUTO_INCREMENT,
-`vote_date`       DATETIME          DEFAULT CURRENT_TIMESTAMP,
-`studentvoter_id` INT      NOT NULL,
-`candidate_id`    INT      NOT NULL,
-`position_id`     INT      NOT NULL,
-PRIMARY KEY (`vote_id`),
-UNIQUE (`studentvoter_id`, `position_id`, `candidate_id`),
-FOREIGN KEY (`studentvoter_id`) REFERENCES `StudentVoters`(`studentvoter_id`),
-FOREIGN KEY (`candidate_id`)    REFERENCES `Candidates`(`candidate_id`),
-FOREIGN KEY (`position_id`)     REFERENCES `Positions`(`position_id`)
+  `vote_id`         INT      NOT NULL AUTO_INCREMENT,
+  `vote_date`       DATETIME          DEFAULT CURRENT_TIMESTAMP,
+  `studentvoter_id` INT      NOT NULL,
+  `candidate_id`    INT      NOT NULL,
+  `position_id`     INT      NOT NULL,
+  `election_id`     INT      NOT NULL,
+  PRIMARY KEY (`vote_id`),
+  UNIQUE (`studentvoter_id`, `position_id`, `candidate_id`, `election_id`),
+  FOREIGN KEY (`studentvoter_id`) REFERENCES `StudentVoters`(`studentvoter_id`),
+  FOREIGN KEY (`candidate_id`)    REFERENCES `Candidates`(`candidate_id`),
+  FOREIGN KEY (`position_id`)     REFERENCES `Positions`(`position_id`),
+  FOREIGN KEY (`election_id`)     REFERENCES `Elections`(`election_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1;
 
 
@@ -224,13 +228,13 @@ INSERT INTO Positions (position_name, election_id) VALUES
 ('Senator',        1000),                               -- position_id: 1002
 ('Vice-Governor',  1000);                               -- position_id: 1003
 
--- Partylists (partylist_id: 1000–1001)
-INSERT INTO Partylists (partylist_name, election_id) VALUES
+-- PoliticalParties (party_id: 1000–1001)
+INSERT INTO PoliticalParties (party_name, election_id) VALUES
 ('Partido Uno', 1000),                                  -- partylist_id: 1000
 ('Partido Dos', 1000);                                  -- partylist_id: 1001
 
 -- Candidates (candidate_id: 1000–1013)
-INSERT INTO Candidates (partylist_id, student_id, position_id) VALUES
+INSERT INTO Candidates (party_id, student_id, position_id) VALUES
 -- Partido Uno (partylist_id: 1000)
 (1000, 2024000000, 1000),                               -- candidate_id: 1000 | Juan Dela Cruz   -> President
 (1000, 2024000001, 1001),                               -- candidate_id: 1001 | Maria Garcia     -> Vice-President
