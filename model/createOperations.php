@@ -43,25 +43,30 @@
 
     function getElectionResults($election_id) {
         $eid = intval($election_id);
-        
-        $positions = getPositions($eid);
-        if ($positions === null) {
-            return ['success' => false, 'message' => 'No positions found'];
-        }
-        
-        $positions_data = [];
-        foreach ($positions as $position) {
-            $position_id = intval($position['position_id']);
-            $position_name = $position['position_name'];
-            
-            $candidates = getCandidates($position_id, $eid);
-            if ($candidates === null) {
-                return ['success' => false, 'message' => 'Error retrieving candidates'];
+        try {
+            $positions = getPositions($eid);
+            if ($positions === null) {
+                return ['success' => false, 'message' => 'No positions found', 'data' => []];
             }
-            calculateVotePercentage($candidates);
-            $positions_data[$position_name] = $candidates;
+            $positions_data = [];
+            foreach ($positions as $position) {
+                $position_id = intval($position['position_id']);
+                $position_name = $position['position_name'];
+                $candidates = getCandidates($position_id, $eid);
+                if ($candidates === null) {
+                    return ['success' => false, 'message' => 'Error retrieving candidates', 'data' => []];
+                }
+                calculateVotePercentage($candidates);
+                $positions_data[] = [
+                    'position_id' => $position_id,
+                    'position_name' => $position_name,
+                    'candidates' => $candidates
+                ];
+            }
+            return ['success' => true, 'message' => '', 'data' => $positions_data];
+        } catch (Exception $e) {
+            error_log('getElectionResults error: ' . $e->getMessage());
+            return ['success' => false, 'message' => 'Server error: ' . $e->getMessage(), 'data' => []];
         }
-        
-        return ['success' => true, 'data' => $positions_data];
     }
 ?>
