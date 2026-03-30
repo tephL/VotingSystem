@@ -1,12 +1,12 @@
 $("#create-panel").hide();
 
-$("#createbutton").click(function(){
+$("#createbutton").click(function () {
     $("#election-panel").hide();
     $("#create-panel").show();
 });
 
 $("#cancel-btn").click(() => {
-    resetAfterEdit();   
+    resetAfterEdit();
 });
 
 // ==================== CREATE / UPDATE ====================
@@ -24,7 +24,7 @@ $("#create-btn").click(function () {
 
     if (confirm("Are you sure?")) {
 
-        let url = "./../../control/electionManagerControl.php?action=create";
+        let url = "./../../control/electionControl.php?action=create";
         let data = {
             title: title,
             status: status,
@@ -33,7 +33,7 @@ $("#create-btn").click(function () {
         };
 
         if (currentEditId !== null) {
-            url = "./../../control/electionManagerControl.php?action=update";
+            url = "./../../control/electionControl.php?action=update";
             data.id = currentEditId;
         }
 
@@ -41,22 +41,28 @@ $("#create-btn").click(function () {
             url: url,
             method: "POST",
             data: data,
+
             success: function (response) {
+
+                response = response.trim();
+
                 if (response === "success") {
-                    
+
                     if (currentEditId !== null) {
                         alert("Election updated successfully!");
                     } else {
                         alert("Election created successfully!");
                     }
 
-                    resetAfterEdit();   
+                    resetAfterEdit();
                     loadElections();
+
                 } else {
                     alert("Error: " + response);
                 }
             },
-            error: function() {
+
+            error: function () {
                 alert("Connection error. Please try again.");
             }
         });
@@ -66,7 +72,7 @@ $("#create-btn").click(function () {
 // ==================== LOAD ALL ELECTIONS ====================
 function loadElections() {
     $.ajax({
-        url: "./../../control/electionManagerControl.php?action=getAll",
+        url: "./../../control/electionControl.php?action=getAll",
         method: "GET",
         success: function (response) {
             let elections = JSON.parse(response);
@@ -105,7 +111,7 @@ function loadElections() {
 
             deleteButton();
         },
-        error: function() {
+        error: function () {
             alert("Failed to load elections.");
         }
     });
@@ -114,12 +120,12 @@ function loadElections() {
 // ==================== DELETE BUTTON ====================
 function deleteButton() {
     $(".delete-btn").off().click(function () {
-        let btnId = $(this).attr("id");           
-        let id = btnId.split("_")[1];             
+        let btnId = $(this).attr("id");
+        let id = btnId.split("_")[1];
 
         if (confirm("Are you sure you want to delete this election?")) {
             $.ajax({
-                url: "./../../control/electionManagerControl.php?action=delete",
+                url: "./../../control/electionControl.php?action=delete",
                 method: "POST",
                 data: { id: id },
                 success: function (response) {
@@ -132,11 +138,11 @@ function deleteButton() {
                 }
             });
         }
-});
+    });
 
     $(".edit-btn").off().click(function () {
-        let btnId = $(this).attr("id");           
-        let id = btnId.split("_")[1];            
+        let btnId = $(this).attr("id");
+        let id = btnId.split("_")[1];
         editElection(id);
     });
 }
@@ -148,11 +154,11 @@ function editElection(id) {
     currentEditId = id;
 
     $.ajax({
-        url: "./../../control/electionManagerControl.php?action=getById&id=" + id,
+        url: "./../../control/electionControl.php?action=getById&id=" + id,
         method: "GET",
         success: function (response) {
             let e = JSON.parse(response);
-            
+
             let startDate = e.start_date;
             let endDate = e.end_date;
 
@@ -181,7 +187,7 @@ function resetAfterEdit() {
     currentEditId = null;
     $("#create-btn").text("Create");
     $("#create-panel h1").text("Create Election");
-    
+
     $("#title-input").val('');
     $("#start-date").val('');
     $("#end-date").val('');
