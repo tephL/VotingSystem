@@ -40,5 +40,6 @@
     </div>
 
     <script src="./voterUtils.js"></script>
+    <script src="./scripts/electionForm.js"></script>
 </body>
 </html>
