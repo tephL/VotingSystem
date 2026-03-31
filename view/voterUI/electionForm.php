@@ -36,7 +36,7 @@
     </div>
     
     <div id="main_content">
-        
+        <h1 id="election_title"></h1>
     </div>
 
     <script src="./voterUtils.js"></script>

@@ -25,24 +25,28 @@ function sayHello(){
 
 function getElectionFormDetails(){
     // check if there are active elections
-    if(!getElectionStatus()){
+    $status = getElectionStatus();
+
+    if($status == "completed"){
         echo json_encode([
-            "message" => "no ongoing election"
+            "status" => $status
         ]);
         return;
     }
 
     // get election_id of ongoing election
-    $election_id = getIDOfActiveElection();
-    echo json_encode([
-        "message" => "hi",
-        "election_id" => $election_id
-    ]);
-    return;
+    $election_details = getDetailsOfActiveElection();
 
     // get the positions within that election
-    
     // get the candidates that aligns with the position_id and the election_id
+    $candidates = getCandidatesOfElection($election_id);
+    
+    echo json_encode([
+        "status" => $status,
+        "election_title" => $election_details[0]["election_title"],
+        "candidates" => $candidates
+    ]);
+    return;
 }
 
 
