@@ -70,11 +70,11 @@
                 <div id="create-date">
                     <div>
                         <label>Start Date</label>
-                        <input type="date" id="start-date">
+                        <input type="date" id="start-date" name="start">
                     </div>
                     <div>
                         <label>End Date</label>
-                        <input type="date" id="end-date">
+                        <input type="date" id="end-date" name="end">
                     </div>
                 </div>
                 
