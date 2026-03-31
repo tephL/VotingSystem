@@ -9,7 +9,7 @@ $("#cancel-btn").click(() => {
     resetAfterEdit();
 });
 
-// ==================== CREATE / UPDATE ====================
+// create/upt
 $("#create-btn").click(function () {
 
     let title = $("#title-input").val().trim();
@@ -57,7 +57,13 @@ $("#create-btn").click(function () {
                     resetAfterEdit();
                     loadElections();
 
-                } else {
+                }
+                else if (response === "active") {
+                    alert("Cannot create election while another is active");
+                } else if (response === "invalid") {
+                    alert("End date cannot be earlier than start date");
+                }
+                else {
                     alert("Error: " + response);
                 }
             },
@@ -69,7 +75,7 @@ $("#create-btn").click(function () {
     }
 });
 
-// ==================== LOAD ALL ELECTIONS ====================
+//load all
 function loadElections() {
     $.ajax({
         url: "./../../control/electionControl.php?action=getAll",
@@ -117,7 +123,7 @@ function loadElections() {
     });
 }
 
-// ==================== DELETE BUTTON ====================
+// delete
 function deleteButton() {
     $(".delete-btn").off().click(function () {
         let btnId = $(this).attr("id");
@@ -129,7 +135,7 @@ function deleteButton() {
                 method: "POST",
                 data: { id: id },
                 success: function (response) {
-                    if (response === "success") {
+                    if (response.trim() === "success") {
                         alert("Election deleted!");
                         loadElections();
                     } else {
@@ -147,7 +153,7 @@ function deleteButton() {
     });
 }
 
-// ==================== EDIT ELECTION ====================
+// edit
 let currentEditId = null;
 
 function editElection(id) {
@@ -173,6 +179,7 @@ function editElection(id) {
             $("#start-date").val(startDate);
             $("#end-date").val(endDate);
             $("#status").val(e.status);
+
             $("#create-btn").text("Update Election");
             $("#create-panel h1").text("Edit Election");
 
@@ -182,9 +189,10 @@ function editElection(id) {
     });
 }
 
-// ==================== RESET AFTER CREATE OR UPDATE ====================
+// resetting
 function resetAfterEdit() {
     currentEditId = null;
+
     $("#create-btn").text("Create");
     $("#create-panel h1").text("Create Election");
 
@@ -196,5 +204,7 @@ function resetAfterEdit() {
     $("#create-panel").hide();
     $("#election-panel").show();
 }
+
+
 
 loadElections();
