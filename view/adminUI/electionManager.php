@@ -1,11 +1,9 @@
 <?php 
-    // validation
     session_start();
     if(!isset($_SESSION["user_id"])){ 
         header("Location: ../../index.html"); 
         exit(); 
     }
-
     if($_SESSION["role"] != "1000"){ 
         header("Location: ../unauthorized.html"); 
         exit(); 
@@ -70,44 +68,26 @@
                 <div id="create-date">
                     <div>
                         <label>Start Date</label>
-                        <input type="date" id="start-date" name="start">
+                        <input type="datetime-local" id="start-date" name="start">
                     </div>
                     <div>
                         <label>End Date</label>
-                        <input type="date" id="end-date" name="end">
+                        <input type="datetime-local" id="end-date" name="end">
                     </div>
-                </div>
-                
-                <div id="create-status"> 
-                    <label>Status</label>
-                    <select id="status">
-                        <option value="">Select status</option>
-                        <option value="Upcoming">Upcoming</option>
-                        <option value="Active">Active</option>
-                        <option value="Done">Done</option>
-                    </select>
                 </div>
 
                 <div> 
                     <p>Position</p>
-                    <div class="create-box">
-                        <div>
-                            <label for="president">President</label>
-                            <input type="number" value="2" disabled>
-                        </div>
-                        <div>
-                            <label for="vice-president">Vice-President</label>
-                            <input type="number" value="2" disabled>
-                        </div>
-                        <div>
-                            <label for="senator">Senator</label>
-                            <input type="number" value="8" disabled>
-                        </div>
-                        <div>
-                            <label for="vice-governor">Vice-Governor</label>
-                            <input type="number" value="2" disabled>
+                    <div class="create-box" id="positions-box">
+                        <!-- first position row by default -->
+                        <div class="position-row">
+                            <label>Position Name</label>
+                            <input type="text" class="pos-name" placeholder="e.g President">
+                            <label>Max Votes</label>
+                            <input type="number" class="pos-max" step="1" min="1" max="8">
                         </div>
                     </div>
+                    <button type="button" id="add-position-btn">+ Add Position</button>
                     
                     <div id="create-btns">
                         <button type="button" id="create-btn">Create</button> 

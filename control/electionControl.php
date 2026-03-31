@@ -18,6 +18,9 @@ else if($action == "update"){
 else if($action == "delete"){
     deleteElection();
 }
+else if($action == "getPositions"){
+    getPositionsByElection($_GET['id']);
+}
 else{
     echo "error";
 }

@@ -2,41 +2,39 @@
 
 include("dbconn.php");
 
+function getStatus($start, $end) {
+    $now = date('Y-m-d H:i:s');
+    $start = date('Y-m-d H:i:s', strtotime($start));
+    $end = date('Y-m-d H:i:s', strtotime($end));
 
-function getStatus($start, $end){
-    $today = date('Y-m-d');
-    $start = date('Y-m-d', strtotime($start));
-    $end = date('Y-m-d', strtotime($end));
-
-    if($today < $start){
+    if ($now < $start) {
         return "Upcoming";
-    }
-    else if($today > $end){
-        return "Done";
-    }
-    else{
+    } else if ($now > $end) {
+        return "Completed";
+    } else {
         return "Active";
     }
 }
 
-function createElections(){
+function createElections() {
     global $conn;
 
     $title = $_POST['title'];
-    $start = date('Y-m-d', strtotime($_POST['start']));
-    $end = date('Y-m-d', strtotime($_POST['end']));
+    $start = date('Y-m-d H:i:s', strtotime($_POST['start']));
+    $end = date('Y-m-d H:i:s', strtotime($_POST['end']));
+    $positions = json_decode($_POST['positions'], true);
 
-    if($start > $end){
+    if ($start > $end) {
         echo "invalid";
         return;
     }
 
     $status = getStatus($start, $end);
-    if($status === "Active"){
-        $today = date('Y-m-d');
-        $check = $conn->query("SELECT * FROM Elections WHERE start_date <= '$today' AND end_date >= '$today'");
-        
-        if($check->num_rows > 0){
+
+    if ($status === "active") {
+        $now = date('Y-m-d H:i:s');
+        $check = $conn->query("SELECT * FROM Elections WHERE start_date <= '$now' AND end_date >= '$now'");
+        if ($check->num_rows > 0) {
             echo "active";
             return;
         }
@@ -45,81 +43,87 @@ function createElections(){
     $sql = "INSERT INTO Elections (election_title, status, start_date, end_date)
             VALUES ('$title', '$status', '$start', '$end')";
 
-    if($conn->query($sql) === TRUE){
+    if ($conn->query($sql) === TRUE) {
+        $election_id = $conn->insert_id;
+
+        foreach ($positions as $p) {
+            $posName = $p['name'];
+            $posMax = (int) $p['max'];
+            $conn->query("INSERT INTO Positions (position_name, max_votes, election_id)
+                          VALUES ('$posName', $posMax, $election_id)");
+        }
+
         echo "success";
-    }else{
+    } else {
         echo "error";
     }
 }
 
-//get the whole table
-function getElection(){
+function getElection() {
     global $conn;
 
     $result = $conn->query("SELECT * FROM Elections ORDER BY election_id DESC");
     $data = array();
 
-    if($result->num_rows > 0){
-        while($row = $result->fetch_assoc()){
-        $newStatus = getStatus($row['start_date'], $row['end_date']);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $newStatus = getStatus($row['start_date'], $row['end_date']);
 
-        //auto updating status in db
-        if($row['status'] != $newStatus){
-        $id = $row['election_id'];
-        $conn->query("UPDATE Elections SET status = '$newStatus' WHERE election_id = $id");
-        }
+            if ($row['status'] != $newStatus) {
+                $id = $row['election_id'];
+                $conn->query("UPDATE Elections SET status = '$newStatus' WHERE election_id = $id");
+            }
 
-        // status dor ui
-        $row['status'] = $newStatus;
-
-        $data[] = $row;
+            $row['status'] = $newStatus;
+            $data[] = $row;
         }
     }
 
     echo json_encode($data);
 }
-//for editing
-function getElectionById(){
+
+function getElectionById() {
     global $conn;
 
     $id = $_GET['id'];
-
     $result = $conn->query("SELECT * FROM Elections WHERE election_id = $id");
 
-    if($result->num_rows > 0){
+    if ($result->num_rows > 0) {
         echo json_encode($result->fetch_assoc());
-    }else{
+    } else {
         echo "error";
     }
 }
 
-function updateElection(){
+function updateElection() {
     global $conn;
 
     $id = $_POST['id'];
     $title = $_POST['title'];
-    $start = date('Y-m-d', strtotime($_POST['start']));
-    $end = date('Y-m-d', strtotime($_POST['end']));
+    $start = date('Y-m-d H:i:s', strtotime($_POST['start']));
+    $end = date('Y-m-d H:i:s', strtotime($_POST['end']));
 
-    if($start > $end){
+    if ($start > $end) {
         echo "invalid";
         return;
     }
 
     $status = getStatus($start, $end);
-    if($status === "Active"){
-        $today = date('Y-m-d');
-        $check = $conn->query
-        ("SELECT * FROM Elections 
-         WHERE start_date <= '$today' 
-        AND end_date >= '$today'
-        AND election_id != $id");
 
-        if($check->num_rows > 0){
+    if ($status === "active") {
+        $now = date('Y-m-d H:i:s');
+        $check = $conn->query(
+            "SELECT * FROM Elections 
+             WHERE start_date <= '$now' 
+             AND end_date >= '$now'
+             AND election_id != $id"
+        );
+        if ($check->num_rows > 0) {
             echo "active";
             return;
         }
     }
+
     $sql = "UPDATE Elections SET 
             election_title = '$title',
             status = '$status',
@@ -127,23 +131,42 @@ function updateElection(){
             end_date = '$end'
             WHERE election_id = $id";
 
-    if($conn->query($sql) === TRUE){
+    if ($conn->query($sql) === TRUE) {
         echo "success";
-    }else{
+    } else {
         echo "error";
     }
 }
 
-function deleteElection(){
+function deleteElection() {
     global $conn;
 
     $id = $_POST['id'];
     $sql = "DELETE FROM Elections WHERE election_id = $id";
 
-    if($conn->query($sql) === TRUE){
+    if ($conn->query($sql) === TRUE) {
         echo "success";
-    }else{
+    } else {
         echo "error";
     }
+}
+function getPositionsByElection($election_id) {
+    global $conn;
+    
+    $sql = "SELECT position_id, position_name, max_votes 
+            FROM Positions 
+            WHERE election_id = $election_id 
+            ORDER BY position_id ASC";
+    
+    $result = $conn->query($sql);
+    $positions = [];
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $positions[] = $row;
+        }
+    }
+    
+    echo json_encode($positions);
 }
 ?>

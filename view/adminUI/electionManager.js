@@ -9,16 +9,59 @@ $("#cancel-btn").click(() => {
     resetAfterEdit();
 });
 
-// create/upt
+// ==================== ADD POSITION ROW ====================
+$("#add-position-btn").click(function () {
+    let newRow = `
+        <div class="position-row">
+            <label>Position Name</label>
+            <input type="text" class="pos-name" placeholder="e.g Senator">
+            <label>Max Votes</label>
+            <input type="number" class="pos-max" step="1" min="1" max="8">
+            <button type="button" class="remove-pos-btn">Remove</button>
+        </div>
+    `;
+    $("#positions-box").append(newRow);
+});
+
+$(".pos-max").on("input", function () {
+    if (this.value > 8) {
+        this.value = 8;
+    }
+    if (this.value < 1 && this.value !== "") {
+        this.value = 1;
+    }
+});
+
+// remove position row
+$(document).on("click", ".remove-pos-btn", function () {
+    $(this).closest(".position-row").remove();
+});
+
+// ==================== CREATE / UPDATE ====================
 $("#create-btn").click(function () {
 
     let title = $("#title-input").val().trim();
     let start = $("#start-date").val();
-    let end = $("#end-date").val();
-    let status = $("#status").val();
+    let end   = $("#end-date").val();
 
-    if (!title || !start || !end || !status) {
+    if (!title || !start || !end) {
         alert("Please fill in all fields.");
+        return;
+    }
+
+    let positions = [];
+    $(".position-row").each(function () {
+        let name = $(this).find(".pos-name").val().trim();
+        let max  = $(this).find(".pos-max").val();
+        if (name && max) {
+            positions.push({ name: name,
+                 max: max 
+            });
+        }
+    });
+
+    if (positions.length === 0) {
+        alert("Please add at least one position.");
         return;
     }
 
@@ -26,10 +69,10 @@ $("#create-btn").click(function () {
 
         let url = "./../../control/electionControl.php?action=create";
         let data = {
-            title: title,
-            status: status,
-            start: start,
-            end: end
+            title:     title,
+            start:     start,
+            end:       end,
+            positions: JSON.stringify(positions)
         };
 
         if (currentEditId !== null) {
@@ -41,33 +84,25 @@ $("#create-btn").click(function () {
             url: url,
             method: "POST",
             data: data,
-
             success: function (response) {
-
                 response = response.trim();
 
                 if (response === "success") {
-
                     if (currentEditId !== null) {
                         alert("Election updated successfully!");
                     } else {
                         alert("Election created successfully!");
                     }
-
                     resetAfterEdit();
                     loadElections();
-
-                }
-                else if (response === "active") {
-                    alert("Cannot create election while another is active");
+                } else if (response === "active") {
+                    alert("Cannot create election while another is active.");
                 } else if (response === "invalid") {
-                    alert("End date cannot be earlier than start date");
-                }
-                else {
+                    alert("End date cannot be earlier than start date.");
+                } else {
                     alert("Error: " + response);
                 }
             },
-
             error: function () {
                 alert("Connection error. Please try again.");
             }
@@ -75,7 +110,31 @@ $("#create-btn").click(function () {
     }
 });
 
-//load all
+// ==================== FORMAT DATE ====================
+function formatDate(dateStr) {
+    if (!dateStr) return "";
+
+    let d = new Date(dateStr);
+
+    // (e.g. March 31, 2026)
+    let datePart = d.toLocaleDateString('en-US', { 
+        month: 'long', 
+        day: 'numeric', 
+        year: 'numeric' 
+    });
+
+    // (e.g. 08:17 PM)
+    let timePart = d.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+    });
+
+    return `<span class="date-part">${datePart}</span><br>
+            <span class="time-part">${timePart}</span>`;
+}
+
+// ==================== LOAD ALL ELECTIONS ====================
 function loadElections() {
     $.ajax({
         url: "./../../control/electionControl.php?action=getAll",
@@ -90,22 +149,12 @@ function loadElections() {
             }
 
             elections.forEach(e => {
-                let startDate = e.start_date;
-                let endDate = e.end_date;
-
-                if (startDate && startDate.includes(" ")) {
-                    startDate = startDate.split(" ")[0];
-                }
-                if (endDate && endDate.includes(" ")) {
-                    endDate = endDate.split(" ")[0];
-                }
-
                 let row = `
                     <ul class="history-row">
                         <li>${e.election_title}</li>
                         <li>${e.status}</li>
-                        <li>${startDate}</li>
-                        <li>${endDate}</li>
+                        <li>${formatDate(e.start_date)}</li>
+                        <li>${formatDate(e.end_date)}</li>
                         <li class="action-cell">
                             <button class="edit-btn" id="edit_${e.election_id}">Edit</button>
                             <button class="delete-btn" id="delete_${e.election_id}">Delete</button>
@@ -123,7 +172,7 @@ function loadElections() {
     });
 }
 
-// delete
+// ==================== DELETE ====================
 function deleteButton() {
     $(".delete-btn").off().click(function () {
         let btnId = $(this).attr("id");
@@ -153,7 +202,7 @@ function deleteButton() {
     });
 }
 
-// edit
+// ==================== EDIT ELECTION ====================
 let currentEditId = null;
 
 function editElection(id) {
@@ -165,31 +214,81 @@ function editElection(id) {
         success: function (response) {
             let e = JSON.parse(response);
 
-            let startDate = e.start_date;
-            let endDate = e.end_date;
-
-            if (startDate && startDate.includes(" ")) {
-                startDate = startDate.split(" ")[0];
-            }
-            if (endDate && endDate.includes(" ")) {
-                endDate = endDate.split(" ")[0];
-            }
-
+            // Fill basic info
             $("#title-input").val(e.election_title);
-            $("#start-date").val(startDate);
-            $("#end-date").val(endDate);
-            $("#status").val(e.status);
+            
+            let startVal = e.start_date ? e.start_date.replace(" ", "T").slice(0, 16) : "";
+            let endVal   = e.end_date   ? e.end_date.replace(" ", "T").slice(0, 16)   : "";
+
+            $("#start-date").val(startVal);
+            $("#end-date").val(endVal);
 
             $("#create-btn").text("Update Election");
             $("#create-panel h1").text("Edit Election");
 
+            // Load existing positions
+            loadExistingPositions(id);
+
             $("#election-panel").hide();
             $("#create-panel").show();
+        },
+        error: function() {
+            alert("Failed to load election details.");
         }
     });
 }
 
-// resetting
+// Load positions when editing
+function loadExistingPositions(electionId) {
+    $.ajax({
+        url: "./../../control/electionControl.php?action=getPositions&id=" + electionId,
+        method: "GET",
+        success: function (response) {
+            let positions = JSON.parse(response);
+            $("#positions-box").empty();   
+
+            if (positions.length === 0) {
+                addDefaultPositionRow();
+                return;
+            }
+
+            positions.forEach(pos => {
+                let row = `
+                    <div class="position-row" data-position-id="${pos.position_id}">
+                        <div class="pos-input-group">
+                            <label>Position Name</label>
+                            <input type="text" class="pos-name" value="${pos.position_name}" placeholder="e.g. President">
+                        </div>
+                        <div class="pos-input-group">
+                            <label>Max Votes</label>
+                            <input type="number" class="pos-max" step="1" min="1" max="8" value="${pos.max_votes}">
+                        </div>
+                        <button type="button" class="remove-pos-btn">Remove</button>
+                    </div>
+                `;
+                $("#positions-box").append(row);
+            });
+        }
+    });
+}
+function addDefaultPositionRow() {
+    let emptyRow = `
+        <div class="position-row">
+            <div class="pos-input-group">
+                <label>Position Name</label>
+                <input type="text" class="pos-name" placeholder="e.g. President">
+            </div>
+            <div class="pos-input-group">
+                <label>Max Votes</label>
+                <input type="number" class="pos-max" step="1" min="1" max="8" value="1">
+            </div>
+            <button type="button" class="remove-pos-btn">Remove</button>
+        </div>
+    `;
+    $("#positions-box").append(emptyRow);
+}
+
+// ==================== RESET ====================
 function resetAfterEdit() {
     currentEditId = null;
 
@@ -199,12 +298,30 @@ function resetAfterEdit() {
     $("#title-input").val('');
     $("#start-date").val('');
     $("#end-date").val('');
-    $("#status").val('');
+
+    // reset positions back to just one empty row
+    $("#positions-box").html(`
+        <div class="position-row">
+            <label>Position Name</label>
+            <input type="text" class="pos-name" placeholder="e.g President">
+            <label>Max Votes</label>
+            <input type="number" class="pos-max" step="1" min="1" max="8">
+        </div>
+    `);
 
     $("#create-panel").hide();
     $("#election-panel").show();
 }
 
-
-
 loadElections();
+// ==================== LIMIT MAX VOTES TO 8 GLOBALLY ====================
+$(document).on("input", ".pos-max", function () {
+    let val = parseInt(this.value);
+    
+    if (val > 8) {
+        this.value = 8;
+    }
+    if (val < 1 && this.value !== "") {
+        this.value = 1;
+    }
+});
