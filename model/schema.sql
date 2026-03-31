@@ -226,14 +226,14 @@ INSERT INTO Elections (election_title, status, start_date, end_date) VALUES
 ('Student Council Election 2024', 'completed', '2024-06-01 08:00:00', '2024-06-01 17:00:00');
 
 -- Positions (position_id: 1000–1003)
-INSERT INTO Positions (position_name, election_id) VALUES
-('President',      1000),                               -- position_id: 1000
-('Vice-President', 1000),                               -- position_id: 1001
-('Senator',        1000),                               -- position_id: 1002
-('Vice-Governor',  1000),                               -- position_id: 1003
-('Tung Master',      1001),                               -- position_id: 1000
-('Brainrot Lord', 1001),                               -- position_id: 1001
-('Bracolocococo',        1001);                                -- position_id: 1002
+INSERT INTO Positions (position_name, max_votes, election_id) VALUES
+('President', 1,      1000),                               -- position_id: 1000
+('Vice-President', 1, 1000),                               -- position_id: 1001
+('Senator', 4,       1000),                               -- position_id: 1002
+('Vice-Governor', 1,  1000),                               -- position_id: 1003
+('Tung Master', 1,      1001),                               -- position_id: 1000
+('Brainrot Lord', 2, 1001),                               -- position_id: 1001
+('Bracolocococo', 4,        1001);                                -- position_id: 1002
 
 -- PoliticalParties (party_id: 1000–1001)
 INSERT INTO PoliticalParties (party_name, election_id) VALUES
@@ -258,6 +258,3 @@ INSERT INTO Candidates (party_id, student_id, election_id, position_id) VALUES
 (1001, 2024000012, 1000, 1002),  -- candidate_id: 1011 | Marco Santiago   -> Senator
 (1001, 2024000013, 1000, 1003),  -- candidate_id: 1012 | Gabrielle Valdez -> Vice-Governor
 (1001, 2024000015, 1000, 1002);  -- candidate_id: 1013 | Camille Fuentes  -> Senator
-sident → pick exactly 1
-Senator → pick up to 12
-Board member → pick up to 3
