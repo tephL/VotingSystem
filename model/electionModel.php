@@ -137,16 +137,29 @@ function updateElection() {
         echo "error";
     }
 }
-
 function deleteElection() {
     global $conn;
 
-    $id = $_POST['id'];
-    $sql = "DELETE FROM Elections WHERE election_id = $id";
+    $id = (int)$_POST['id'];   
+    if ($id <= 0) {
+        echo "invalid";
+        return;
+    }
+    $conn->begin_transaction();
 
-    if ($conn->query($sql) === TRUE) {
+    try {
+        // Delete in correct order (child tables first)
+        $conn->query("DELETE FROM Votes WHERE election_id = $id");
+        $conn->query("DELETE FROM Candidates WHERE election_id = $id");
+        $conn->query("DELETE FROM PoliticalParties WHERE election_id = $id");
+        $conn->query("DELETE FROM Positions WHERE election_id = $id");
+        $conn->query("DELETE FROM Elections WHERE election_id = $id");
+
+        $conn->commit();
         echo "success";
-    } else {
+
+    } catch (Exception $e) {
+        $conn->rollback();
         echo "error";
     }
 }
