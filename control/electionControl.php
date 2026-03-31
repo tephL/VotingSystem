@@ -1,5 +1,5 @@
 <?php
-include("../model/electionManager.php");
+include("../model/electionModel.php");
 
 $action = $_GET['action'];
 
