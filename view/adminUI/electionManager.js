@@ -100,7 +100,8 @@ $("#create-btn").click(function () {
                     alert("Cannot create election while another is active.");
                 } else if (response === "invalid") {
                     alert("End date cannot be earlier than start date.");
-                } else {
+                } else if (response === "past") {
+                    alert("Start date cannot be in the past.");
                     alert("Error: " + response);
                 }
             },
@@ -236,6 +237,7 @@ function editElection(id) {
     });
 }
 
+// Load positions when editing
 function loadExistingPositions(electionId) {
     $.ajax({
         url: "./../../control/electionControl.php?action=getPositions&id=" + electionId,
@@ -309,6 +311,7 @@ function resetAfterEdit() {
     $("#create-panel").hide();
     $("#election-panel").show();
 }
+
 loadElections();
 
 // ==================== LIMIT MAX VOTES TO 8 GLOBALLY ====================
@@ -325,6 +328,6 @@ $(document).on("input", ".pos-max", function () {
 
 setInterval(() => {
     loadElections();
-}, 10000); 
+}, 10000); // every 10 seconds
 
 
