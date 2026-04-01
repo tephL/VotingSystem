@@ -102,7 +102,6 @@ $("#create-btn").click(function () {
                     alert("End date cannot be earlier than start date.");
                 } else if (response === "past") {
                     alert("Start date cannot be in the past.");
-                    alert("Error: " + response);
                 }
             },
             error: function () {
