@@ -26,6 +26,13 @@ function createElections() {
     $end = date('Y-m-d H:i:s', strtotime($_POST['end']));
     $positions = json_decode($_POST['positions'], true);
 
+    $now = date('Y-m-d H:i:s');
+    
+    if ($start < $now) {
+        echo "past";
+        return;
+    }
+
     if ($start > $end) {
         echo "invalid";
         return;
