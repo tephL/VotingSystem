@@ -42,7 +42,7 @@ $("#create-btn").click(function () {
 
     let title = $("#title-input").val().trim();
     let start = $("#start-date").val();
-    let end   = $("#end-date").val();
+    let end = $("#end-date").val();
 
     if (!title || !start || !end) {
         alert("Please fill in all fields.");
@@ -52,10 +52,11 @@ $("#create-btn").click(function () {
     let positions = [];
     $(".position-row").each(function () {
         let name = $(this).find(".pos-name").val().trim();
-        let max  = $(this).find(".pos-max").val();
+        let max = $(this).find(".pos-max").val();
         if (name && max) {
-            positions.push({ name: name,
-                 max: max 
+            positions.push({
+                name: name,
+                max: max
             });
         }
     });
@@ -69,9 +70,9 @@ $("#create-btn").click(function () {
 
         let url = "./../../control/electionControl.php?action=create";
         let data = {
-            title:     title,
-            start:     start,
-            end:       end,
+            title: title,
+            start: start,
+            end: end,
             positions: JSON.stringify(positions)
         };
 
@@ -114,26 +115,25 @@ $("#create-btn").click(function () {
 function formatDate(dateStr) {
     if (!dateStr) return "";
 
-    let d = new Date(dateStr);
+    let d = new Date(dateStr.replace(" ", "T") + "+08:00");
 
-    // (e.g. March 31, 2026)
-    let datePart = d.toLocaleDateString('en-US', { 
-        month: 'long', 
-        day: 'numeric', 
-        year: 'numeric' 
+    let datePart = d.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        timeZone: 'Asia/Manila'
     });
 
-    // (e.g. 08:17 PM)
-    let timePart = d.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
+    let timePart = d.toLocaleTimeString('en-US', {
+        hour: '2-digit',
         minute: '2-digit',
-        hour12: true 
+        hour12: true,
+        timeZone: 'Asia/Manila'
     });
 
     return `<span class="date-part">${datePart}</span><br>
             <span class="time-part">${timePart}</span>`;
 }
-
 // ==================== LOAD ALL ELECTIONS ====================
 function loadElections() {
     $.ajax({
@@ -214,11 +214,10 @@ function editElection(id) {
         success: function (response) {
             let e = JSON.parse(response);
 
-            // Fill basic info
             $("#title-input").val(e.election_title);
-            
+
             let startVal = e.start_date ? e.start_date.replace(" ", "T").slice(0, 16) : "";
-            let endVal   = e.end_date   ? e.end_date.replace(" ", "T").slice(0, 16)   : "";
+            let endVal = e.end_date ? e.end_date.replace(" ", "T").slice(0, 16) : "";
 
             $("#start-date").val(startVal);
             $("#end-date").val(endVal);
@@ -226,26 +225,24 @@ function editElection(id) {
             $("#create-btn").text("Update Election");
             $("#create-panel h1").text("Edit Election");
 
-            // Load existing positions
             loadExistingPositions(id);
 
             $("#election-panel").hide();
             $("#create-panel").show();
         },
-        error: function() {
+        error: function () {
             alert("Failed to load election details.");
         }
     });
 }
 
-// Load positions when editing
 function loadExistingPositions(electionId) {
     $.ajax({
         url: "./../../control/electionControl.php?action=getPositions&id=" + electionId,
         method: "GET",
         success: function (response) {
             let positions = JSON.parse(response);
-            $("#positions-box").empty();   
+            $("#positions-box").empty();
 
             if (positions.length === 0) {
                 addDefaultPositionRow();
@@ -271,6 +268,7 @@ function loadExistingPositions(electionId) {
         }
     });
 }
+
 function addDefaultPositionRow() {
     let emptyRow = `
         <div class="position-row">
@@ -299,7 +297,6 @@ function resetAfterEdit() {
     $("#start-date").val('');
     $("#end-date").val('');
 
-    // reset positions back to just one empty row
     $("#positions-box").html(`
         <div class="position-row">
             <label>Position Name</label>
@@ -312,12 +309,12 @@ function resetAfterEdit() {
     $("#create-panel").hide();
     $("#election-panel").show();
 }
-
 loadElections();
+
 // ==================== LIMIT MAX VOTES TO 8 GLOBALLY ====================
 $(document).on("input", ".pos-max", function () {
     let val = parseInt(this.value);
-    
+
     if (val > 8) {
         this.value = 8;
     }
@@ -325,3 +322,9 @@ $(document).on("input", ".pos-max", function () {
         this.value = 1;
     }
 });
+
+setInterval(() => {
+    loadElections();
+}, 10000); 
+
+
