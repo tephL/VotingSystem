@@ -22,10 +22,8 @@
 
 // =================== Election Results Aggregation/Calculation ===========================================================================
 
-    function isElectionOngoing($end_date) {
-        $current_time = new DateTime('now');
-        $election_end = new DateTime($end_date);
-        return $current_time < $election_end;
+    function isElectionOngoing($status) {
+        return $status === 'active';
     }
 
     function calculateVotePercentage(&$candidates) {
@@ -33,10 +31,11 @@
         foreach ($candidates as $candidate) {
             $total_votes += intval($candidate['vote_count']);
         }
-        
-        if ($total_votes > 0) {
-            foreach ($candidates as &$candidate) {
+        foreach ($candidates as &$candidate) {
+            if ($total_votes > 0) {
                 $candidate['percentage'] = round((intval($candidate['vote_count']) / $total_votes) * 100, 1);
+            } else {
+                $candidate['percentage'] = 0;
             }
         }
     }
@@ -60,6 +59,7 @@
                 $positions_data[] = [
                     'position_id' => $position_id,
                     'position_name' => $position_name,
+                    'candidate_count' => count($candidates),
                     'candidates' => $candidates
                 ];
             }

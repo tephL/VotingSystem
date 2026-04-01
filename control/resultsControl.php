@@ -12,7 +12,7 @@ function getUserInfoController() {
     }
     $username = $_SESSION['username'];
     $user_role = $_SESSION['role'];
-    $is_admin = ($user_role === "1000");
+    $is_admin = (intval($user_role) === 1000);
     return [
         "success" => true,
         "message" => "",
@@ -34,14 +34,14 @@ function getElectionController() {
 
 function checkElectionStatusController($election, $is_admin) {
     $election_id = $election['election_id'];
-    $end_date = $election['end_date'];
-    $is_ongoing = isElectionOngoing($end_date);
+    $election_status = $election['status'];
+    $is_ongoing = isElectionOngoing($election_status);
     if ($is_ongoing && !$is_admin) {
         return [
             "success" => true,
             "message" => "Election results are not yet available. Results will be displayed after the election closes.",
             "data" => [
-                "election_status" => "ongoing",
+                "election_status" => "active",
                 "election_title" => $election['election_title'],
                 "restricted" => true
             ]
@@ -51,7 +51,7 @@ function checkElectionStatusController($election, $is_admin) {
         "success" => true,
         "message" => "",
         "data" => [
-            "election_status" => $is_ongoing ? "ongoing" : "ended",
+            "election_status" => $election_status,
             "election_id" => $election_id,
             "restricted" => false
         ]
@@ -80,7 +80,7 @@ function handleGetResultsController() {
             "success" => true,
             "message" => $electionResult["message"],
             "data" => [
-                "election_status" => "none",
+                "election_status" => "upcoming",
                 "username" => $username
             ]
         ];
@@ -93,7 +93,7 @@ function handleGetResultsController() {
             "success" => true,
             "message" => $statusResult["message"],
             "data" => [
-                "election_status" => "ongoing",
+                "election_status" => "active",
                 "username" => $username,
                 "election_title" => $election["election_title"]
             ]
@@ -107,7 +107,6 @@ function handleGetResultsController() {
     }
 
     $status = $statusResult["data"]["election_status"];
-    $view_type = ($status === "ongoing") ? "admin_live_count" : ($is_admin ? "admin_results" : "voter_results");
 
     return [
         "success" => true,
@@ -116,7 +115,6 @@ function handleGetResultsController() {
             "election_status" => $status,
             "username" => $username,
             "election_title" => $election["election_title"],
-            "view_type" => $view_type,
             "positions" => $resultsData["data"]
         ]
     ];
