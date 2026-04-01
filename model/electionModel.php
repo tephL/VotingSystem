@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('Asia/Manila');
+
 include("dbconn.php");
 
 function getStatus($start, $end) {
@@ -9,7 +11,7 @@ function getStatus($start, $end) {
 
     if ($now < $start) {
         return "Upcoming";
-    } else if ($now > $end) {
+    } else if ($now >= $end) { 
         return "Completed";
     } else {
         return "Active";
@@ -31,7 +33,7 @@ function createElections() {
 
     $status = getStatus($start, $end);
 
-    if ($status === "active") {
+    if ($status === "Active") {
         $now = date('Y-m-d H:i:s');
         $check = $conn->query("SELECT * FROM Elections WHERE start_date <= '$now' AND end_date >= '$now'");
         if ($check->num_rows > 0) {
@@ -67,6 +69,8 @@ function getElection() {
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
+
+            
             $newStatus = getStatus($row['start_date'], $row['end_date']);
 
             if ($row['status'] != $newStatus) {
@@ -110,7 +114,7 @@ function updateElection() {
 
     $status = getStatus($start, $end);
 
-    if ($status === "active") {
+    if ($status === "Active") {
         $now = date('Y-m-d H:i:s');
         $check = $conn->query(
             "SELECT * FROM Elections 
@@ -136,50 +140,5 @@ function updateElection() {
     } else {
         echo "error";
     }
-}
-function deleteElection() {
-    global $conn;
-
-    $id = (int)$_POST['id'];   
-    if ($id <= 0) {
-        echo "invalid";
-        return;
-    }
-    $conn->begin_transaction();
-
-    try {
-        // Delete in correct order (child tables first)
-        $conn->query("DELETE FROM Votes WHERE election_id = $id");
-        $conn->query("DELETE FROM Candidates WHERE election_id = $id");
-        $conn->query("DELETE FROM PoliticalParties WHERE election_id = $id");
-        $conn->query("DELETE FROM Positions WHERE election_id = $id");
-        $conn->query("DELETE FROM Elections WHERE election_id = $id");
-
-        $conn->commit();
-        echo "success";
-
-    } catch (Exception $e) {
-        $conn->rollback();
-        echo "error";
-    }
-}
-function getPositionsByElection($election_id) {
-    global $conn;
-    
-    $sql = "SELECT position_id, position_name, max_votes 
-            FROM Positions 
-            WHERE election_id = $election_id 
-            ORDER BY position_id ASC";
-    
-    $result = $conn->query($sql);
-    $positions = [];
-
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $positions[] = $row;
-        }
-    }
-    
-    echo json_encode($positions);
 }
 ?>
