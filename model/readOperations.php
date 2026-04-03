@@ -103,7 +103,6 @@
     }
 
 
-
 // =================== Election Results Read Operations ===========================================================================
 
     function getCurrentElection() {

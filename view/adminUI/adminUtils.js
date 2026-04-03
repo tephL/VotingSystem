@@ -37,7 +37,6 @@ $("#start_election").click(function(){
 
 //Charts and Tables
 $(document).ready(function(){
- 
     $("#no_election_section").hide();
     $("#ongoing_election_section").hide();
     $("#closed_election_section").hide();
@@ -55,16 +54,15 @@ $(document).ready(function(){
                     alert("Error loading results: " + response.message);
                     return;
                 }
- 
-                // Backend handles all logic — JS only reads and renders
+
                 const data = response.data;
-                const status = data.election_status;   // "upcoming" | "active" | "completed"
+                const status = data.election_status;
                 const username = data.username;
                 const election_title = data.election_title;
-                const positions = data.positions;
- 
+                const positions = data.positions || [];
+
                 $("#greeting").text("Good Day, " + username);
- 
+
                 if(status === "upcoming"){
                     renderNoElection();
                 } else if(status === "active"){
@@ -73,38 +71,39 @@ $(document).ready(function(){
                     renderClosed(election_title, positions);
                 }
             },
-            error: function(xhr, status, error){
-                console.error("AJAX error:", error);
-                alert("Failed to load results. Please try again.");
-            }
+            error: function(){ alert("Failed to load results. Please try again."); }
         });
     }
-    // Render: No election 
+
     function renderNoElection(){
         $("#no_election_section").show();
     }
- 
-    //Render: Ongoing election (bar charts only) 
+
     function renderOngoing(election_title, positions){
         $("#ongoing_election_title").text(election_title);
         $("#ongoing_election_section").show();
- 
+
         const container = document.getElementById("ongoing_charts_container");
         container.innerHTML = "";
- 
+
         for(let i in positions){
             const pos_name = positions[i].position_name;
-            const candidates = positions[i].candidates;
-            const canvas_id  = "canvas_bar_ongoing_" + i;
- 
-            let heading = document.createElement("h2");
-            heading.innerHTML = pos_name + " Ranking";
-            container.appendChild(heading);
- 
-            let canvas = document.createElement("canvas");
+            const candidates = positions[i].candidates || [];
+            const canvas_id = "canvas_bar_ongoing_" + i;
+
+            const block = document.createElement("div");
+            block.className = `position-chart-block ${candidates.length <= 2 ? "two-col" : "full-width"}`;
+
+            const heading = document.createElement("h2");
+            heading.textContent = pos_name + " Ranking";
+            block.appendChild(heading);
+
+            const canvas = document.createElement("canvas");
             canvas.id = canvas_id;
-            container.appendChild(canvas);
- 
+            block.appendChild(canvas);
+
+            container.appendChild(block);
+
             let labels = [];
             let votes  = [];
             for(let j in candidates){
@@ -114,26 +113,26 @@ $(document).ready(function(){
             renderBarChart(canvas_id, labels, votes, pos_name);
         }
     }
-    //Render: Closed election (winners + pie + bar)
+
     function renderClosed(election_title, positions){
         $("#closed_election_title").text(election_title + " — Results");
         $("#closed_election_section").show();
- 
+
         const winners_container = document.getElementById("winners_container");
-        const charts_container  = document.getElementById("closed_charts_container");
- 
+        const charts_container = document.getElementById("closed_charts_container");
+
         winners_container.innerHTML = "";
         charts_container.innerHTML  = "";
- 
+
         for(let i in positions){
             const pos_name   = positions[i].position_name;
             const candidates = positions[i].candidates;
- 
-            // Guard: skip if no candidates
-            if(!candidates || candidates.length === 0) continue;
- 
-            // Winner card (backend already sorts DESC by vote_count)
-            const winner         = candidates[0];
+            if(!candidates || !candidates.length){
+                continue;
+            }
+
+            // Winner Card
+            const winner = candidates[0];
             const winner_card_id = "winner_card_" + i;
  
             let winner_card = document.createElement("div");
@@ -157,35 +156,39 @@ $(document).ready(function(){
             winner_card.appendChild(card_percentage);
  
             winners_container.appendChild(winner_card);
- 
-            // Position result block (pie + bar)
+
+            // Charts Block
             const pie_id = "canvas_pie_" + i;
             const bar_id = "canvas_bar_closed_" + i;
- 
+
             let block = document.createElement("div");
-            block.className = "position_result_block";
- 
+            block.className = `position_result_block ${candidates.length <= 2 ? "two-col" : "full-width"}`;
+
+            // Pie Chart Section
             let pie_heading = document.createElement("h2");
-            pie_heading.innerHTML = pos_name + " Vote Share";
+            pie_heading.textContent = pos_name + " Vote Share";
             block.appendChild(pie_heading);
- 
+
+            let pieWrapper = document.createElement("div");
+            pieWrapper.className = "pie-wrapper";
             let pie_canvas = document.createElement("canvas");
             pie_canvas.id = pie_id;
-            block.appendChild(pie_canvas);
- 
+            pieWrapper.appendChild(pie_canvas);
+            block.appendChild(pieWrapper);
+
+            // Bar Chart Section
             let bar_heading = document.createElement("h2");
-            bar_heading.innerHTML = pos_name + " Vote Ranking";
+            bar_heading.textContent = pos_name + " Vote Ranking";
             block.appendChild(bar_heading);
- 
+
             let bar_canvas = document.createElement("canvas");
             bar_canvas.id = bar_id;
             block.appendChild(bar_canvas);
- 
+
             charts_container.appendChild(block);
- 
-            // Backend already calculates percentages — JS just reads them
-            let labels      = [];
-            let votes       = [];
+
+            let labels = [];
+            let votes = [];
             let percentages = [];
             for(let j in candidates){
                 labels.push(candidates[j].candidate_name);
@@ -198,7 +201,6 @@ $(document).ready(function(){
         }
     }
 
-    //Chart factory: Bar 
     function renderBarChart(canvas_id, labels, data, pos_name){
         const canvas = document.getElementById(canvas_id);
         if(!canvas) return;
@@ -217,8 +219,7 @@ $(document).ready(function(){
             options: { responsive: true }
         });
     }
- 
-    //Chart factory: Pie 
+
     function renderPieChart(canvas_id, labels, data, pos_name){
         const canvas = document.getElementById(canvas_id);
         if(!canvas) return;
@@ -237,8 +238,7 @@ $(document).ready(function(){
             options: { responsive: true }
         });
     }
-    
-    //Color generator 
+
     function generateColors(count){
         const color_pool = [
             "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0",

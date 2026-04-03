@@ -17,13 +17,10 @@ body {
 #title {
     margin: 70px 0px 100px 0px;
     text-align: center;
-
-    h1 {
-        font-size: 35px;
-    }
+    h1 { font-size: 35px; }
 }
 
-#menu_items {
+#menu_items{
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 50px;
@@ -31,114 +28,109 @@ body {
     font-size: 18px;
     padding: 0px 50px 0px 50px;
 
-    a {
+    a{
         text-decoration: none;
         color: black;
     }
+
 }
 
-#main_content {
+#main_content{
     border: 2px solid red;
     width: 100%;
     padding: 60px;
     height: 100vh;
     overflow-y: auto;
-    
+    display: grid;
+   
 }
 
+#greeting { 
+    margin-bottom: 30px; 
 
-/* ── Greeting ── */
-#greeting {
+}
+
+#no_election_section {
+    margin-top: 20px;
+    
+    h2 { 
+        font-size: 24px; 
+        margin-bottom: 10px; 
+    }
+    p { font-size: 14px; 
+        color: gray; 
+        margin-bottom: 15px; 
+    }
+    button { padding: 8px 16px; 
+        cursor: pointer; 
+    }
+}
+
+#ongoing_election_title,
+#closed_election_title {
+    font-size: 22px;
+    font-weight: bold;
     margin-bottom: 30px;
 }
 
-/* ── No Election Section ── */
-#no_election_section {
-    margin-top: 20px;
-
-    h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-
-    p {
-        font-size: 14px;
-        color: gray;
-        margin-bottom: 15px;
-    }
-
-    button {
-        padding: 8px 16px;
-        cursor: pointer;
-    }
+#winners_container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 50px;
 }
 
-/* ── Ongoing Election Section ── */
-#ongoing_election_section {
-    display: none;
-
-    #ongoing_election_title {
-        font-size: 22px;
-        font-weight: bold;
-        margin-bottom: 30px;
-    }
-
-    h2 {
-        font-size: 18px;
-        margin: 20px 0px 10px 0px;
-    }
-
-    canvas {
-        border: 1px solid black;
-        height: 250px;
-        margin-bottom: 20px;
-        width: 100%;
-    }
+.winner_card {
+    border: 1px solid black;
+    padding: 15px;
+    text-align: center;
+    h3 { font-size: 16px; margin-bottom: 8px; }
+    p { font-size: 13px; color: gray; }
 }
 
-/* ── Closed Election Section ── */
-#closed_election_section {
-    display: none;
+/* Main containers for charts */
+#ongoing_charts_container,
+#closed_charts_container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 35px;
+}
 
-    #closed_election_title {
-        font-size: 22px;
-        font-weight: bold;
-        margin-bottom: 30px;
-    }
+/* When position has only 1-2 candidates */
+.position-chart-block.two-col,
+.position_result_block.two-col {
+    grid-column: span 1;
+}
 
-    /* Winner Cards */
-    #winners {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        margin-bottom: 40px;
-    }
+.position-chart-block.two-col canvas,
+.position_result_block.two-col canvas {
+    height: 325px;
+    border: 1px solid black;
+}
 
-    .winner_card {
-        border: 1px solid black;
-        padding: 15px;
-        text-align: center;
+/* When position has 3 or more candidates */
+.position-chart-block.full-width,
+.position_result_block.full-width {
+    grid-column: span 2;
+}
 
-        h3 {
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
+.position-chart-block.full-width canvas,
+.position_result_block.full-width canvas {
+    height: 700px;
+    border: 1px solid black;
+}
 
-        p {
-            font-size: 13px;
-            color: gray;
-        }
-    }
 
-    h2 {
-        font-size: 18px;
-        margin: 20px 0px 10px 0px;
-    }
+.position_result_block .pie-wrapper {
+    grid-column: 1 / -1;     /* This forces it to take full row */
+    display: flex;
+    justify-content: center;
+    margin: 25px 0 15px 0;
+    height: 700px;
+}
 
-    canvas {
-        border: 1px solid black;
-        height: 250px;
-        margin-bottom: 20px;
-        width: 100%;
-    }
+.position_result_block canvas[id^="canvas_pie_"] {
+    height: 700px;
+    width: 650px;
+    max-width: 700px;
 }
