@@ -35,6 +35,23 @@ function newPositionRow(name, max, positionId) {
     `;
 }
 
+function newPartyRow(name, partyId) {
+    let dataAttr = "";
+    if (partyId) {
+        dataAttr = 'data-party-id="' + partyId + '"';
+    }
+
+    if (!name) { name = ""; }
+
+    return `
+        <div class="party-row" ${dataAttr}>
+            <label>Party Name</label>
+            <input type="text" class="party-name" value="${name}" placeholder="e.g Partido Uno">
+            <button type="button" class="remove-party-btn">Remove</button>
+        </div>
+    `;
+}
+
 function electionRow(e) {
     return `
         <ul class="history-row">
@@ -65,6 +82,42 @@ $(document).on("input", ".pos-max", function () {
     if (val < 1 && this.value !== "") { this.value = 1; }
 });
 
+// ==================== ADD / REMOVE PARTY ROW ====================
+$("#add-party-btn").click(function () {
+    $("#parties-box").append(newPartyRow());
+});
+
+$(document).on("click", ".remove-party-btn", function () {
+    let row = $(this).closest(".party-row");
+
+    // If this is an existing party (has a party-id), delete it from DB first
+    let partyId = row.attr("data-party-id");
+    if (partyId && currentEditId !== null) {
+        if (!confirm("Remove this party? Candidates under this party will also be removed.")) {
+            return;
+        }
+
+        $.ajax({
+            url:    "./../../control/electionControl.php?action=removeParty",
+            method: "POST",
+            data:   { party_id: partyId },
+            success: function (response) {
+                if (response.trim() === "success") {
+                    row.remove();
+                } else {
+                    alert("Failed to remove party: " + response.trim());
+                }
+            },
+            error: function () {
+                alert("Connection error while removing party.");
+            }
+        });
+    } else {
+        // New unsaved row — just remove from UI
+        row.remove();
+    }
+});
+
 // ==================== CREATE / UPDATE ====================
 $("#create-btn").click(function () {
 
@@ -91,6 +144,16 @@ $("#create-btn").click(function () {
         return;
     }
 
+    // Collect parties
+    let parties = [];
+    $(".party-row").each(function () {
+        let name    = $(this).find(".party-name").val().trim();
+        let partyId = $(this).attr("data-party-id") || null;
+        if (name) {
+            parties.push({ name: name, party_id: partyId });
+        }
+    });
+
     if (confirm("Are you sure?")) {
 
         let url = "./../../control/electionControl.php?action=create";
@@ -98,7 +161,8 @@ $("#create-btn").click(function () {
             title:     title,
             start:     start,
             end:       end,
-            positions: JSON.stringify(positions)
+            positions: JSON.stringify(positions),
+            parties:   JSON.stringify(parties)
         };
 
         if (currentEditId !== null) {
@@ -235,6 +299,7 @@ function editElection(id) {
             $("#create-panel h1").text("Edit Election");
 
             loadExistingPositions(id);
+            loadExistingParties(id);
 
             showCreatePanel(); 
         },
@@ -265,6 +330,35 @@ function loadExistingPositions(electionId) {
     });
 }
 
+// ==================== LOAD EXISTING PARTIES (edit mode) ====================
+function loadExistingParties(electionId) {
+    $.ajax({
+        url:    "./../../control/electionControl.php?action=getParties&id=" + electionId,
+        method: "GET",
+        success: function (response) {
+            let parties = JSON.parse(response);
+            $("#parties-box").empty();
+
+            if (parties.length === 0) {
+                $("#parties-box").append(newPartyRow());
+                return;
+            }
+
+            parties.forEach(p => {
+                $("#parties-box").append(newPartyRow(p.party_name, p.party_id));
+            });
+        },
+        error: function () {
+            alert("Failed to load parties.");
+        }
+    });
+}
+
+// ==================== CANCEL BUTTON ====================
+$("#cancel-btn").click(function () {
+    resetAfterEdit();
+});
+
 // ==================== RESET ====================
 function resetAfterEdit() {
     currentEditId = null;
@@ -274,6 +368,7 @@ function resetAfterEdit() {
     $("#start-date").val('');
     $("#end-date").val('');
     $("#positions-box").html(newPositionRow());
+    $("#parties-box").html(newPartyRow());
     showElectionPanel(); 
 }
 

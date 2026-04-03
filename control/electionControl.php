@@ -1,27 +1,48 @@
 <?php
-include("../model/electionModel.php");
+// electionControl.php
 
-$action = $_GET['action'];
+require_once __DIR__ . "/../model/electionModel.php";
 
-if($action == "create"){
-    createElections();
-}
-else if($action == "getAll"){
-    getElection();
-}
-else if($action == "getById"){
-    getElectionById();
-}
-else if($action == "update"){
-    updateElection();
-}
-else if($action == "delete"){
-    deleteElection();
-}
-else if($action == "getPositions"){
-    getPositionsByElection($_GET['id']);
-}
-else{
-    echo "error";
+$action = isset($_GET['action']) ? $_GET['action'] : '';
+
+switch ($action) {
+
+    case "create":
+        createElections();
+        break;
+
+    case "getAll":
+        getElection();
+        break;
+
+    case "getById":
+        getElectionById();
+        break;
+
+    case "update":
+        updateElection();
+        break;
+
+    case "delete":
+        deleteElection();
+        break;
+
+    case "getPositions":
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        getPositionsByElection($id);
+        break;
+
+    case "getParties":
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        getPartiesByElection($id);
+        break;
+
+    case "removeParty":
+        removeParty();
+        break;
+
+    default:
+        echo json_encode(array("success" => false, "message" => "Unknown action."));
+        break;
 }
 ?>

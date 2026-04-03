@@ -5,9 +5,9 @@ date_default_timezone_set('Asia/Manila');
 include("dbconn.php");
 
 function getStatus($start, $end) {
-    $now = date('Y-m-d H:i:s');
+    $now   = date('Y-m-d H:i:s');
     $start = date('Y-m-d H:i:s', strtotime($start));
-    $end = date('Y-m-d H:i:s', strtotime($end));
+    $end   = date('Y-m-d H:i:s', strtotime($end));
 
     if ($now < $start) {
         return "Upcoming";
@@ -21,10 +21,11 @@ function getStatus($start, $end) {
 function createElections() {
     global $conn;
 
-    $title = $_POST['title'];
-    $start = date('Y-m-d H:i:s', strtotime($_POST['start']));
-    $end = date('Y-m-d H:i:s', strtotime($_POST['end']));
+    $title     = $_POST['title'];
+    $start     = date('Y-m-d H:i:s', strtotime($_POST['start']));
+    $end       = date('Y-m-d H:i:s', strtotime($_POST['end']));
     $positions = json_decode($_POST['positions'], true);
+    $parties   = isset($_POST['parties']) ? json_decode($_POST['parties'], true) : [];
 
     $now = date('Y-m-d H:i:s');
     
@@ -41,7 +42,6 @@ function createElections() {
     $status = getStatus($start, $end);
 
     if ($status === "Active") {
-        $now = date('Y-m-d H:i:s');
         $check = $conn->query("SELECT * FROM Elections WHERE start_date <= '$now' AND end_date >= '$now'");
         if ($check->num_rows > 0) {
             echo "active";
@@ -55,11 +55,19 @@ function createElections() {
     if ($conn->query($sql) === TRUE) {
         $election_id = $conn->insert_id;
 
+        // Insert positions
         foreach ($positions as $p) {
             $posName = $p['name'];
-            $posMax = (int) $p['max'];
+            $posMax  = (int) $p['max'];
             $conn->query("INSERT INTO Positions (position_name, max_votes, election_id)
                           VALUES ('$posName', $posMax, $election_id)");
+        }
+
+        // Insert parties
+        foreach ($parties as $party) {
+            $partyName = $party['name'];
+            $conn->query("INSERT INTO PoliticalParties (party_name, election_id)
+                          VALUES ('$partyName', $election_id)");
         }
 
         echo "success";
@@ -72,12 +80,10 @@ function getElection() {
     global $conn;
 
     $result = $conn->query("SELECT * FROM Elections ORDER BY election_id DESC");
-    $data = array();
+    $data   = array();
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-
-            
             $newStatus = getStatus($row['start_date'], $row['end_date']);
 
             if ($row['status'] != $newStatus) {
@@ -96,7 +102,7 @@ function getElection() {
 function getElectionById() {
     global $conn;
 
-    $id = $_GET['id'];
+    $id     = $_GET['id'];
     $result = $conn->query("SELECT * FROM Elections WHERE election_id = $id");
 
     if ($result->num_rows > 0) {
@@ -109,10 +115,11 @@ function getElectionById() {
 function updateElection() {
     global $conn;
 
-    $id = $_POST['id'];
-    $title = $_POST['title'];
-    $start = date('Y-m-d H:i:s', strtotime($_POST['start']));
-    $end = date('Y-m-d H:i:s', strtotime($_POST['end']));
+    $id        = $_POST['id'];
+    $title     = $_POST['title'];
+    $start     = date('Y-m-d H:i:s', strtotime($_POST['start']));
+    $end       = date('Y-m-d H:i:s', strtotime($_POST['end']));
+    $parties   = isset($_POST['parties']) ? json_decode($_POST['parties'], true) : [];
 
     if ($start > $end) {
         echo "invalid";
@@ -122,7 +129,7 @@ function updateElection() {
     $status = getStatus($start, $end);
 
     if ($status === "Active") {
-        $now = date('Y-m-d H:i:s');
+        $now   = date('Y-m-d H:i:s');
         $check = $conn->query(
             "SELECT * FROM Elections 
              WHERE start_date <= '$now' 
@@ -137,17 +144,35 @@ function updateElection() {
 
     $sql = "UPDATE Elections SET 
             election_title = '$title',
-            status = '$status',
-            start_date = '$start',
-            end_date = '$end'
+            status         = '$status',
+            start_date     = '$start',
+            end_date       = '$end'
             WHERE election_id = $id";
 
     if ($conn->query($sql) === TRUE) {
+
+        // Handle parties: insert new ones (no party_id), skip existing ones (already in DB)
+        foreach ($parties as $party) {
+            $partyName = $party['name'];
+            $partyId   = $party['party_id'];
+
+            if ($partyId === null || $partyId === "") {
+                // New party — insert it
+                $conn->query("INSERT INTO PoliticalParties (party_name, election_id)
+                              VALUES ('$partyName', $id)");
+            } else {
+                // Existing party — update name in case admin renamed it
+                $conn->query("UPDATE PoliticalParties SET party_name = '$partyName'
+                              WHERE party_id = $partyId");
+            }
+        }
+
         echo "success";
     } else {
         echo "error";
     }
 }
+
 function deleteElection() {
     global $conn;
 
@@ -156,6 +181,7 @@ function deleteElection() {
         echo "invalid";
         return;
     }
+
     $conn->begin_transaction();
 
     try {
@@ -173,6 +199,7 @@ function deleteElection() {
         echo "error";
     }
 }
+
 function getPositionsByElection($election_id) {
     global $conn;
     
@@ -181,7 +208,7 @@ function getPositionsByElection($election_id) {
             WHERE election_id = $election_id 
             ORDER BY position_id ASC";
     
-    $result = $conn->query($sql);
+    $result    = $conn->query($sql);
     $positions = [];
 
     if ($result->num_rows > 0) {
@@ -191,5 +218,45 @@ function getPositionsByElection($election_id) {
     }
     
     echo json_encode($positions);
+}
+
+// ========================
+// GET PARTIES BY ELECTION
+// ========================
+function getPartiesByElection($election_id) {
+    global $conn;
+
+    $sql = "SELECT party_id, party_name
+            FROM PoliticalParties
+            WHERE election_id = $election_id
+            ORDER BY party_name ASC";
+
+    $result  = $conn->query($sql);
+    $parties = [];
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $parties[] = $row;
+        }
+    }
+
+    echo json_encode($parties);
+}
+
+// ========================
+// REMOVE PARTY
+// ========================
+function removeParty() {
+    global $conn;
+
+    $party_id = (int)$_POST['party_id'];
+
+    // Remove candidates under this party first
+    $conn->query("DELETE FROM Votes WHERE candidate_id IN 
+                  (SELECT candidate_id FROM Candidates WHERE party_id = $party_id)");
+    $conn->query("DELETE FROM Candidates WHERE party_id = $party_id");
+    $conn->query("DELETE FROM PoliticalParties WHERE party_id = $party_id");
+
+    echo "success";
 }
 ?>

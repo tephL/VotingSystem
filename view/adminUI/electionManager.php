@@ -76,10 +76,10 @@
                     </div>
                 </div>
 
+                <!-- Positions -->
                 <div> 
                     <p>Position</p>
                     <div class="create-box" id="positions-box">
-                        <!-- first position row by default -->
                         <div class="position-row">
                             <label>Position Name</label>
                             <input type="text" class="pos-name" placeholder="e.g President">
@@ -88,11 +88,24 @@
                         </div>
                     </div>
                     <button type="button" id="add-position-btn">+ Add Position</button>
-                    
-                    <div id="create-btns">
-                        <button type="button" id="create-btn">Create</button> 
-                        <button type="button" id="cancel-btn">Cancel</button> 
+                </div>
+
+                <!-- Parties -->
+                <div>
+                    <p>Political Parties</p>
+                    <div class="create-box" id="parties-box">
+                        <div class="party-row">
+                            <label>Party Name</label>
+                            <input type="text" class="party-name" placeholder="e.g Partido Uno">
+                            <button type="button" class="remove-party-btn">Remove</button>
+                        </div>
                     </div>
+                    <button type="button" id="add-party-btn">+ Add Party</button>
+                </div>
+                    
+                <div id="create-btns">
+                    <button type="button" id="create-btn">Create</button> 
+                    <button type="button" id="cancel-btn">Cancel</button> 
                 </div>
             </div>
         </div>
