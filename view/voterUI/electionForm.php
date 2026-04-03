@@ -16,6 +16,7 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="./styles/voterUI.css">
+    <link rel="stylesheet" href="./styles/electionForm.css">
     <script src="../jquery.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,6 +38,7 @@
     
     <div id="main_content">
         <h1 id="election_title"></h1>
+        <p id="election_year"></p>
     </div>
 
     <script src="./voterUtils.js"></script>
