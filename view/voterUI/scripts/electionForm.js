@@ -13,7 +13,7 @@ function intitializeData(){
         },
         success: function(response){
 
-            // console.log(response);
+            console.log(response);
 
             if(response.status == "completed"){
                 renderTitle("Theres no ongoing Election");
@@ -230,7 +230,7 @@ function submitFormAnswers(){
         
     });
 
-    // console.log(vote_json);
+    console.log(vote_json);
 
     $.ajax({
         url: "../../control/voter/voteController.php",
@@ -246,8 +246,9 @@ function submitFormAnswers(){
                 window.location.href = "./dashboard.php";
             }, 2000);
         },
-        error: function(){
+        error: function(response){
             alert("Something went wrong");
+            console.log(response);
         }
 
     });

@@ -17,6 +17,9 @@ switch($action){
         break;
     case "submitFormAnswers":
         $user_id = initializeSessionUserId();
+        // echo json_encode([
+        //     "message" => "hi stephen"
+        // ]);
         submitFormAnswers($user_id);
         break;
     default:
@@ -64,12 +67,11 @@ function getElectionFormDetails(){
 
     // check if user has voted and return already_voted
     $user_id = initializeSessionUserId();
-    $studentvoter_id = getVoterIdWithUserId($user_id)["studentvoter_id"];
+    $studentvoter_id = getVoterIdWithUserId($user_id);
 
     if(hasUserVoted($election_id, $studentvoter_id)){
         echo json_encode([
-            "status" => "already_voted",
-            "studentvoter_id" => $studentvoter_id
+            "status" => "already_voted"
         ]);
         return;
     }
@@ -93,7 +95,7 @@ function getElectionFormDetails(){
 function submitFormAnswers($user_id){
     $vote_json = json_decode($_POST["vote_json"], true);
 
-    $studentvoter_id = getVoterIdWithUserId($user_id)["studentvoter_id"];
+    $studentvoter_id = getVoterIdWithUserId($user_id);
     $election_id = $vote_json["election_id"];
 
     foreach($vote_json["positions"] as $position){
@@ -113,8 +115,7 @@ function submitFormAnswers($user_id){
         "status" => "success",
         "vote_json" => $vote_json,
         "studentvoter_id" => $studentvoter_id,
-        "election_id" => $election_id,
-        "last_position_id" => $position_id
+        "election_id" => $election_id
     ]);
     return;
 }

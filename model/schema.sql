@@ -249,7 +249,14 @@ INSERT INTO Candidates (party_id, student_id, election_id, position_id) VALUES
 (1000, 2024000003, 1000, 1002),  -- candidate_id: 1003 | Ana Martinez     -> Senator
 (1000, 2024000004, 1000, 1002),  -- candidate_id: 1004 | Jose Rodriguez   -> Senator
 (1000, 2024000005, 1000, 1003),  -- candidate_id: 1005 | Luisa Hernandez  -> Vice-Governor
-(1000, 2024000006, 1000, 1002);  -- candidate_id: 1006 | Miguel Gonzales  -> Senator
+(1000, 2024000006, 1000, 1002),  -- candidate_id: 1006 | Miguel Gonzales  -> Senator
+(1001, 2024000008, 1000, 1000),  -- candidate_id: 1007 | Ramon Castillo   -> President
+(1001, 2024000009, 1000, 1001),  -- candidate_id: 1008 | Elena Morales    -> Vice-President
+(1001, 2024000010, 1000, 1002),  -- candidate_id: 1009 | Diego Navarro    -> Senator
+(1001, 2024000011, 1000, 1002),  -- candidate_id: 1010 | Isabella Reyes   -> Senator
+(1001, 2024000012, 1000, 1002),  -- candidate_id: 1011 | Marco Santiago   -> Senator
+(1001, 2024000013, 1000, 1003),  -- candidate_id: 1012 | Gabrielle Valdez -> Vice-Governor
+(1001, 2024000015, 1000, 1002); 
 
 -- ==========================================================
 -- TESTING FOR ELECTION FORM (exclude on initialization)
@@ -295,3 +302,16 @@ INSERT INTO Candidates (party_id, student_id, election_id, position_id) VALUES
 (1003, 2024000022, 1002, 1009),
 (1003, 2024000023, 1002, 1009);
 
+
+-- ========================= JOINS FOR SEEING VOTES OF A PERSON
+SELECT 
+	v.studentvoter_id,
+    s.last_name,
+    p.position_name
+FROM Votes v
+LEFT JOIN Candidates c
+	ON v.candidate_id = c.candidate_id
+LEFT JOIN Positions p
+	ON p.position_id = c.position_id
+LEFT JOIN Students s
+	ON s.student_id = c.student_id

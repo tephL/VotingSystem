@@ -126,7 +126,10 @@ function getVoterIdWithUserId($user_id){
 
     $sql = "SELECT studentvoter_id FROM StudentVoters WHERE user_id = '$user_id'";
     $r_sql = $conn->query($sql);
-    return $r_sql->fetch_assoc();
+    $row = $r_sql->fetch_assoc();
+    $studentvoter_id = $row["studentvoter_id"]; 
+
+    return $studentvoter_id;
 }
 
 function hasUserVoted($election_id, $studentvoter_id){
