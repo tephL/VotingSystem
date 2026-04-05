@@ -13,6 +13,7 @@ if (isset($_POST['action'])) {
 }
 
 switch ($action) {
+    
 
     case "get_elections":
     echo json_encode([
@@ -67,16 +68,20 @@ switch ($action) {
 
     case "add_candidate":
 
-        if (
-            empty($_POST['student_id']) ||
-            empty($_POST['position_id']) ||
-            empty($_POST['party_id']) ||
-            empty($_POST['election_id'])
-        ) {
-            echo json_encode([
-                "success" => false,
-                "message" => "All fields are required."
-            ]);
+        if (empty($_POST['election_id'])) {
+            echo json_encode(["success" => false, "message" => "Select election first."]);
+            exit;
+        }
+        if (empty($_POST['party_id'])) {
+            echo json_encode(["success" => false, "message" => "Select party."]);
+            exit;
+        }
+        if (empty($_POST['position_id'])) {
+            echo json_encode(["success" => false, "message" => "Select position."]);
+            exit;
+        }
+        if (empty($_POST['student_id'])) {
+            echo json_encode(["success" => false, "message" => "Select student."]);
             exit;
         }
 

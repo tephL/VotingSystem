@@ -198,12 +198,6 @@ $(document).ready(function () {
 
     // ==================== ADD ====================
     $("#add_candidate_btn").on("click", function () {
-
-        if (!currentElectionId) return showStatus("Select election first.", "error");
-        if (!currentPartyId) return showStatus("Select party.", "error");
-        if (!currentPositionId) return showStatus("Select position.", "error");
-        if (!selectedStudentId) return showStatus("Select student.", "error");
-
         $.ajax({
             url: "../../control/candidatesControl.php",
             method: "POST",
@@ -216,9 +210,7 @@ $(document).ready(function () {
             },
             dataType: "json",
             success: function (res) {
-
                 showStatus(res.message, res.success ? "success" : "error");
-
                 if (res.success) {
                     loadCandidates();
                     resetStudentSearch();
