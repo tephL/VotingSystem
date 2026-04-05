@@ -30,7 +30,4 @@ $("#signout_btn").click(function(){
 });
 
 $("#start_election").click(function(){
-    console.log("clicked");
-    alert("YOURE AB TO dieeee");
-    window.location.href = "https://ddlc.moe/";
 });

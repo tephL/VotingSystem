@@ -36,24 +36,27 @@ INSERT INTO College (college_name) VALUES
 ('College of Social Sciences and Philosophy'),           -- college_id: 1003
 ('College of Education');                                -- college_id: 1004
 
--- Students (student_id: 1000–1015)
+
+-- Students (using 2024000000 format)
+-- ============================================================
+
 INSERT INTO Students (first_name, middle_name, last_name, college_id) VALUES
-('Juan',      'Santos',     'Dela Cruz', 1000),          -- student_id: 1000
-('Maria',     'Reyes',      'Garcia',    1001),          -- student_id: 1001
-('Carlos',    'Mendoza',    'Lopez',     1002),          -- student_id: 1002
-('Ana',       'Cruz',       'Martinez',  1003),          -- student_id: 1003
-('Jose',      'Bautista',   'Rodriguez', 1004),          -- student_id: 1004
-('Luisa',     'Villanueva', 'Hernandez', 1000),          -- student_id: 1005
-('Miguel',    'Aquino',     'Gonzales',  1001),          -- student_id: 1006
-('Sofia',     'Ramos',      'Perez',     1002),          -- student_id: 1007
-('Ramon',     'Torres',     'Castillo',  1003),          -- student_id: 1008
-('Elena',     'Flores',     'Morales',   1004),          -- student_id: 1009
-('Diego',     'Pascual',    'Navarro',   1000),          -- student_id: 1010
-('Isabella',  'Aguilar',    'Reyes',     1001),          -- student_id: 1011
-('Marco',     'Domingo',    'Santiago',  1002),          -- student_id: 1012
-('Gabrielle', 'Espinosa',   'Valdez',    1003),          -- student_id: 1013
-('Rafael',    'Mercado',    'Salazar',   1004),          -- student_id: 1014
-('Camille',   'Ocampo',     'Fuentes',   1000);          -- student_id: 1015
+('Juan',      'Santos',     'Dela Cruz', 1000),   -- student_id: 2024000000
+('Maria',     'Reyes',      'Garcia',    1001),   -- 2024000001
+('Carlos',    'Mendoza',    'Lopez',     1002),   -- 2024000002
+('Ana',       'Cruz',       'Martinez',  1003),   -- 2024000003
+('Jose',      'Bautista',   'Rodriguez', 1004),   -- 2024000004
+('Luisa',     'Villanueva', 'Hernandez', 1000),   -- 2024000005
+('Miguel',    'Aquino',     'Gonzales',  1001),   -- 2024000006
+('Sofia',     'Ramos',      'Perez',     1002),   -- 2024000007
+('Ramon',     'Torres',     'Castillo',  1003),   -- 2024000008
+('Elena',     'Flores',     'Morales',   1004),   -- 2024000009
+('Diego',     'Pascual',    'Navarro',   1000),   -- 2024000010
+('Isabella',  'Aguilar',    'Reyes',     1001),   -- 2024000011
+('Marco',     'Domingo',    'Santiago',  1002),   -- 2024000012
+('Gabrielle', 'Espinosa',   'Valdez',    1003),   -- 2024000013
+('Rafael',    'Mercado',    'Salazar',   1004),   -- 2024000014
+('Camille',   'Ocampo',     'Fuentes',   1000);   -- 2024000015
 
 -- ============================================================
 -- ACCOUNTS 
@@ -133,24 +136,24 @@ INSERT INTO Users (username, email, password, role_id) VALUES
 INSERT INTO Admins (first_name, middle_name, last_name, contact_number, user_id) VALUES
 ('Steph', NULL, 'L', '09000000000', 1000);              -- admin_id: 1000
 
--- StudentVoters (studentvoter_id: 1000–1015)
+-- StudentVoters (updated with new student_id format)
 INSERT INTO StudentVoters (user_id, student_id) VALUES
-(1001, 1000),                                            -- studentvoter_id: 1000 | Juan Dela Cruz
-(1002, 1001),                                            -- studentvoter_id: 1001 | Maria Garcia
-(1003, 1002),                                            -- studentvoter_id: 1002 | Carlos Lopez
-(1004, 1003),                                            -- studentvoter_id: 1003 | Ana Martinez
-(1005, 1004),                                            -- studentvoter_id: 1004 | Jose Rodriguez
-(1006, 1005),                                            -- studentvoter_id: 1005 | Luisa Hernandez
-(1007, 1006),                                            -- studentvoter_id: 1006 | Miguel Gonzales
-(1008, 1007),                                            -- studentvoter_id: 1007 | Sofia Perez
-(1009, 1008),                                            -- studentvoter_id: 1008 | Ramon Castillo
-(1010, 1009),                                            -- studentvoter_id: 1009 | Elena Morales
-(1011, 1010),                                            -- studentvoter_id: 1010 | Diego Navarro
-(1012, 1011),                                            -- studentvoter_id: 1011 | Isabella Reyes
-(1013, 1012),                                            -- studentvoter_id: 1012 | Marco Santiago
-(1014, 1013),                                            -- studentvoter_id: 1013 | Gabrielle Valdez
-(1015, 1014),                                            -- studentvoter_id: 1014 | Rafael Salazar
-(1016, 1015);                                            -- studentvoter_id: 1015 | Camille Fuentes
+(1001, 2024000000),   -- Juan
+(1002, 2024000001),   -- Maria
+(1003, 2024000002),   -- Carlos
+(1004, 2024000003),   -- Ana
+(1005, 2024000004),   -- Jose
+(1006, 2024000005),   -- Luisa
+(1007, 2024000006),   -- Miguel
+(1008, 2024000007),   -- Sofia
+(1009, 2024000008),   -- Ramon
+(1010, 2024000009),   -- Elena
+(1011, 2024000010),   -- Diego
+(1012, 2024000011),   -- Isabella
+(1013, 2024000012),   -- Marco
+(1014, 2024000013),   -- Gabrielle
+(1015, 2024000014),   -- Rafael
+(1016, 2024000015);   -- Camille
 
 -- ============================================================
 -- VOTING PROCESS 
@@ -240,21 +243,25 @@ INSERT INTO PoliticalParties (party_name, election_id) VALUES
 ('Partido Uno', 1000),                                  -- partylist_id: 1000
 ('Partido Dos', 1000);                                  -- partylist_id: 1001
 
--- Candidates (candidate_id: 1000–1013)
+-- ============================================================
+-- Candidates (using correct 20240000xx student_id)
+-- ============================================================
+
 INSERT INTO Candidates (party_id, student_id, election_id, position_id) VALUES
 -- Partido Uno (party_id: 1000)
-(1000, 2024000000, 1000, 1000),  -- candidate_id: 1000 | Juan Dela Cruz   -> President
-(1000, 2024000001, 1000, 1001),  -- candidate_id: 1001 | Maria Garcia     -> Vice-President
-(1000, 2024000002, 1000, 1002),  -- candidate_id: 1002 | Carlos Lopez     -> Senator
-(1000, 2024000003, 1000, 1002),  -- candidate_id: 1003 | Ana Martinez     -> Senator
-(1000, 2024000004, 1000, 1002),  -- candidate_id: 1004 | Jose Rodriguez   -> Senator
-(1000, 2024000005, 1000, 1003),  -- candidate_id: 1005 | Luisa Hernandez  -> Vice-Governor
-(1000, 2024000006, 1000, 1002),  -- candidate_id: 1006 | Miguel Gonzales  -> Senator
+(1000, 2024000000, 1000, 1000),   -- Juan Dela Cruz      → President
+(1000, 2024000001, 1000, 1001),   -- Maria Garcia        → Vice-President
+(1000, 2024000002, 1000, 1002),   -- Carlos Lopez        → Senator
+(1000, 2024000003, 1000, 1002),   -- Ana Martinez        → Senator
+(1000, 2024000004, 1000, 1002),   -- Jose Rodriguez      → Senator
+(1000, 2024000005, 1000, 1003),   -- Luisa Hernandez     → Vice-Governor
+(1000, 2024000006, 1000, 1002),   -- Miguel Gonzales     → Senator
+
 -- Partido Dos (party_id: 1001)
-(1001, 2024000008, 1000, 1000),  -- candidate_id: 1007 | Ramon Castillo   -> President
-(1001, 2024000009, 1000, 1001),  -- candidate_id: 1008 | Elena Morales    -> Vice-President
-(1001, 2024000010, 1000, 1002),  -- candidate_id: 1009 | Diego Navarro    -> Senator
-(1001, 2024000011, 1000, 1002),  -- candidate_id: 1010 | Isabella Reyes   -> Senator
-(1001, 2024000012, 1000, 1002),  -- candidate_id: 1011 | Marco Santiago   -> Senator
-(1001, 2024000013, 1000, 1003),  -- candidate_id: 1012 | Gabrielle Valdez -> Vice-Governor
-(1001, 2024000015, 1000, 1002);  -- candidate_id: 1013 | Camille Fuentes  -> Senator
+(1001, 2024000008, 1000, 1000),   -- Ramon Castillo      → President
+(1001, 2024000009, 1000, 1001),   -- Elena Morales       → Vice-President
+(1001, 2024000010, 1000, 1002),   -- Diego Navarro       → Senator
+(1001, 2024000011, 1000, 1002),   -- Isabella Reyes      → Senator
+(1001, 2024000012, 1000, 1002),   -- Marco Santiago      → Senator
+(1001, 2024000013, 1000, 1003),   -- Gabrielle Valdez    → Vice-Governor
+(1001, 2024000015, 1000, 1002);   -- Camille Fuentes     → Senator

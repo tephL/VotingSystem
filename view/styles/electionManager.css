@@ -46,10 +46,279 @@ body{
     overflow-y: auto;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: column;
 }
 
 .graph{
     border: 1px solid black;
     height: 250px;
     margin: 20px;
+}
+#election-title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 50px;
+}
+#election-title p{
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+}
+#createbutton{
+    position: absolute;
+    right: 75px;
+    background-color: rgb(72, 196, 72);
+    width: 75px;
+    height: 50px;
+    border: 2px solid green;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+#createbutton:hover {
+    background-color: rgb(66, 173, 66);
+}
+#history {
+    max-height: 70vh;        
+    overflow-y: auto;          
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fff;
+}
+.history-row:hover {
+    background: #f0f0f0;
+}
+#history ul {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+#history li {
+    margin-left: 50px;
+    flex: 1;
+}
+#create-list{
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+    width: 850px;
+    height: auto;  
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    padding: 10px;
+    gap: 25px;
+}
+
+.create-box{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-left: 10px;
+    width: 800px;
+    height: auto;
+    border: 2px solid rgb(82, 82, 82);
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    padding: 40px;
+}
+.create-box div{
+    display: grid;
+    grid-template-columns: 1fr;
+}
+#create-date {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+#create-date input{
+    height: 40px;
+    font-size: 16px;
+}
+
+#create-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+#create-title input {
+    font-size: 16px;
+    width: 80%;
+}
+#create-status{
+    display: grid;
+    grid-template-columns: 1fr;
+}
+#create-btns button{
+    margin-top: 20px;
+    margin-left: 10px;
+    width: 150px;
+    height: 30px;
+}
+#create-btn{
+    background-color: rgb(41, 180, 41);
+}
+#create-btns{
+    display: flex;                    
+    gap: 10px;
+}
+#elect-title{
+    font-size: 24px;
+    font-weight: bold;
+}
+#title-input{
+    height:50px;
+}
+#create-date div input {
+    width: 100%;
+}
+.history-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+.history-row li {
+    list-style: none;
+    margin-left: 50px;
+    flex: 1;
+    margin-top: 40px;
+}
+.no-elect{
+    text-align:center;
+    padding:40px;
+    color:#888;
+}
+.history-row .date-part {
+    font-weight: bold;
+    color: #333;
+    font-size: 15px;
+}
+
+.history-row .time-part {
+    color: #666;
+    font-size: 14px;
+}
+.history-row li {
+    margin-top: 10px; 
+    line-height: 1.4;
+}
+
+/* ==================== POSITIONS SECTION ==================== */
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.create-box {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 15px;
+}
+
+/* Each position row */
+.position-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    background: #f9f9f9;
+    padding: 18px 20px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #eee;
+    transition: all 0.2s;
+}
+
+.position-row:hover {
+    background: #f5f5f5;
+    border-color: #ccc;
+}
+
+.pos-name, .pos-max {
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border 0.2s;
+}
+
+/* Remove button — shared by both positions and parties */
+.remove-pos-btn,
+.remove-party-btn {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+    align-self: flex-end;
+}
+
+.remove-pos-btn:hover,
+.remove-party-btn:hover {
+    background: #e63333;
+}
+
+/* Add buttons */
+.add-btn {
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+/* Make Max Votes input narrower */
+.pos-max {
+    max-width: 140px;
+}
+
+/* ==================== PARTIES SECTION ==================== */
+
+/* Party rows mirror position rows exactly */
+.party-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    background: #f9f9f9;
+    padding: 18px 20px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #eee;
+    transition: all 0.2s;
+}
+
+.party-row:hover {
+    background: #f5f5f5;
+    border-color: #ccc;
+}
+
+.party-name {
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border 0.2s;
+    flex: 1;
+}
+
+#parties-box {
+    display: block;
 }
