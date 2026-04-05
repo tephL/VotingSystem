@@ -22,7 +22,7 @@ function newPositionRow(name, max, positionId) {
     }
 
     if (!name) { name = ""; }
-    if (!max)  { max  = ""; }
+    if (!max) { max = ""; }
 
     return `
         <div class="position-row" ${dataAttr}>
@@ -90,7 +90,6 @@ $("#add-party-btn").click(function () {
 $(document).on("click", ".remove-party-btn", function () {
     let row = $(this).closest(".party-row");
 
-    // If this is an existing party (has a party-id), delete it from DB first
     let partyId = row.attr("data-party-id");
     if (partyId && currentEditId !== null) {
         if (!confirm("Remove this party? Candidates under this party will also be removed.")) {
@@ -98,9 +97,9 @@ $(document).on("click", ".remove-party-btn", function () {
         }
 
         $.ajax({
-            url:    "./../../control/electionControl.php?action=removeParty",
+            url: "./../../control/electionControl.php?action=removeParty",
             method: "POST",
-            data:   { party_id: partyId },
+            data: { party_id: partyId },
             success: function (response) {
                 if (response.trim() === "success") {
                     row.remove();
@@ -113,7 +112,6 @@ $(document).on("click", ".remove-party-btn", function () {
             }
         });
     } else {
-        // New unsaved row — just remove from UI
         row.remove();
     }
 });
@@ -123,7 +121,7 @@ $("#create-btn").click(function () {
 
     let title = $("#title-input").val().trim();
     let start = $("#start-date").val();
-    let end   = $("#end-date").val();
+    let end = $("#end-date").val();
 
     if (!title || !start || !end) {
         alert("Please fill in all fields.");
@@ -133,9 +131,10 @@ $("#create-btn").click(function () {
     let positions = [];
     $(".position-row").each(function () {
         let name = $(this).find(".pos-name").val().trim();
-        let max  = $(this).find(".pos-max").val();
+        let max = $(this).find(".pos-max").val();
+        let positionId = $(this).attr("data-position-id") || null;
         if (name && max) {
-            positions.push({ name: name, max: max });
+            positions.push({ name: name, max: max, position_id: positionId });
         }
     });
 
@@ -144,10 +143,9 @@ $("#create-btn").click(function () {
         return;
     }
 
-    // Collect parties
     let parties = [];
     $(".party-row").each(function () {
-        let name    = $(this).find(".party-name").val().trim();
+        let name = $(this).find(".party-name").val().trim();
         let partyId = $(this).attr("data-party-id") || null;
         if (name) {
             parties.push({ name: name, party_id: partyId });
@@ -158,22 +156,22 @@ $("#create-btn").click(function () {
 
         let url = "./../../control/electionControl.php?action=create";
         let data = {
-            title:     title,
-            start:     start,
-            end:       end,
+            title: title,
+            start: start,
+            end: end,
             positions: JSON.stringify(positions),
-            parties:   JSON.stringify(parties)
+            parties: JSON.stringify(parties)
         };
 
         if (currentEditId !== null) {
-            url     = "./../../control/electionControl.php?action=update";
+            url = "./../../control/electionControl.php?action=update";
             data.id = currentEditId;
         }
 
         $.ajax({
-            url:    url,
+            url: url,
             method: "POST",
-            data:   data,
+            data: data,
             success: function (response) {
                 response = response.trim();
 
@@ -191,7 +189,11 @@ $("#create-btn").click(function () {
                     alert("End date cannot be earlier than start date.");
                 } else if (response === "past") {
                     alert("Start date cannot be in the past.");
-                } else {
+                }
+                else if (response === "min_parties") {
+                    alert("There must be at least TWO party lists.");
+                }
+                else {
                     alert("Error: " + response);
                 }
             },
@@ -222,7 +224,7 @@ function formatDate(dateStr) {
 // ==================== LOAD ALL ELECTIONS ====================
 function loadElections() {
     $.ajax({
-        url:    "./../../control/electionControl.php?action=getAll",
+        url: "./../../control/electionControl.php?action=getAll",
         method: "GET",
         success: function (response) {
             let elections = JSON.parse(response);
@@ -252,9 +254,9 @@ function attachButtons() {
 
         if (confirm("Are you sure you want to delete this election?")) {
             $.ajax({
-                url:    "./../../control/electionControl.php?action=delete",
+                url: "./../../control/electionControl.php?action=delete",
                 method: "POST",
-                data:   { id: id },
+                data: { id: id },
                 success: function (response) {
                     if (response.trim() === "success") {
                         alert("Election deleted!");
@@ -280,16 +282,16 @@ function editElection(id) {
     currentEditId = id;
 
     $.ajax({
-        url:    "./../../control/electionControl.php?action=getById&id=" + id,
+        url: "./../../control/electionControl.php?action=getById&id=" + id,
         method: "GET",
         success: function (response) {
             let e = JSON.parse(response);
 
             let startVal = "";
-            let endVal   = "";
+            let endVal = "";
 
             if (e.start_date) { startVal = e.start_date.replace(" ", "T").slice(0, 16); }
-            if (e.end_date)   { endVal   = e.end_date.replace(" ", "T").slice(0, 16); }
+            if (e.end_date) { endVal = e.end_date.replace(" ", "T").slice(0, 16); }
 
             $("#title-input").val(e.election_title);
             $("#start-date").val(startVal);
@@ -301,7 +303,7 @@ function editElection(id) {
             loadExistingPositions(id);
             loadExistingParties(id);
 
-            showCreatePanel(); 
+            showCreatePanel();
         },
         error: function () {
             alert("Failed to load election details.");
@@ -309,10 +311,10 @@ function editElection(id) {
     });
 }
 
-// ==================== LOAD EXISTING POSITIONS (edit mode) ====================
+// ==================== LOAD EXISTING POSITIONS ====================
 function loadExistingPositions(electionId) {
     $.ajax({
-        url:    "./../../control/electionControl.php?action=getPositions&id=" + electionId,
+        url: "./../../control/electionControl.php?action=getPositions&id=" + electionId,
         method: "GET",
         success: function (response) {
             let positions = JSON.parse(response);
@@ -330,10 +332,10 @@ function loadExistingPositions(electionId) {
     });
 }
 
-// ==================== LOAD EXISTING PARTIES (edit mode) ====================
+// ==================== LOAD EXISTING PARTIES ====================
 function loadExistingParties(electionId) {
     $.ajax({
-        url:    "./../../control/electionControl.php?action=getParties&id=" + electionId,
+        url: "./../../control/electionControl.php?action=getParties&id=" + electionId,
         method: "GET",
         success: function (response) {
             let parties = JSON.parse(response);
@@ -369,7 +371,7 @@ function resetAfterEdit() {
     $("#end-date").val('');
     $("#positions-box").html(newPositionRow());
     $("#parties-box").html(newPartyRow());
-    showElectionPanel(); 
+    showElectionPanel();
 }
 
 // ==================== INIT ====================

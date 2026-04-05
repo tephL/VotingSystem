@@ -1,14 +1,40 @@
 <?php
-// electionControl.php
 
 require_once __DIR__ . "/../model/electionModel.php";
 
-$action = isset($_GET['action']) ? $_GET['action'] : '';
+$action = '';
+if (isset($_GET['action'])) {
+    $action = $_GET['action'];
+}
 
 switch ($action) {
-
+    
     case "create":
+
+        if (
+            empty($_POST['title']) ||
+            empty($_POST['start']) ||
+            empty($_POST['end'])
+        ) {
+            echo "invalid";
+            exit;
+        }
+
         createElections();
+        break;
+    
+    case "update":
+
+        if (
+            empty($_POST['title']) ||
+            empty($_POST['start']) ||
+            empty($_POST['end'])
+        ) {
+            echo "invalid";
+            exit;
+        }
+
+        updateElection();
         break;
 
     case "getAll":
@@ -17,10 +43,6 @@ switch ($action) {
 
     case "getById":
         getElectionById();
-        break;
-
-    case "update":
-        updateElection();
         break;
 
     case "delete":
@@ -42,7 +64,10 @@ switch ($action) {
         break;
 
     default:
-        echo json_encode(array("success" => false, "message" => "Unknown action."));
+        echo json_encode([
+            "success" => false,
+            "message" => "Unknown action."
+        ]);
         break;
 }
 ?>
