@@ -1,379 +1,406 @@
-// candidatesManager.js
-
 $(document).ready(function () {
 
-    const CTRL = "../../control/candidatesControl.php";
+    let currentElectionId = "";
+    let currentPartyId = "";
+    let currentPositionId = "";
+    let selectedStudentId = "";
 
-    // ── State ──
-    let currentElectionId   = "";
-    let currentPartyId      = "";
-    let currentPartyName    = "";
-    let currentPositionId   = "";
-    let selectedStudentId   = "";
-    let selectedStudentName = "";
-    let allPositions        = [];
-    let allParties          = [];
+    let allPositions = [];
+    let allParties = [];
 
-    // ── Init hidden sections ──
-    $("#view_toggle_section").hide();
-    $("#party_tabs_section").hide();
-    $("#tabs_section").hide();
-    $("#candidates_section").hide();
-    $("#add_candidate_section").hide();
-    $("#slate_view").hide();
+    init();
 
-    // ── Load elections ──
-    loadElections();
+    function init() {
+        hideAllTabsAndViews();
+        loadElections();
+    }
 
+    function hideAllTabsAndViews() {
+        $("#manage_view, #student_view, #slate_view").hide();
+        $("#party_tabs_section, #tabs_section, #view_toggle_section").hide();
+    }
+
+    function showStatus(message, type) {
+        $("#status_message")
+            .removeClass("success error")
+            .addClass(type)
+            .text(message)
+            .show();
+
+        setTimeout(function() {
+            $("#status_message").hide().text("");
+        }, 3000);
+    }
+
+    // LOAD ELECTIONS 
     function loadElections() {
         $.ajax({
-            url: CTRL, type: "GET",
+            url: "../../control/candidatesControl.php",
+            method: "GET",
             data: { action: "get_elections" },
             dataType: "json",
-            success: function (result) {
-                let dropdown = $("#election_dropdown");
-                dropdown.empty();
+            success: function (res) {
+                let dropdown = $("#election_dropdown").empty();
                 dropdown.append('<option value="">-- Select an Election --</option>');
-                if (result.success) {
-                    result.data.forEach(function (e) {
-                        dropdown.append('<option value="' + e.election_id + '">' + e.election_title + '</option>');
+
+                if (res.success && res.data) {
+                    res.data.forEach(function(e) {
+                        dropdown.append(`<option value="${e.election_id}">${e.election_title}</option>`);
                     });
                 }
             }
         });
     }
 
-    // ── Election selected ──
+    // ELECTION DROPDOWN CHANGE 
     $("#election_dropdown").on("change", function () {
         currentElectionId = $(this).val();
+
+        if (currentElectionId === "") {
+            hideAllTabsAndViews();
+            return;
+        }
+
         resetAll();
 
-        if (currentElectionId === "") return;
+        $("#manage_view").show();
+        $("#party_tabs_section, #view_toggle_section").show();
 
-        $.when(
-            $.ajax({ url: CTRL, type: "GET", data: { action: "get_parties",   election_id: currentElectionId }, dataType: "json" }),
-            $.ajax({ url: CTRL, type: "GET", data: { action: "get_positions", election_id: currentElectionId }, dataType: "json" })
-        ).done(function (partiesRes, positionsRes) {
-            allParties   = partiesRes[0].data  || [];
-            allPositions = positionsRes[0].data || [];
-
-            if (allParties.length === 0) {
-                showStatus("No parties found. Add parties in Election Manager first.", "error");
-                return;
-            }
-            if (allPositions.length === 0) {
-                showStatus("No positions found for this election.", "error");
-                return;
-            }
-
-            buildPartyTabs(allParties);
-            $("#party_tabs_section").show();
-            $("#view_toggle_section").show();
-
-            $(".party_tab_btn").first().trigger("click");
-        });
+        loadStudentReference();
+        loadParties();
     });
 
-    // ── Build party tabs ──
-    function buildPartyTabs(parties) {
-        let container = $("#party_tabs_container");
-        container.empty();
+    function loadParties() {
+        $.ajax({
+            url: "../../control/candidatesControl.php",
+            method: "GET",
+            data: { action: "get_parties", election_id: currentElectionId },
+            dataType: "json",
+            success: function (res) {
+                allParties = [];
+                if (res.data) {
+                    allParties = res.data;
+                }
+                buildPartyTabs();
 
-        parties.forEach(function (p) {
-            let btn = $('<button class="party_tab_btn tab_btn"></button>');
-            btn.text(p.party_name);
-            btn.attr("data-party-id",   p.party_id);
-            btn.attr("data-party-name", p.party_name);
-            container.append(btn);
+                loadPositions();
+            }
         });
     }
 
-    // ── Party tab clicked ──
+    function loadPositions() {
+        $.ajax({
+            url: "../../control/candidatesControl.php",
+            method: "GET",
+            data: { action: "get_positions", election_id: currentElectionId },
+            dataType: "json",
+            success: function (res) {
+                allPositions = [];
+                if (res.data) {
+                    allPositions = res.data;
+                }
+                buildPositionTabs();
+
+                // Auto select first party
+                if (allParties.length > 0) {
+                    $(".party_tab_btn").first().click();
+                }
+            }
+        });
+    }
+
+    // PARTY TABS 
+    function buildPartyTabs() {
+        let container = $("#party_tabs_container").empty();
+
+        allParties.forEach(function(p) {
+            container.append(`
+                <button class="party_tab_btn tab_btn"
+                        data-party-id="${p.party_id}">
+                    ${p.party_name}
+                </button>
+            `);
+        });
+    }
+
     $(document).on("click", ".party_tab_btn", function () {
         $(".party_tab_btn").removeClass("active");
         $(this).addClass("active");
 
-        currentPartyId    = $(this).attr("data-party-id");
-        currentPartyName  = $(this).attr("data-party-name");
-        currentPositionId = "";
+        currentPartyId = $(this).data("party-id");
 
-        resetStudentSearch();
-        $("#candidates_section").hide();
-        $("#add_candidate_section").hide();
-
-        buildPositionTabs(allPositions);
+        buildPositionTabs();
         $("#tabs_section").show();
+        $("#candidates_section, #add_candidate_section").hide();
 
-        $(".position_tab_btn").first().trigger("click");
+        if (allPositions.length > 0) {
+            $(".position_tab_btn").first().click();
+        }
     });
 
-    // ── Build position tabs ──
-    function buildPositionTabs(positions) {
-        let container = $("#tabs_container");
-        container.empty();
+    // POSITION TABS 
+    function buildPositionTabs() {
+        let container = $("#tabs_container").empty();
 
-        positions.forEach(function (p) {
-            let btn = $('<button class="position_tab_btn tab_btn"></button>');
-            btn.text(p.position_name);
-            btn.attr("data-position-id", p.position_id);
-            container.append(btn);
+        allPositions.forEach(function(pos) {
+            container.append(`
+                <button class="position_tab_btn tab_btn"
+                        data-position-id="${pos.position_id}">
+                    ${pos.position_name}
+                </button>
+            `);
         });
     }
 
-    // ── Position tab clicked ──
     $(document).on("click", ".position_tab_btn", function () {
         $(".position_tab_btn").removeClass("active");
         $(this).addClass("active");
 
-        currentPositionId = $(this).attr("data-position-id");
+        currentPositionId = $(this).data("position-id");
 
-        resetStudentSearch();
-        loadCandidates(currentPartyId, currentPositionId);
-        $("#candidates_section").show();
-        $("#add_candidate_section").show();
+        loadCandidates();
+        $("#candidates_section, #add_candidate_section").show();
     });
 
-    // ── Load candidates by party + position ──
-    function loadCandidates(party_id, position_id) {
+    // LOAD CANDIDATES 
+    function loadCandidates() {
         $.ajax({
-            url: CTRL, type: "GET",
-            data: { action: "get_candidates_by_party_position", party_id: party_id, position_id: position_id },
-            dataType: "json",
-            success: function (result) {
-                if (result.success) {
-                    displayCandidates(result.data);
-                } else {
-                    showStatus("Failed to load candidates.", "error");
-                }
-            }
-        });
-    }
-
-    function displayCandidates(candidates) {
-        let list = $("#candidates_list");
-        list.empty();
-
-        if (candidates.length === 0) {
-            list.append('<p id="no_candidates_msg">No candidates yet for this position.</p>');
-            return;
-        }
-
-        candidates.forEach(function (c) {
-            let fullName = c.first_name + " " + c.last_name;
-            let item = '<div class="candidate_item" data-candidate-id="' + c.candidate_id + '">';
-            item += '<span>';
-            item += '<span class="candidate_name">' + fullName + '</span>';
-            item += '<span class="candidate_meta">ID: ' + c.student_id + '</span>';
-            item += '</span>';
-            item += '<button class="remove_btn" data-candidate-id="' + c.candidate_id + '">Remove</button>';
-            item += '</div>';
-            list.append(item);
-        });
-    }
-
-    // ── Remove candidate ──
-    $(document).on("click", ".remove_btn", function () {
-        let candidate_id = $(this).attr("data-candidate-id");
-        if (!confirm("Remove this candidate?")) return;
-
-        $.ajax({
-            url: CTRL, type: "POST",
-            data: { action: "remove_candidate", candidate_id: candidate_id },
-            dataType: "json",
-            success: function (result) {
-                showStatus(result.message, result.success ? "success" : "error");
-                if (result.success) loadCandidates(currentPartyId, currentPositionId);
-            }
-        });
-    });
-
-    // ── Student search ──
-    let searchTimeout = null;
-
-    $("#student_search_input").on("keyup", function () {
-        let term = $(this).val().trim();
-        clearTimeout(searchTimeout);
-
-        if (term.length < 2) {
-            $("#student_dropdown").hide().empty();
-            return;
-        }
-
-        searchTimeout = setTimeout(function () {
-            $.ajax({
-                url: CTRL, type: "GET",
-                data: { action: "search_students", search_term: term, election_id: currentElectionId },
-                dataType: "json",
-                success: function (result) {
-                    let dropdown = $("#student_dropdown");
-                    dropdown.empty();
-
-                    if (!result.success || result.data.length === 0) {
-                        dropdown.hide();
-                        return;
-                    }
-
-                    dropdown.append('<option value="">-- Select a Student --</option>');
-                    result.data.forEach(function (s) {
-                        dropdown.append('<option value="' + s.student_id + '">'
-                            + s.first_name + " " + s.last_name
-                            + ' (ID: ' + s.student_id + ')'
-                            + '</option>');
-                    });
-                    dropdown.show();
-                }
-            });
-        }, 400);
-    });
-
-    // ── Student selected ──
-    $(document).on("change", "#student_dropdown", function () {
-        selectedStudentId   = $(this).val();
-        selectedStudentName = $(this).find("option:selected").text();
-
-        if (selectedStudentId === "") {
-            $("#selected_student_display").text("No student selected.");
-        } else {
-            $("#selected_student_display").text("Selected: " + selectedStudentName);
-        }
-    });
-
-    // ── Add candidate ──
-    $("#add_candidate_btn").on("click", function () {
-        if (!currentElectionId) { showStatus("Select an election first.", "error"); return; }
-        if (!currentPartyId)    { showStatus("Select a party first.", "error"); return; }
-        if (!currentPositionId) { showStatus("Select a position first.", "error"); return; }
-        if (!selectedStudentId) { showStatus("Search and select a student first.", "error"); return; }
-
-        $.ajax({
-            url: CTRL, type: "POST",
+            url: "../../control/candidatesControl.php",
+            method: "GET",
             data: {
-                action:      "add_candidate",
-                student_id:  selectedStudentId,
+                action: "get_candidates_by_party_position",
+                party_id: currentPartyId,
+                position_id: currentPositionId
+            },
+            dataType: "json",
+            success: function (res) {
+                let list = $("#candidates_list").empty();
+
+                if (!res.success || res.data.length === 0) {
+                    list.append('<p>No candidates yet for this position.</p>');
+                    return;
+                }
+
+                res.data.forEach(function(c) {
+                    list.append(`
+                        <div class="candidate_item" data-candidate-id="${c.candidate_id}">
+                            <span>
+                                <span class="candidate_name">${c.first_name} ${c.last_name}</span>
+                                <span class="candidate_meta">ID: ${c.student_id}</span>
+                            </span>
+                            <button class="remove_btn" data-candidate-id="${c.candidate_id}">Remove</button>
+                        </div>
+                    `);
+                });
+            }
+        });
+    }
+
+    // ADD & REMOVE 
+    $("#add_candidate_btn").on("click", function () {
+        if (!selectedStudentId) {
+            showStatus("Please select a student first.", "error");
+            return;
+        }
+
+        $.ajax({
+            url: "../../control/candidatesControl.php",
+            method: "POST",
+            data: {
+                action: "add_candidate",
+                student_id: selectedStudentId,
                 position_id: currentPositionId,
-                party_id:    currentPartyId,
+                party_id: currentPartyId,
                 election_id: currentElectionId
             },
             dataType: "json",
-            success: function (result) {
-                showStatus(result.message, result.success ? "success" : "error");
-                if (result.success) {
-                    loadCandidates(currentPartyId, currentPositionId);
+            success: function (res) {
+                showStatus(res.message, res.success ? "success" : "error");
+                if (res.success) {
+                    loadCandidates();
                     resetStudentSearch();
                 }
             }
         });
     });
 
-    // ── View toggle ──
-    $("#btn_manage_view").on("click", function () {
-        $(this).addClass("active");
-        $("#btn_slate_view").removeClass("active");
-        $("#manage_view").show();
-        $("#slate_view").hide();
+    $(document).on("click", ".remove_btn", function () {
+        if (!confirm("Remove this candidate?")) return;
+
+        let candidateId = $(this).data("candidate-id");
+
+        $.ajax({
+            url: "../../control/candidatesControl.php",
+            method: "POST",
+            data: { action: "remove_candidate", candidate_id: candidateId },
+            dataType: "json",
+            success: function (res) {
+                showStatus(res.message, res.success ? "success" : "error");
+                if (res.success) loadCandidates();
+            }
+        });
     });
 
-    $("#btn_slate_view").on("click", function () {
-        $(this).addClass("active");
-        $("#btn_manage_view").removeClass("active");
-        $("#manage_view").hide();
-        $("#slate_view").show();
-        loadSlate();
+    // STUDENT SEARCH 
+    $("#student_search_input").on("keyup", function () {
+        let term = $(this).val().trim();
+
+        if (term.length < 2) {
+            $("#student_dropdown").hide().empty();
+            return;
+        }
+
+        $.ajax({
+            url: "../../control/candidatesControl.php",
+            method: "GET",
+            data: {
+                action: "search_students",
+                search_term: term,
+                election_id: currentElectionId
+            },
+            dataType: "json",
+            success: function (res) {
+                let dropdown = $("#student_dropdown").empty();
+
+                if (!res.success || res.data.length === 0) {
+                    dropdown.hide();
+                    return;
+                }
+
+                dropdown.append('<option value="">-- Select a Student --</option>');
+
+                res.data.forEach(function(s) {
+                    dropdown.append(`<option value="${s.student_id}">
+                        ${s.first_name} ${s.last_name} (ID: ${s.student_id})
+                    </option>`);
+                });
+
+                dropdown.show();
+            }
+        });
     });
 
-    // ── Slate view ──
+    $("#student_dropdown").on("change", function () {
+        selectedStudentId = $(this).val();
+    });
+
+    function loadStudentReference() {
+        $.ajax({
+            url: "../../control/candidatesControl.php",
+            method: "GET",
+            data: {
+                action: "search_students",
+                search_term: "",
+                election_id: currentElectionId
+            },
+            dataType: "json",
+            success: function (res) {
+                let tbody = $("#student_reference_table tbody").empty();
+
+                if (!res.success || res.data.length === 0) {
+                    tbody.append("<tr><td colspan='2'>No students available</td></tr>");
+                    return;
+                }
+
+                res.data.forEach(function(s) {
+                    tbody.append(`
+                        <tr>
+                            <td>${s.student_id}</td>
+                            <td>${s.first_name} ${s.last_name}</td>
+                        </tr>
+                    `);
+                });
+            }
+        });
+    }
+
+    // ==================== VIEW TOGGLE ====================
+    $(".view_toggle_btn").click(function () {
+        $(".view_toggle_btn").removeClass("active");
+        $(this).addClass("active");
+
+        $("#manage_view, #student_view, #slate_view").hide();
+
+        if ($(this).attr("id") === "btn_manage_view") {
+            $("#manage_view").show();
+        }
+        else if ($(this).attr("id") === "btn_student_view") {
+            $("#student_view").show();
+            loadStudentReference();
+        }
+        else if ($(this).attr("id") === "btn_slate_view") {
+            $("#slate_view").show();
+            loadSlate();
+        }
+    });
+
+    // ==================== SLATE VIEW ====================
     function loadSlate() {
         $.ajax({
-            url: CTRL, type: "GET",
+            url: "../../control/candidatesControl.php",
+            method: "GET",
             data: { action: "get_slate", election_id: currentElectionId },
             dataType: "json",
-            success: function (result) {
-                if (result.success) buildSlate(result.data);
+            success: function (res) {
+                if (res.success) {
+                    buildSlate(res.data);
+                }
             }
         });
     }
 
     function buildSlate(data) {
-        let container = $("#slate_container");
-        container.empty();
+        let container = $("#slate_container").empty();
 
-        if (!data.parties || data.parties.length === 0) {
-            container.append('<p class="no_slate_msg">No data to display.</p>');
-            return;
-        }
-
-        let row = $('<div class="slate_row"></div>');
-
-        data.parties.forEach(function (party) {
+        data.parties.forEach(function(party) {
             let col = $('<div class="slate_col"></div>');
-            col.append('<div class="slate_party_name">' + party.party_name + '</div>');
+            col.append(`<div class="slate_party_name">${party.party_name}</div>`);
 
-            data.positions.forEach(function (pos) {
-                let matches = data.candidates.filter(function (c) {
-                    return c.party_id == party.party_id && c.position_id == pos.position_id;
+            data.positions.forEach(function(position) {
+                let matches = data.candidates.filter(function(c) {
+                    return c.party_id == party.party_id && c.position_id == position.position_id;
                 });
 
-                let posBlock = $('<div class="slate_position_block"></div>');
-                posBlock.append('<div class="slate_position_label">' + pos.position_name + '</div>');
+                let block = $('<div class="slate_position_block"></div>');
+                block.append(`<div class="slate_position_label">${position.position_name}</div>`);
 
                 if (matches.length === 0) {
-                    posBlock.append('<div class="slate_candidate_name empty">—</div>');
+                    block.append('<div class="slate_candidate_name empty">—</div>');
                 } else {
-                    matches.forEach(function (c) {
-                        posBlock.append('<div class="slate_candidate_name">' + c.first_name + ' ' + c.last_name + '</div>');
+                    matches.forEach(function(c) {
+                        block.append(`
+                            <div class="slate_candidate_name">
+                                <strong>${c.first_name} ${c.last_name}</strong><br>
+                                <small>ID: ${c.student_id}</small><br>
+                                <small>College: ${c.college_name || "N/A"}</small>
+                            </div>
+                        `);
                     });
                 }
-
-                col.append(posBlock);
+                col.append(block);
             });
 
-            row.append(col);
+            container.append(col);
         });
-
-        container.append(row);
     }
 
-    // ── Helpers ──
+    // ==================== RESET ====================
     function resetStudentSearch() {
-        selectedStudentId   = "";
-        selectedStudentName = "";
+        selectedStudentId = "";
         $("#student_search_input").val("");
         $("#student_dropdown").hide().empty();
-        $("#selected_student_display").text("No student selected.");
     }
 
     function resetAll() {
-        currentPartyId    = "";
-        currentPartyName  = "";
+        currentPartyId = "";
         currentPositionId = "";
-        allParties        = [];
-        allPositions      = [];
+        selectedStudentId = "";
+        allParties = [];
+        allPositions = [];
 
-        $("#view_toggle_section").hide();
-        $("#party_tabs_section").hide();
-        $("#party_tabs_container").empty();
-        $("#tabs_section").hide();
-        $("#tabs_container").empty();
-        $("#candidates_section").hide();
-        $("#candidates_list").empty();
-        $("#add_candidate_section").hide();
-        $("#slate_view").hide();
-        $("#manage_view").show();
-        $("#btn_manage_view").addClass("active");
-        $("#btn_slate_view").removeClass("active");
-
+        $("#party_tabs_container, #tabs_container, #candidates_list").empty();
         resetStudentSearch();
-        hideStatus();
-    }
-
-    function showStatus(message, type) {
-        let box = $("#status_message");
-        box.removeClass("success error").addClass(type).text(message).show();
-        setTimeout(hideStatus, 4000);
-    }
-
-    function hideStatus() {
-        $("#status_message").hide().text("");
+        hideAllTabsAndViews();   
     }
 
 });
