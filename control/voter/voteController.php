@@ -41,6 +41,7 @@ function sayHello(){
     return;
 }
 
+
 function getElectionFormDetails(){
     // check if there are active elections
     $status = getElectionStatus();
