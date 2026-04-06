@@ -207,6 +207,7 @@ function submitFormAnswers(){
     }
 
     if(!confirm("Are you sure about your selection?")) return;
+    disableSubmitButton();
 
     let index_of_position = 0;
     let election_id = $("#election_title").data("election-id");
@@ -270,4 +271,9 @@ function minimumVoteChecker() {
     });
 
     return unvoted_positions; // empty = all positions answered
+}
+
+function disableSubmitButton(){
+    $("#submit_button")
+        .prop("disabled", true);
 }
