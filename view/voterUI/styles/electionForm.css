@@ -1,0 +1,10 @@
+#main_content{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.candidates{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
