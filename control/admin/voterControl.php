@@ -1,6 +1,6 @@
 <?php
 
-include(__DIR__ . "/../model/readOperations.php");
+include(__DIR__ . "/../../model/admin/readOperations.php");
 
 function renderDeactivatedUsers(){
     $deactivated_users = getDeactivatedUsers();
