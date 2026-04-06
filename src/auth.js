@@ -47,7 +47,7 @@ $("#registerBtn").click(function(){
     let confirmpassword = $("#confirmpassword").val().trim();
 
     $.ajax({
-        url: "../control/register.php",
+        url: "control/register.php",
         type: "POST",
         dataType: "json",
         data: {
@@ -60,7 +60,7 @@ $("#registerBtn").click(function(){
         success: function(response){
             if (response.success) {
                 alert("Registered successfully!");
-                window.location.href = "../index.html"
+                window.location.href = "index.html"
             } else {
                 $("#hint").text(response.message[0]);
             }
