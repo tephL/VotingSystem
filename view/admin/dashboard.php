@@ -7,7 +7,7 @@
     }
 
     if($_SESSION["role"] != "1000"){ 
-        header("Location: ../unauthorized.html"); 
+        header("Location: ../../index.html"); 
         exit(); 
     }
 ?>
@@ -16,7 +16,7 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="./styles/adminUI.css">
-    <script src="../jquery.js"></script>
+    <script src="../../src/jquery.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
@@ -33,7 +33,7 @@
             <a class="items" href="./electionManager.php">Election Manager</a>
             <a class="items" href="./candidatesManager.php">Candidates Manager</a>
             <a class="items" href="./votersManager.php">Voters Manager</a>
-            <a class="items" href="./adminSettings.php">Settings</a>
+            <a class="items" id="signout_btn">Sign Out</a>
         </div>
     </div>
     
@@ -46,6 +46,6 @@
         <div class="graph" id="live_report_animals">Live standing of Animals</div>
     </div>
 
-    <script src="./adminUtils.js"></script>
+    <script src="./scripts/adminUtils.js"></script>
 </body>
 </html>

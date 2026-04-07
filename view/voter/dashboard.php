@@ -31,7 +31,7 @@
         <div id="menu_items">
             <a class="items" href="dashboard.php">Dashboard</a>
             <a class="items" href="./electionForm.php">Election Form</a>
-            <a class="items" href="./voterSettings.php">Settings</a>
+            <a class="items" id="signout_btn">Sign Out</a>
         </div>
     </div>
     
@@ -39,6 +39,6 @@
         
     </div>
 
-    <script src="./voterUtils.js"></script>
+    <script src="./scripts/voterUtils.js"></script>
 </body>
 </html>

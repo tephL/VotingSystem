@@ -1,6 +1,6 @@
 <?php
 
-    include(__DIR__ . "/dbconn.php");
+    include(__DIR__ . "/../dbconn.php");
 
      function userExists($username){
         global $conn;

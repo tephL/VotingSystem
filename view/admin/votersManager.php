@@ -7,7 +7,7 @@
     }
 
     if($_SESSION["role"] != "1000"){ 
-        header("Location: ../unauthorized.html"); 
+        header("Location: ../../index.html"); 
         exit(); 
     }
 ?>
@@ -33,7 +33,7 @@
             <a class="items" href="./electionManager.php">Election Manager</a>
             <a class="items" href="./candidatesManager.php">Candidates Manager</a>
             <a class="items" href="./votersManager.php">Voters Manager</a>
-            <a class="items" href="./adminSettings.php">Settings</a>
+            <a class="items" id="signout_btn">Sign Out</a>
         </div>
     </div>
     
@@ -47,6 +47,6 @@
         </div>
     </div>
 
-    <script src="./adminUtils.js"></script>
+    <script src="./scripts/adminUtils.js"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@
     }
 
     if($_SESSION["role"] != "1000"){ 
-        header("Location: ../unauthorized.html"); 
+        header("Location: ../../index.html"); 
         exit(); 
     }
 ?>
