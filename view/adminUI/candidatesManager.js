@@ -101,7 +101,6 @@ $(document).ready(function () {
                 }
                 buildPositionTabs();
 
-                // Auto select first party
                 if (allParties.length > 0) {
                     $(".party_tab_btn").first().click();
                 }
@@ -314,7 +313,7 @@ $(document).ready(function () {
         });
     }
 
-    // ==================== VIEW TOGGLE ====================
+    // VIEW TOGGLE 
     $(".view_toggle_btn").click(function () {
         $(".view_toggle_btn").removeClass("active");
         $(this).addClass("active");
@@ -334,7 +333,7 @@ $(document).ready(function () {
         }
     });
 
-    // ==================== SLATE VIEW ====================
+    // SLATE VIEW 
     function loadSlate() {
         $.ajax({
             url: "../../control/candidatesControl.php",
@@ -384,7 +383,7 @@ $(document).ready(function () {
         });
     }
 
-    // ==================== RESET ====================
+    // RESET
     function resetStudentSearch() {
         selectedStudentId = "";
         $("#student_search_input").val("");

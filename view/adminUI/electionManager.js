@@ -111,7 +111,6 @@ $(document).ready(function () {
         }
     });
 
-    // LIMIT MAX VOTES TO 8
     $(document).on("input", ".pos-max", function () {
         if ($(this).val() > 8) {
             $(this).val(8);
