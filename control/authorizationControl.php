@@ -1,6 +1,6 @@
 <?php
 
-    include("../model/readOperations.php");
+    include(__DIR__ . "/../model/authorizationModel.php");
 
     // getting what type of action
     $action = $_POST["action"];
@@ -92,9 +92,9 @@
 
         $role_id = getUserRoleID($username);
         if($role_id == "1000"){
-            $landing_page = "adminUI";
+            $landing_page = "admin";
         } else if($role_id == "1001"){
-            $landing_page = "voterUI";
+            $landing_page = "voter";
         }
         
         echo json_encode([

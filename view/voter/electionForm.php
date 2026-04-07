@@ -7,7 +7,7 @@
     }
 
     if($_SESSION["role"] != "1001"){ 
-        header("Location: ../unauthorized.html"); 
+        header("Location: ../../index.html"); 
         exit(); 
     }
 ?>
@@ -16,10 +16,11 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="./styles/voterUI.css">
-    <script src="../jquery.js"></script>
+    <link rel="stylesheet" href="./styles/electionForm.css">
+    <script src="../../src/jquery.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Election Form</title>
 </head>
 <body>
 
@@ -31,14 +32,17 @@
         <div id="menu_items">
             <a class="items" href="dashboard.php">Dashboard</a>
             <a class="items" href="./electionForm.php">Election Form</a>
-            <a class="items" href="./voterSettings.php">Settings</a>
+            <a class="items" id="signout_btn">Sign Out</a>
         </div>
     </div>
     
     <div id="main_content">
-        
+        <h1 id="election_title"></h1>
+        <p id="election_year"></p>
     </div>
 
-    <script src="./voterUtils.js"></script>
+
+    <script src="./scripts/voterUtils.js"></script>
+    <script src="./scripts/electionForm.js"></script>
 </body>
 </html>

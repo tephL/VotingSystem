@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
-include_once "../model/readOperations.php";
-include "../model/createOperations.php";
+include_once "../model/admin/readOperations.php";
+include "../model/admin/createOperations.php";
 
 $studentid = trim($_POST['studentid']);
 $email = trim($_POST['email']);

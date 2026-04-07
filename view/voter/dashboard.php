@@ -6,8 +6,8 @@
         exit(); 
     }
 
-    if($_SESSION["role"] != "1000"){ 
-        header("Location: ../unauthorized.html"); 
+    if($_SESSION["role"] != "1001"){ 
+        header("Location: ../../index.html"); 
         exit(); 
     }
 ?>
@@ -15,25 +15,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="../styles/adminUI.css">
-    <script src="../jquery.js"></script>
+    <link rel="stylesheet" href="./styles/voterUI.css">
+    <script src="../../src/jquery.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voters Manager</title>
+    <title>Dashboard</title>
 </head>
 <body>
 
     <div id="sidebar">
         <div id="title">
             <h1>Voting System</h1>
-            <p>Admin Page</p>
+            <p>Voter Page</p>
         </div>
         <div id="menu_items">
             <a class="items" href="dashboard.php">Dashboard</a>
-            <a class="items" href="./electionManager.php">Election Manager</a>
-            <a class="items" href="./candidatesManager.php">Candidates Manager</a>
-            <a class="items" href="./votersManager.php">Voters Manager</a>
-            <a class="items" href="./adminSettings.php">Settings</a>
+            <a class="items" href="./electionForm.php">Election Form</a>
+            <a class="items" id="signout_btn">Sign Out</a>
         </div>
     </div>
     
@@ -41,6 +39,6 @@
         
     </div>
 
-    <script src="./adminUtils.js"></script>
+    <script src="./scripts/voterUtils.js"></script>
 </body>
 </html>
