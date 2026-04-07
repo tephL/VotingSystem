@@ -207,7 +207,6 @@ function updateElection() {
             }
         }
 
-        // NEW: If election status is Completed, set all its parties to inactive
         if ($status === "Completed") {
             $conn->query("UPDATE PoliticalParties SET status = 'inactive' WHERE election_id = $id");
         }
@@ -232,7 +231,6 @@ function getElection() {
                 $id = $row['election_id'];
                 $conn->query("UPDATE Elections SET status = '$newStatus' WHERE election_id = $id");
                 
-                // If status changed to Completed, set parties to inactive
                 if ($newStatus === "Completed") {
                     $conn->query("UPDATE PoliticalParties SET status = 'inactive' WHERE election_id = $id");
                 }
