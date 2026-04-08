@@ -56,14 +56,14 @@
     
     <div id="main_content">
         <div id="deactivated_users">
-            <?php
-                include(__DIR__ . "/../../control/admin/voterControl.php");
-                
-                renderDeactivatedUsers();
-            ?>
+            <table>
+                <th></th>
+                <td></td>
+            </table>
         </div>
     </div>
 
     <script src="./scripts/adminUtils.js"></script>
+    <script src="./scripts/votersManager.js"></script>
 </body>
 </html>
