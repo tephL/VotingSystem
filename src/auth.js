@@ -14,7 +14,7 @@ function login(){
     let password = $("#password").val();
 
     $.ajax({
-        url: "control/authorizationControl.php",
+        url: "control/authenticationControl.php",
         type: "POST",
         dataType: "json",
         data: {
@@ -47,7 +47,7 @@ $("#registerBtn").click(function(){
     let confirmpassword = $("#confirmpassword").val().trim();
 
     $.ajax({
-        url: "control/register.php",
+        url: "control/registerControl.php",
         type: "POST",
         dataType: "json",
         data: {

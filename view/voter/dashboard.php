@@ -26,7 +26,7 @@
     <div id="sidebar">
         <div id="title">
             <h1>Voting System</h1>
-            <p>Voter Page</p>
+            <p id="role_name">Student Voter</p>
         </div>
         <div id="menu_items">
             <a class="items" href="dashboard.php">Dashboard</a>

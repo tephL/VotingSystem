@@ -2,7 +2,9 @@
 
     include(__DIR__ . "/../dbconn.php");
 
-     function userExists($username){
+    $conn = instantiateDbForUser("root", "");
+
+    function userExists($username){
         global $conn;
         
         $sql = "SELECT * FROM Users WHERE username = '$username'";

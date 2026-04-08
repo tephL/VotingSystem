@@ -103,31 +103,38 @@ FOREIGN KEY (`user_id`)    REFERENCES `Users`(`user_id`)
 -- ============================================================
 
 -- Roles (role_id: 1000 = admin, 1001 = student_voter)
-INSERT INTO Roles (role_name) VALUES ('admin');          -- role_id: 1000
-INSERT INTO Roles (role_name) VALUES ('student_voter');  -- role_id: 1001
+INSERT INTO Roles (role_id, role_name) VALUES ('3000', 'master_admin');  -- role_id: 3000
+INSERT INTO Roles (role_id, role_name) VALUES ('3001', 'election_admin');  -- role_id: 3001
+INSERT INTO Roles (role_id, role_name) VALUES ('3002', 'voters_admin');  -- role_id: 3002
+INSERT INTO Roles (role_id, role_name) VALUES ('1000', 'student_voter');  -- role_id: 1000
 
 -- Users: Admin (user_id: 1000)
 INSERT INTO Users (username, email, password, role_id, activated_status) VALUES
-('tephL', 'tephL@example.com', '1234567878', 1000, 1);      -- user_id: 1000
+('tephL', 'tephL@example.com', '1234567878', 3000, 1), 
+('justine', 'justine@example.com', '1234567878', 3001, 1), 
+('sandrara', 'sandra@example.com', '1234567878', 3001, 1),
+('luigicat', 'luigi@example.com', '1234567878', 3002, 1),
+('johnpaul', 'jp@example.com', '1234567878', 3002, 1),
+('markjoseph', 'mj@example.com', '1234567878', 3002, 1); 
 
 -- Users: Student Voters (user_id: 1001–1016)
 INSERT INTO Users (username, email, password, role_id) VALUES
-('juan.delacruz',    'juan@example.com',       '12345678', 1001),  -- user_id: 1001
-('maria.garcia',     'maria@example.com',      '12345678', 1001),  -- user_id: 1002
-('carlos.lopez',     'carlos@example.com',     '12345678', 1001),  -- user_id: 1003
-('ana.martinez',     'ana@example.com',        '12345678', 1001),  -- user_id: 1004
-('jose.rodriguez',   'jose@example.com',       '12345678', 1001),  -- user_id: 1005
-('luisa.hernandez',  'luisa@example.com',      '12345678', 1001),  -- user_id: 1006
-('miguel.gonzales',  'miguel@example.com',     '12345678', 1001),  -- user_id: 1007
-('sofia.perez',      'sofia@example.com',      '12345678', 1001),  -- user_id: 1008
-('ramon.castillo',   'ramon@example.com',      '12345678', 1001),  -- user_id: 1009
-('elena.morales',    'elena@example.com',      '12345678', 1001),  -- user_id: 1010
-('diego.navarro',    'diego@example.com',      '12345678', 1001),  -- user_id: 1011
-('isabella.reyes',   'isabella@example.com',   '12345678', 1001),  -- user_id: 1012
-('marco.santiago',   'marco@example.com',      '12345678', 1001),  -- user_id: 1013
-('gabrielle.valdez', 'gabrielle@example.com',  '12345678', 1001),  -- user_id: 1014
-('rafael.salazar',   'rafael@example.com',     '12345678', 1001),  -- user_id: 1015
-('camille.fuentes',  'camille@example.com',    '12345678', 1001);  -- user_id: 1016
+('juan.delacruz',    'juan@example.com',       '12345678', 1000),
+('maria.garcia',     'maria@example.com',      '12345678', 1000),
+('carlos.lopez',     'carlos@example.com',     '12345678', 1000),
+('ana.martinez',     'ana@example.com',        '12345678', 1000),
+('jose.rodriguez',   'jose@example.com',       '12345678', 1000),
+('luisa.hernandez',  'luisa@example.com',      '12345678', 1000),
+('miguel.gonzales',  'miguel@example.com',     '12345678', 1000),
+('sofia.perez',      'sofia@example.com',      '12345678', 1000),
+('ramon.castillo',   'ramon@example.com',      '12345678', 1000),
+('elena.morales',    'elena@example.com',      '12345678', 1000),
+('diego.navarro',    'diego@example.com',      '12345678', 1000),
+('isabella.reyes',   'isabella@example.com',   '12345678', 1000),
+('marco.santiago',   'marco@example.com',      '12345678', 1000),
+('gabrielle.valdez', 'gabrielle@example.com',  '12345678', 1000),
+('rafael.salazar',   'rafael@example.com',     '12345678', 1000),
+('camille.fuentes',  'camille@example.com',    '12345678', 1000);
 
 -- Admins (admin_id: 1000)
 INSERT INTO Admins (first_name, middle_name, last_name, contact_number, user_id) VALUES

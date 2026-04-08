@@ -2,11 +2,13 @@
 
     include(__DIR__ . "/dbconn.php");
 
+    $conn = instantiateDbForUser("root", "");
+
     
     function userExists($username){
         global $conn;
         
-        $sql = "SELECT * FROM Users WHERE username = '$username'";
+        $sql = "SELECT * FROM Users WHERE BINARY username = '$username'";
         $r_sql = $conn->query($sql);
 
         if($r_sql->num_rows > 0){
@@ -38,7 +40,7 @@
     function passwordValidation($username, $password){
         global $conn;
         
-        $sql = "SELECT * FROM Users WHERE username = '$username'";
+        $sql = "SELECT * FROM Users WHERE BINARY username = '$username'";
         $r_sql = $conn->query($sql);
 
         if($r_sql->num_rows > 0){
@@ -58,7 +60,7 @@
     function getUserActivatedStatus($username){
         global $conn;
         
-        $sql = "SELECT * FROM Users WHERE username = '$username'";
+        $sql = "SELECT * FROM Users WHERE BINARY username = '$username'";
         $r_sql = $conn->query($sql);
 
         $row = $r_sql->fetch_assoc();
@@ -70,7 +72,7 @@
     function getUserID($username){
         global $conn;
         
-        $sql = "SELECT * FROM Users WHERE username = '$username'";
+        $sql = "SELECT * FROM Users WHERE BINARY username = '$username'";
         $r_sql = $conn->query($sql);
 
         $row = $r_sql->fetch_assoc();
@@ -82,7 +84,7 @@
     function getUserRoleID($username){
         global $conn;
         
-        $sql = "SELECT * FROM Users WHERE username = '$username'";
+        $sql = "SELECT * FROM Users WHERE BINARY username = '$username'";
         $r_sql = $conn->query($sql);
 
         $row = $r_sql->fetch_assoc();
