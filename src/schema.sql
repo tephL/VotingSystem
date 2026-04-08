@@ -92,7 +92,6 @@ CREATE TABLE `VotingSystem`.`StudentVoters` (
 `studentvoter_id` INT        NOT NULL AUTO_INCREMENT,
 `user_id`         INT        NOT NULL,
 `student_id`      INT        NOT NULL,
-`has_voted`       TINYINT(1) NOT NULL DEFAULT 0,
 PRIMARY KEY (`studentvoter_id`),
 FOREIGN KEY (`user_id`)    REFERENCES `Users`(`user_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1000;
