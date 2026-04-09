@@ -1,6 +1,8 @@
 <?php
 
-include(__DIR__ . "/../dbconn.php");
+include_once(__DIR__ . "/../dbconn.php");
+
+$conn = instantiateDbForUser("root", "");
 
 function insertVote($studentvoter_id, $candidate_id, $position_id, $election_id){
     global $conn;

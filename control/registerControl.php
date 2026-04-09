@@ -29,9 +29,6 @@ function validateRegistration($studentid, $username, $email, $password, $confirm
     if (strlen($username) < 5){
         $errors[] = 'Username too short';
     }
-    if (!ctype_alnum($username)) {
-        $errors[] = 'Username cannot contain spaces or special characters';
-    }
     if (strlen($password) < 8){
         $errors[] = 'Password too short';
     }
@@ -42,7 +39,9 @@ function validateRegistration($studentid, $username, $email, $password, $confirm
     if (!empty($errors)) return $errors;
 
     // db check 
-    if (userExists($username)){
+    // validating existence in db
+    $userExistence = userExists($username);
+    if($userExistence){
         $errors[] = 'Username already taken';
     }
 

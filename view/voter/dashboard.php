@@ -6,7 +6,7 @@
         exit(); 
     }
 
-    if($_SESSION["role"] != "1001"){ 
+    if($_SESSION["role"] != "1000"){ 
         header("Location: ../../index.html"); 
         exit(); 
     }

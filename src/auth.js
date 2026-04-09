@@ -65,8 +65,8 @@ $("#registerBtn").click(function(){
                 $("#hint").text(response.message[0]);
             }
         },
-        error: function(xhr) {
-            alert("Error: " + xhr.responseText); 
+        error: function(response) {
+            console.log("Error: " + response.responseText); 
         }
     });
 });

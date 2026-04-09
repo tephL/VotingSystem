@@ -15,7 +15,7 @@ PRIMARY KEY (`college_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1000;
 
 CREATE TABLE `VotingSystem`.`Students` (
-`student_id`  INT          NOT NULL AUTO_INCREMENT,
+`student_id`  BIGINT          NOT NULL AUTO_INCREMENT,
 `first_name`  VARCHAR(255) NOT NULL,
 `middle_name` VARCHAR(255),
 `last_name`   VARCHAR(255) NOT NULL,
@@ -91,8 +91,7 @@ FOREIGN KEY (`user_id`) REFERENCES `Users`(`user_id`)
 CREATE TABLE `VotingSystem`.`StudentVoters` (
 `studentvoter_id` INT        NOT NULL AUTO_INCREMENT,
 `user_id`         INT        NOT NULL,
-`student_id`      INT        NOT NULL,
-`has_voted`       TINYINT(1) NOT NULL DEFAULT 0,
+`student_id`      BIGINT        NOT NULL,
 PRIMARY KEY (`studentvoter_id`),
 FOREIGN KEY (`user_id`)    REFERENCES `Users`(`user_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1000;
@@ -119,22 +118,11 @@ INSERT INTO Users (username, email, password, role_id, activated_status) VALUES
 
 -- Users: Student Voters (user_id: 1001–1016)
 INSERT INTO Users (username, email, password, role_id) VALUES
-('juan.delacruz',    'juan@example.com',       '12345678', 1000),
-('maria.garcia',     'maria@example.com',      '12345678', 1000),
-('carlos.lopez',     'carlos@example.com',     '12345678', 1000),
-('ana.martinez',     'ana@example.com',        '12345678', 1000),
-('jose.rodriguez',   'jose@example.com',       '12345678', 1000),
-('luisa.hernandez',  'luisa@example.com',      '12345678', 1000),
-('miguel.gonzales',  'miguel@example.com',     '12345678', 1000),
-('sofia.perez',      'sofia@example.com',      '12345678', 1000),
-('ramon.castillo',   'ramon@example.com',      '12345678', 1000),
-('elena.morales',    'elena@example.com',      '12345678', 1000),
-('diego.navarro',    'diego@example.com',      '12345678', 1000),
-('isabella.reyes',   'isabella@example.com',   '12345678', 1000),
-('marco.santiago',   'marco@example.com',      '12345678', 1000),
-('gabrielle.valdez', 'gabrielle@example.com',  '12345678', 1000),
-('rafael.salazar',   'rafael@example.com',     '12345678', 1000),
-('camille.fuentes',  'camille@example.com',    '12345678', 1000);
+('john_doe', 'john.doe@example.com', '321321321', 1000), -- 1006
+('jane_smith', 'jane.smith@example.com', '321321321', 1000), -- 1007
+('mike_ross', 'mike.ross@example.com', '321321321', 1000), -- 1008
+('rachel_zane', 'rachel.zane@example.com', '321321321', 1000), -- 1009
+('harvey_specter', 'harvey.specter@example.com', '321321321', 1000); -- 1010
 
 -- Admins (admin_id: 1000)
 INSERT INTO Admins (first_name, middle_name, last_name, contact_number, user_id) VALUES
@@ -142,22 +130,12 @@ INSERT INTO Admins (first_name, middle_name, last_name, contact_number, user_id)
 
 -- StudentVoters (studentvoter_id: 1000–1015)
 INSERT INTO StudentVoters (user_id, student_id) VALUES
-(1001, 1000),                                            -- studentvoter_id: 1000 | Juan Dela Cruz
-(1002, 1001),                                            -- studentvoter_id: 1001 | Maria Garcia
-(1003, 1002),                                            -- studentvoter_id: 1002 | Carlos Lopez
-(1004, 1003),                                            -- studentvoter_id: 1003 | Ana Martinez
-(1005, 1004),                                            -- studentvoter_id: 1004 | Jose Rodriguez
-(1006, 1005),                                            -- studentvoter_id: 1005 | Luisa Hernandez
-(1007, 1006),                                            -- studentvoter_id: 1006 | Miguel Gonzales
-(1008, 1007),                                            -- studentvoter_id: 1007 | Sofia Perez
-(1009, 1008),                                            -- studentvoter_id: 1008 | Ramon Castillo
-(1010, 1009),                                            -- studentvoter_id: 1009 | Elena Morales
-(1011, 1010),                                            -- studentvoter_id: 1010 | Diego Navarro
-(1012, 1011),                                            -- studentvoter_id: 1011 | Isabella Reyes
-(1013, 1012),                                            -- studentvoter_id: 1012 | Marco Santiago
-(1014, 1013),                                            -- studentvoter_id: 1013 | Gabrielle Valdez
-(1015, 1014),                                            -- studentvoter_id: 1014 | Rafael Salazar
-(1016, 1015);                                            -- studentvoter_id: 1015 | Camille Fuentes
+(1006, 2023000001),
+(1007, 2023000002),
+(1008, 2023000003),
+(1009, 2023000004),
+(1010, 2023000005);
+
 
 -- ============================================================
 -- VOTING PROCESS 
@@ -194,7 +172,7 @@ CREATE TABLE `VotingSystem`.`PoliticalParties` (
 CREATE TABLE `VotingSystem`.`Candidates` (
   `candidate_id` INT NOT NULL AUTO_INCREMENT,
   `party_id`     INT NOT NULL,
-  `student_id`   INT NOT NULL,
+  `student_id`   BIGINT NOT NULL,
   `election_id`  INT NOT NULL,
   `position_id`  INT NOT NULL,
   PRIMARY KEY (`candidate_id`),
@@ -264,61 +242,3 @@ INSERT INTO Candidates (party_id, student_id, election_id, position_id) VALUES
 (1001, 2024000012, 1000, 1002),  -- candidate_id: 1011 | Marco Santiago   -> Senator
 (1001, 2024000013, 1000, 1003),  -- candidate_id: 1012 | Gabrielle Valdez -> Vice-Governor
 (1001, 2024000015, 1000, 1002); 
-
--- ==========================================================
--- TESTING FOR ELECTION FORM (exclude on initialization)
--- ==========================================================
-
--- Students
-INSERT INTO Students (first_name, middle_name, last_name, college_id) VALUES
-('Tungtung', 'Tung', 'Sahur', 1001), -- 2024000016
-('Traralero', 'Tra', 'Lala', 1001),
-('Cappucinna', 'Baller', 'Rina', 1001),
-('Brocoloco', 'Coco', 'Loco', 1001),
-('Brim', 'Bim', 'Patapim', 1001),
-('Walter', 'Not', 'White', 1001),
-('John', 'Beef', 'Pork', 1001),
-('Boyni', 'Bono', 'Nini', 1001); -- 2024000023
-
--- Election
-INSERT INTO Elections (election_title, status, start_date, end_date) VALUES
-('Brainrot Showdown 2026', 'active', '2026-03-01 08:00:00', '2026-04-25 17:00:00'); -- 1002
-
--- Parties
-INSERT INTO PoliticalParties (party_name, election_id) VALUES
-('Giga Chads', 1002), -- 1002
-('Axis', 1002); -- 1003
-
--- Positions
-INSERT INTO Positions (position_name, max_votes, election_id) VALUES
-('Brainrot', 1, 1002), -- 1007
-('Bawlsacks', 1, 1002), -- 1008
-('LowTiers', 3, 1002);  -- 1009
-
--- Candidates
-INSERT INTO Candidates (party_id, student_id, election_id, position_id) VALUES
-  -- brainrot
-(1002, 2024000016, 1002, 1007),
-(1003, 2024000017, 1002, 1007),
-  -- bawlsacks
-(1002, 2024000018, 1002, 1008),
-(1003, 2024000019, 1002, 1008),
-  -- lowtiers
-(1002, 2024000020, 1002, 1009),
-(1002, 2024000021, 1002, 1009),
-(1003, 2024000022, 1002, 1009),
-(1003, 2024000023, 1002, 1009);
-
-
--- ========================= JOINS FOR SEEING VOTES OF A PERSON
-SELECT 
-	v.studentvoter_id,
-    s.last_name,
-    p.position_name
-FROM Votes v
-LEFT JOIN Candidates c
-	ON v.candidate_id = c.candidate_id
-LEFT JOIN Positions p
-	ON p.position_id = c.position_id
-LEFT JOIN Students s
-	ON s.student_id = c.student_id
