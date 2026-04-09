@@ -1,6 +1,6 @@
 <?php
 
-    include(__DIR__ . "/../dbconn.php");
+    include (__DIR__ . "/../dbconn.php");
 
     $conn = instantiateDbForUser("root", "");
 
@@ -49,7 +49,6 @@
             $row = $r_sql->fetch_assoc();
             $passwordFromDB = $row["password"];
 
-            // check if incorrect
             if($password != $passwordFromDB){
                 return false;
             }
