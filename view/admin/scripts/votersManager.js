@@ -1,5 +1,5 @@
 // type of users
-let is_activated_users = true;
+let is_activated_users = false;
 // user's pagination behavior
 let USERS_PAGE = 1;
 let USERS_PAGE_MAX = false;
@@ -35,13 +35,23 @@ function loadUsers(page){
                 } else{
                     USERS_PAGE_MAX = false;
                 }
-                renderDeactivatedUsers(response.deactivated_users);
+                renderTableBody();
+                renderUsers(response.deactivated_users);
                 renderPaginationForDeactivatedUsers();
             } else{
+                if(response.is_last_page){
+                    USERS_PAGE_MAX = true;
+                } else{
+                    USERS_PAGE_MAX = false;
+                }
+
                 if(USERS_PAGE != 1){
                     USERS_PAGE -= 1;
-                    loadDeactivatedUsers(USERS_PAGE);
+                    loadUsers(USERS_PAGE);
                 }
+                renderTableBody();
+                renderEmptyUsers();
+                renderPaginationForDeactivatedUsers();
             }
         },
         error: function(response){
@@ -51,7 +61,13 @@ function loadUsers(page){
 
 }
 
-function renderDeactivatedUsers(deactivated_users){
+
+function renderTableBody(){
+
+    if(deactivated_users.length == 0){
+        console.log("empty set");
+    }
+
     // users type title handler
     let title;
     if(is_activated_users){
@@ -70,7 +86,7 @@ function renderDeactivatedUsers(deactivated_users){
             is_activated_users = true;
             USERS_PAGE_MAX = false;
             USERS_PAGE = 1;
-            loadDeactivatedUsers(USERS_PAGE);
+            loadUsers(USERS_PAGE);
         });;
     let deactivated_title = $("<h1>")
         .text(title)
@@ -82,7 +98,7 @@ function renderDeactivatedUsers(deactivated_users){
             is_activated_users = false;
             USERS_PAGE_MAX = false;
             USERS_PAGE = 1;
-            loadDeactivatedUsers(USERS_PAGE);
+            loadUsers(USERS_PAGE);
         });
     users_header
         .append(prev)
@@ -90,7 +106,7 @@ function renderDeactivatedUsers(deactivated_users){
         .append(next);
 
     // table header
-    let table = $("<table>");
+    let table = $("<table>").attr("id", "table_body");
     let header = $("<tr>");
     let user_id_col = $("<th>").text("User ID");
     let username_col = $("<th>").text("Username");
@@ -107,6 +123,36 @@ function renderDeactivatedUsers(deactivated_users){
         .append(actions_col);
     table
         .append(header);
+
+    // appending to container
+    let deactivated_users_container = $("#deactivated_users")
+        .append(users_header)
+        .append(table);
+}
+
+
+function renderEmptyUsers(){
+    let subtext;
+    if(is_activated_users){
+        subtext = "No Activated Users";
+    } else{
+        subtext = "No Deactivated Users";
+    }
+
+    let subtext_message = $("<p>")
+        .text(subtext);
+    let subtext_container = $("<div>")
+        .append(subtext_message);
+    let table_row = $("<tr>")
+        .append(subtext_container);
+    let table = $("#table_body")
+        .append(table_row);
+}
+
+
+function renderUsers(deactivated_users){
+
+    let table = $("#table_body");
 
     // users traversal for table data and actions
     deactivated_users.forEach((user) => {
@@ -155,10 +201,7 @@ function renderDeactivatedUsers(deactivated_users){
         table.append(new_data_row);   
     });
 
-    // appending to container
-    let deactivated_users_container = $("#deactivated_users")
-        .append(users_header)
-        .append(table);
+    
 
 }
 
@@ -171,14 +214,14 @@ function renderPaginationForDeactivatedUsers(){
         .prop("disabled", USERS_PAGE == 1)
         .on("click", function(){
             USERS_PAGE -= 1;
-            loadDeactivatedUsers(USERS_PAGE);
+            loadUsers(USERS_PAGE);
         });
     next_button = $("<button>")
         .text(">")
         .prop("disabled", USERS_PAGE_MAX)
         .on("click", function(){
             USERS_PAGE += 1;
-            loadDeactivatedUsers(USERS_PAGE);
+            loadUsers(USERS_PAGE);
         });
     deactivated_pagination = $("<div>")
         .addClass("pagination")
@@ -192,7 +235,7 @@ function renderPaginationForDeactivatedUsers(){
 
 
 loadUsers(USERS_PAGE);
-// setInterval(loadDeactivatedUsers, 3000); // for live reload but shi it looks so buns with the lag
+// setInterval(loadUsers, 3000); // for live reload but shi it looks so buns with the lag
 
 
 function acceptUser(user_id, username){
@@ -207,7 +250,7 @@ function acceptUser(user_id, username){
             user_id: `${user_id}`
         },
         success: function(response){
-            loadDeactivatedUsers(USERS_PAGE);
+            loadUsers(USERS_PAGE);
             alert(`Accepted ${username} (${user_id})`);
         },
         error: function(response){
@@ -229,7 +272,7 @@ function rejectUser(user_id, username){
             user_id: `${user_id}`
         },
         success: function(response){
-            loadDeactivatedUsers(USERS_PAGE);
+            loadUsers(USERS_PAGE);
             alert(`Rejected ${username} (${user_id})`);
         },
         error: function(response){
@@ -251,7 +294,7 @@ function deleteUser(user_id, username){
             user_id: `${user_id}`
         },
         success: function(response){
-            loadDeactivatedUsers(USERS_PAGE);
+            loadUsers(USERS_PAGE);
             alert(`Deleted ${username} (${user_id})`);
         },
         error: function(response){

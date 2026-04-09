@@ -59,9 +59,9 @@ function returnTypeOfUsers($type){
 
     $is_activated;
     if($type == "activated"){ 
-        $is_activated = 1;
+        $is_activated = true;
     } else if($type == "deactivated"){
-        $is_activated = 0; 
+        $is_activated = false; 
     }
 
     $page = $_POST["page"];
@@ -75,7 +75,8 @@ function returnTypeOfUsers($type){
     if($type_of_users->num_rows < 1){
         echo json_encode([
             "status" => false,
-            "limit" => $limit
+            "limit" => $limit,
+            "is_last_page" => $is_last_page
         ]); 
         return;
     }

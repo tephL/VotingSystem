@@ -20,7 +20,7 @@ function getTypeOfUsers($is_activated, $limit, $offset){
             FROM Users u
             LEFT JOIN StudentVoters sv
                 ON sv.user_id = u.user_id
-            WHERE activated_status = $is_activated AND u.role_id = 1000
+            WHERE u.activated_status = $activated_status AND u.role_id = 1000
             ORDER BY u.user_id DESC
             LIMIT $limit
             OFFSET $offset;";
@@ -39,10 +39,11 @@ function isTypeOfUsersLastPage($is_activated, $page, $limit){
 
     $sql = "SELECT COUNT(*) AS COUNT 
             FROM Users 
-            WHERE activated_status = $is_activated AND role_id = 1000
+            WHERE activated_status = $activated_status AND role_id = 1000
             ORDER BY user_id DESC";
     $r_sql = $conn->query($sql);
     $row = $r_sql->fetch_assoc();
+
 
     $total = $row["COUNT"];
     $total_pages = ceil($total / $limit);
