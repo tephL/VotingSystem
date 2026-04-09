@@ -17,11 +17,11 @@ switch($action){
         returnTypeOfUsers("activated");
         break;
     case "rejectUserWithUserId":
-        rejectUserWithUserId();
+        deleteUserWithUserId();
         break;
     case "acceptUserWithUserId":
         acceptUserWithUserId();
-        break
+        break;
     case "deleteUserWithUserId":
         deleteUserWithUserId();
         break;
@@ -34,17 +34,6 @@ switch($action){
 
 
 function deleteUserWithUserId(){
-    $user_id = $_POST["user_id"];
-    deleteUser($user_id);
-    
-    echo json_encode([
-        "message" => "success"
-    ]);
-    return;
-}
-
-
-function rejectUserWithUserId(){
     $user_id = $_POST["user_id"];
     deleteUser($user_id);
     
