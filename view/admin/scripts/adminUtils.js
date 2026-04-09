@@ -42,6 +42,10 @@ $(document).ready(function(){
     $("#closed_election_section").hide();
  
     loadResults();
+
+    setInterval(function(){
+        loadResults();
+    }, 10000);
  
     function loadResults(){
         $.ajax({
@@ -62,6 +66,10 @@ $(document).ready(function(){
                 const positions = data.positions || [];
 
                 $("#greeting").text("Good Day, " + username);
+
+                $("#no_election_section").hide();
+                $("#ongoing_election_section").hide();
+                $("#closed_election_section").hide();
 
                 if(status === "upcoming"){
                     renderNoElection();
