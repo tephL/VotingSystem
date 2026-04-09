@@ -2,7 +2,7 @@
 
 date_default_timezone_set('Asia/Manila');
 
-include __DIR__ . "./../dbconn.php";
+include __DIR__ . "../../dbconn.php";
 
 $conn = instantiateDbForUser("root", "");
 
