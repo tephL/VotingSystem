@@ -56,11 +56,29 @@
     </div>
     
     <div id="main_content">
-        <div id="deactivated_users">
-            <table>
-                <th></th>
-                <td></td>
-            </table>
+        <div id="users"></div>
+    </div>
+
+    <div id="edit_window_bg">
+        <div id="edit_window">
+            <p id="edit_subtext">Edit User ID</p>
+            <div id="edit_hint">
+                <p id="edit_hint_text" hidden></p>
+            </div>
+            <input type="number" id="edit_student_id" placeholder="New Student ID" oninput="if(this.value.length > 10) this.value = this.value.slice(0, 10);">
+            <input type="text" id="edit_user_id" hidden>
+            <input type="text" id="old_username" hidden>
+            <input type="text" id="edit_username" placeholder="New Username">
+            <input type="email" id="edit_email" placeholder="New Email">
+            <input type="text" id="edit_password" placeholder="New Password">
+            <select id="edit_status">
+                <option selected>Activate</option>
+                <option>Deactivate</option>
+            </select>
+            <div id="edit_actions">
+                <button id="edit_cancel" onclick="cancelEdit()">Cancel</button>
+                <button id="edit_submit" onclick="submitUpdatedUserInfo()">Submit</button>
+            </div>
         </div>
     </div>
 

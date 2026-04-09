@@ -1,5 +1,5 @@
 // type of users
-let is_activated_users = false;
+let is_activated_users = true;
 // user's pagination behavior
 let USERS_PAGE = 1;
 let USERS_PAGE_MAX = false;
@@ -7,8 +7,8 @@ let USERS_PAGE_MAX = false;
 
 function loadUsers(page){
     // clear out the page
-    let deactivated_users_container = $("#deactivated_users");
-    deactivated_users_container.empty();
+    let users_container = $("#users");
+    users_container.empty();
 
     // action handler
     let action;
@@ -27,7 +27,6 @@ function loadUsers(page){
             page: page
         },
         success: function(response){
-            console.log(response);
             if(response.status){
                 // next button handler
                 if(response.is_last_page){
@@ -36,7 +35,7 @@ function loadUsers(page){
                     USERS_PAGE_MAX = false;
                 }
                 renderTableBody();
-                renderUsers(response.deactivated_users);
+                renderUsers(response.users);
                 renderPaginationForDeactivatedUsers();
             } else{
                 if(response.is_last_page){
@@ -63,11 +62,6 @@ function loadUsers(page){
 
 
 function renderTableBody(){
-
-    if(deactivated_users.length == 0){
-        console.log("empty set");
-    }
-
     // users type title handler
     let title;
     if(is_activated_users){
@@ -125,7 +119,7 @@ function renderTableBody(){
         .append(header);
 
     // appending to container
-    let deactivated_users_container = $("#deactivated_users")
+    let users_container = $("#users")
         .append(users_header)
         .append(table);
 }
@@ -150,12 +144,12 @@ function renderEmptyUsers(){
 }
 
 
-function renderUsers(deactivated_users){
+function renderUsers(users){
 
     let table = $("#table_body");
 
     // users traversal for table data and actions
-    deactivated_users.forEach((user) => {
+    users.forEach((user) => {
         let new_data_row = $("<tr>");
         let user_id = $("<td>").text(user.user_id);
         let username = $("<td>").text(user.username);
@@ -185,8 +179,14 @@ function renderUsers(deactivated_users){
                 .on("click", function() {
                     deleteUser(user.user_id, user.username);
                 });
+            let edit_button = $("<button>")
+                .text("Edit")
+                .on("click", function() {
+                    editUser(user.user_id, user.username, user.student_id, user.email);
+                });
             actions_container = $("<div>")
-                .append(delete_button);
+                .append(delete_button)
+                .append(edit_button);
         }
 
         let actions = $("<td>")
@@ -228,7 +228,7 @@ function renderPaginationForDeactivatedUsers(){
         .append(prev_button)
         .append(next_button);
 
-    let deactivated_users_container = $("#deactivated_users")
+    let users_container = $("#users")
         .append(deactivated_pagination);
 
 }
@@ -296,6 +296,96 @@ function deleteUser(user_id, username){
         success: function(response){
             loadUsers(USERS_PAGE);
             alert(`Deleted ${username} (${user_id})`);
+        },
+        error: function(response){
+            console.log(response.responseText);
+        }
+    });
+}
+
+
+function editUser(user_id, username, student_id, email){
+    if(!confirm(`Are you sure you want to EDIT ${username} (${user_id})?`)) return;
+
+    let edit_window_bg = $("#edit_window_bg")
+        .css("display", "flex");
+    let edit_subtext = $("#edit_subtext").text(`Editing ${username} (${user_id})`);
+
+    $.ajax({
+        url: "../../control/admin/votersControl.php",
+        type: "POST",
+        dataType: "json",
+        data: {
+            action: "getUserPassword",
+            user_id: `${user_id}`
+        },
+        success: function(response){
+            let edit_password = $("#edit_password").val(response.password);
+        },
+        error: function(response){
+            console.log(response.responseText);
+        }
+    });
+
+    let old_username = $("#old_username").val(username);
+    let edit_username = $("#edit_username").val(username);
+    let edit_user_id = $("#edit_user_id").val(user_id);
+    let edit_student_id = $("#edit_student_id").val(student_id);
+    let edit_email = $("#edit_email").val(email);
+}
+
+
+function cancelEdit(){
+    let edit_window_bg = $("#edit_window_bg")
+        .css("display", "none");
+}
+
+
+function submitUpdatedUserInfo(){
+    let edit_user_id = $("#edit_user_id").val();
+    let old_username = $("#old_username").val();
+    let edit_username = $("#edit_username").val();
+    let edit_student_id = $("#edit_student_id").val();
+    let edit_email = $("#edit_email").val();
+    let edit_password = $("#edit_password").val();
+    let edit_status = $("#edit_status").val();
+
+    let new_activated_status;
+    if(edit_status == 'Activate'){
+        new_activated_status = 1;
+    } else{
+        new_activated_status = 0;
+    }
+
+    let updatedUserInfo = {
+        user_id: edit_user_id,
+        new_username: edit_username,
+        old_username: old_username,
+        new_student_id: edit_student_id,
+        new_email: edit_email,
+        new_password: edit_password,
+        new_activated_status: new_activated_status
+    }
+
+    console.log(updatedUserInfo);
+
+    $.ajax({
+        url: "../../control/admin/votersControl.php",
+        type: "POST",
+        dataType: "json",
+        data: {
+            action: "updateUserInfo",
+            new_data: updatedUserInfo
+        },
+        success: function(response){
+            console.log(response);
+            $("#edit_hint_text").fadeIn(3000);
+            $("#edit_hint_text").text(response.message);
+              
+            if(response.status){
+                cancelEdit();
+                loadUsers(USERS_PAGE);
+            }
         },
         error: function(response){
             console.log(response.responseText);
