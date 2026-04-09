@@ -39,7 +39,9 @@ function validateRegistration($studentid, $username, $email, $password, $confirm
     if (!empty($errors)) return $errors;
 
     // db check 
-    if (userExists($username)){
+    // validating existence in db
+    $userExistence = userExists($username);
+    if($userExistence){
         $errors[] = 'Username already taken';
     }
 

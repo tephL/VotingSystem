@@ -69,6 +69,14 @@ function updateUserInfo(){
         return;
     }
 
+    if(str_contains($new_student_id, ' ')){
+        echo json_encode([
+            "status" => false,
+            "message" => "student id cant contain whitespaces" 
+        ]);
+        return;
+    }
+
     // is it less than minimum char of the usern (5)
     if(strlen($new_username) <= 4){
         echo json_encode([
