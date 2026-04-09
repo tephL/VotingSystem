@@ -1,5 +1,5 @@
 <?php 
-    include_once(__DIR__ . "/./readOperations.php");
+    include (__DIR__ . "./readOperations.php");
 
     function registerStudent($studentid, $username, $email, $password) {
     global $conn;
