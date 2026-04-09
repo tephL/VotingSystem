@@ -29,9 +29,6 @@ function validateRegistration($studentid, $username, $email, $password, $confirm
     if (strlen($username) < 5){
         $errors[] = 'Username too short';
     }
-    if (!ctype_alnum($username)) {
-        $errors[] = 'Username cannot contain spaces or special characters';
-    }
     if (strlen($password) < 8){
         $errors[] = 'Password too short';
     }

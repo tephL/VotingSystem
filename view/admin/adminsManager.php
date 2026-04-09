@@ -6,7 +6,7 @@
         exit(); 
     }
 
-    if($_SESSION["role"] != "3002"){ 
+    if($_SESSION["role"] != "3000" && $_SESSION["role"] != "3001" && $_SESSION["role"] != "3002"){ 
         header("Location: ../../index.html"); 
         exit(); 
     }
@@ -18,11 +18,10 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="./styles/adminUI.css">
-    <link rel="stylesheet" href="./styles/votersManager.css">
     <script src="../../src/jquery.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voters Manager</title>
+    <title>Dashboard</title>
 </head>
 <body>
 
@@ -56,15 +55,10 @@
     </div>
     
     <div id="main_content">
-        <div id="deactivated_users">
-            <table>
-                <th></th>
-                <td></td>
-            </table>
-        </div>
+        <div id="admins_container"></div>
     </div>
 
     <script src="./scripts/adminUtils.js"></script>
-    <script src="./scripts/votersManager.js"></script>
+    <script src="./scripts/adminsManager.js"></script>
 </body>
 </html>
