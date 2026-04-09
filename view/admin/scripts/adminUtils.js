@@ -91,34 +91,54 @@ $(document).ready(function(){
         $("#ongoing_election_title").text(election_title);
         $("#ongoing_election_section").show();
 
-        const container = document.getElementById("ongoing_charts_container");
-        container.innerHTML = "";
+        const charts_container = document.getElementById("ongoing_charts_container");
+        charts_container.innerHTML  = "";
 
         for(let i in positions){
-            const pos_name = positions[i].position_name;
-            const candidates = positions[i].candidates || [];
-            const canvas_id = "canvas_bar_ongoing_" + i;
+            const pos_name   = positions[i].position_name;
+            const candidates = positions[i].candidates;
+            if(!candidates || !candidates.length){
+                continue;
+            }
 
-            const block = document.createElement("div");
-            block.className = `position-chart-block ${candidates.length <= 2 ? "two-col" : "full-width"}`;
+            const pie_id = "canvas_pie_ongoing_" + i;
+            const bar_id = "canvas_bar_ongoing_" + i;
 
-            const heading = document.createElement("h2");
-            heading.textContent = pos_name + " Ranking";
-            block.appendChild(heading);
+            let block = document.createElement("div");
+            block.className = `position_result_block ${candidates.length <= 2 ? "two-col" : "full-width"}`;
 
-            const canvas = document.createElement("canvas");
-            canvas.id = canvas_id;
-            block.appendChild(canvas);
+            let pie_heading = document.createElement("h2");
+            pie_heading.textContent = pos_name + " Vote Share";
+            block.appendChild(pie_heading);
 
-            container.appendChild(block);
+            let pieWrapper = document.createElement("div");
+            pieWrapper.className = "pie-wrapper";
+            let pie_canvas = document.createElement("canvas");
+            pie_canvas.id = pie_id;
+            pieWrapper.appendChild(pie_canvas);
+            block.appendChild(pieWrapper);
+
+            let bar_heading = document.createElement("h2");
+            bar_heading.textContent = pos_name + " Vote Ranking";
+            block.appendChild(bar_heading);
+
+            let bar_canvas = document.createElement("canvas");
+            bar_canvas.id = bar_id;
+            block.appendChild(bar_canvas);
+
+            charts_container.appendChild(block);
 
             let labels = [];
-            let votes  = [];
+            let votes = [];
+            let percentages = [];
             for(let j in candidates){
                 labels.push(candidates[j].candidate_name);
                 votes.push(parseInt(candidates[j].vote_count));
+                percentages.push(candidates[j].percentage);
             }
-            renderBarChart(canvas_id, labels, votes, pos_name);
+ 
+            renderPieChart(pie_id, labels, percentages, pos_name);
+            renderBarChart(bar_id, labels, votes, pos_name);
         }
     }
 
