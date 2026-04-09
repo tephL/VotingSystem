@@ -103,31 +103,38 @@ FOREIGN KEY (`user_id`)    REFERENCES `Users`(`user_id`)
 -- ============================================================
 
 -- Roles (role_id: 1000 = admin, 1001 = student_voter)
-INSERT INTO Roles (role_name) VALUES ('admin');          -- role_id: 1000
-INSERT INTO Roles (role_name) VALUES ('student_voter');  -- role_id: 1001
+INSERT INTO Roles (role_id, role_name) VALUES ('3000', 'master_admin');  -- role_id: 3000
+INSERT INTO Roles (role_id, role_name) VALUES ('3001', 'election_admin');  -- role_id: 3001
+INSERT INTO Roles (role_id, role_name) VALUES ('3002', 'voters_admin');  -- role_id: 3002
+INSERT INTO Roles (role_id, role_name) VALUES ('1000', 'student_voter');  -- role_id: 1000
 
 -- Users: Admin (user_id: 1000)
 INSERT INTO Users (username, email, password, role_id, activated_status) VALUES
-('tephL', 'tephL@example.com', '1234567878', 1000, 1);      -- user_id: 1000
+('tephL', 'tephL@example.com', '1234567878', 3000, 1), 
+('justine', 'justine@example.com', '1234567878', 3001, 1), 
+('sandrara', 'sandra@example.com', '1234567878', 3001, 1),
+('luigicat', 'luigi@example.com', '1234567878', 3002, 1),
+('johnpaul', 'jp@example.com', '1234567878', 3002, 1),
+('markjoseph', 'mj@example.com', '1234567878', 3002, 1); 
 
 -- Users: Student Voters (user_id: 1001–1016)
 INSERT INTO Users (username, email, password, role_id) VALUES
-('juan.delacruz',    'juan@example.com',       '12345678', 1001),  -- user_id: 1001
-('maria.garcia',     'maria@example.com',      '12345678', 1001),  -- user_id: 1002
-('carlos.lopez',     'carlos@example.com',     '12345678', 1001),  -- user_id: 1003
-('ana.martinez',     'ana@example.com',        '12345678', 1001),  -- user_id: 1004
-('jose.rodriguez',   'jose@example.com',       '12345678', 1001),  -- user_id: 1005
-('luisa.hernandez',  'luisa@example.com',      '12345678', 1001),  -- user_id: 1006
-('miguel.gonzales',  'miguel@example.com',     '12345678', 1001),  -- user_id: 1007
-('sofia.perez',      'sofia@example.com',      '12345678', 1001),  -- user_id: 1008
-('ramon.castillo',   'ramon@example.com',      '12345678', 1001),  -- user_id: 1009
-('elena.morales',    'elena@example.com',      '12345678', 1001),  -- user_id: 1010
-('diego.navarro',    'diego@example.com',      '12345678', 1001),  -- user_id: 1011
-('isabella.reyes',   'isabella@example.com',   '12345678', 1001),  -- user_id: 1012
-('marco.santiago',   'marco@example.com',      '12345678', 1001),  -- user_id: 1013
-('gabrielle.valdez', 'gabrielle@example.com',  '12345678', 1001),  -- user_id: 1014
-('rafael.salazar',   'rafael@example.com',     '12345678', 1001),  -- user_id: 1015
-('camille.fuentes',  'camille@example.com',    '12345678', 1001);  -- user_id: 1016
+('juan.delacruz',    'juan@example.com',       '12345678', 1000),
+('maria.garcia',     'maria@example.com',      '12345678', 1000),
+('carlos.lopez',     'carlos@example.com',     '12345678', 1000),
+('ana.martinez',     'ana@example.com',        '12345678', 1000),
+('jose.rodriguez',   'jose@example.com',       '12345678', 1000),
+('luisa.hernandez',  'luisa@example.com',      '12345678', 1000),
+('miguel.gonzales',  'miguel@example.com',     '12345678', 1000),
+('sofia.perez',      'sofia@example.com',      '12345678', 1000),
+('ramon.castillo',   'ramon@example.com',      '12345678', 1000),
+('elena.morales',    'elena@example.com',      '12345678', 1000),
+('diego.navarro',    'diego@example.com',      '12345678', 1000),
+('isabella.reyes',   'isabella@example.com',   '12345678', 1000),
+('marco.santiago',   'marco@example.com',      '12345678', 1000),
+('gabrielle.valdez', 'gabrielle@example.com',  '12345678', 1000),
+('rafael.salazar',   'rafael@example.com',     '12345678', 1000),
+('camille.fuentes',  'camille@example.com',    '12345678', 1000);
 
 -- Admins (admin_id: 1000)
 INSERT INTO Admins (first_name, middle_name, last_name, contact_number, user_id) VALUES
@@ -198,18 +205,18 @@ CREATE TABLE `VotingSystem`.`Candidates` (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1000;
 
 CREATE TABLE `VotingSystem`.`Votes` (
-`vote_id`         INT      NOT NULL AUTO_INCREMENT,
-`vote_date`       DATETIME          DEFAULT CURRENT_TIMESTAMP,
-`studentvoter_id` INT      NOT NULL,
-`candidate_id`    INT      NOT NULL,
-`position_id`     INT      NOT NULL,
-`election_id`     INT      NOT NULL,
-PRIMARY KEY (`vote_id`),
-UNIQUE (`studentvoter_id`, `position_id`, `candidate_id`),
-FOREIGN KEY (`studentvoter_id`) REFERENCES `StudentVoters`(`studentvoter_id`),
-FOREIGN KEY (`candidate_id`)    REFERENCES `Candidates`(`candidate_id`),
-FOREIGN KEY (`position_id`)     REFERENCES `Positions`(`position_id`),
-FOREIGN KEY (`election_id`)     REFERENCES `Elections`(`election_id`)
+  `vote_id`         INT      NOT NULL AUTO_INCREMENT,
+  `vote_date`       DATETIME          DEFAULT CURRENT_TIMESTAMP,
+  `studentvoter_id` INT      NOT NULL,
+  `candidate_id`    INT      NULL,
+  `position_id`     INT      NOT NULL,
+  `election_id`     INT      NOT NULL,
+  PRIMARY KEY (`vote_id`),
+  UNIQUE (`studentvoter_id`, `position_id`, `candidate_id`, `election_id`),
+  FOREIGN KEY (`studentvoter_id`) REFERENCES `StudentVoters`(`studentvoter_id`),
+  FOREIGN KEY (`candidate_id`)    REFERENCES `Candidates`(`candidate_id`),
+  FOREIGN KEY (`position_id`)     REFERENCES `Positions`(`position_id`),
+  FOREIGN KEY (`election_id`)     REFERENCES `Elections`(`election_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1;
 
 
@@ -251,11 +258,68 @@ INSERT INTO Candidates (party_id, student_id, election_id, position_id) VALUES
 (1000, 2024000004, 1000, 1002),  -- candidate_id: 1004 | Jose Rodriguez   -> Senator
 (1000, 2024000005, 1000, 1003),  -- candidate_id: 1005 | Luisa Hernandez  -> Vice-Governor
 (1000, 2024000006, 1000, 1002),  -- candidate_id: 1006 | Miguel Gonzales  -> Senator
--- Partido Dos (party_id: 1001)
 (1001, 2024000008, 1000, 1000),  -- candidate_id: 1007 | Ramon Castillo   -> President
 (1001, 2024000009, 1000, 1001),  -- candidate_id: 1008 | Elena Morales    -> Vice-President
 (1001, 2024000010, 1000, 1002),  -- candidate_id: 1009 | Diego Navarro    -> Senator
 (1001, 2024000011, 1000, 1002),  -- candidate_id: 1010 | Isabella Reyes   -> Senator
 (1001, 2024000012, 1000, 1002),  -- candidate_id: 1011 | Marco Santiago   -> Senator
 (1001, 2024000013, 1000, 1003),  -- candidate_id: 1012 | Gabrielle Valdez -> Vice-Governor
-(1001, 2024000015, 1000, 1002);  -- candidate_id: 1013 | Camille Fuentes  -> Senator
+(1001, 2024000015, 1000, 1002); 
+
+-- ==========================================================
+-- TESTING FOR ELECTION FORM (exclude on initialization)
+-- ==========================================================
+
+-- Students
+INSERT INTO Students (first_name, middle_name, last_name, college_id) VALUES
+('Tungtung', 'Tung', 'Sahur', 1001), -- 2024000016
+('Traralero', 'Tra', 'Lala', 1001),
+('Cappucinna', 'Baller', 'Rina', 1001),
+('Brocoloco', 'Coco', 'Loco', 1001),
+('Brim', 'Bim', 'Patapim', 1001),
+('Walter', 'Not', 'White', 1001),
+('John', 'Beef', 'Pork', 1001),
+('Boyni', 'Bono', 'Nini', 1001); -- 2024000023
+
+-- Election
+INSERT INTO Elections (election_title, status, start_date, end_date) VALUES
+('Brainrot Showdown 2026', 'active', '2026-03-01 08:00:00', '2026-04-25 17:00:00'); -- 1002
+
+-- Parties
+INSERT INTO PoliticalParties (party_name, election_id) VALUES
+('Giga Chads', 1002), -- 1002
+('Axis', 1002); -- 1003
+
+-- Positions
+INSERT INTO Positions (position_name, max_votes, election_id) VALUES
+('Brainrot', 1, 1002), -- 1007
+('Bawlsacks', 1, 1002), -- 1008
+('LowTiers', 3, 1002);  -- 1009
+
+-- Candidates
+INSERT INTO Candidates (party_id, student_id, election_id, position_id) VALUES
+  -- brainrot
+(1002, 2024000016, 1002, 1007),
+(1003, 2024000017, 1002, 1007),
+  -- bawlsacks
+(1002, 2024000018, 1002, 1008),
+(1003, 2024000019, 1002, 1008),
+  -- lowtiers
+(1002, 2024000020, 1002, 1009),
+(1002, 2024000021, 1002, 1009),
+(1003, 2024000022, 1002, 1009),
+(1003, 2024000023, 1002, 1009);
+
+
+-- ========================= JOINS FOR SEEING VOTES OF A PERSON
+SELECT 
+	v.studentvoter_id,
+    s.last_name,
+    p.position_name
+FROM Votes v
+LEFT JOIN Candidates c
+	ON v.candidate_id = c.candidate_id
+LEFT JOIN Positions p
+	ON p.position_id = c.position_id
+LEFT JOIN Students s
+	ON s.student_id = c.student_id

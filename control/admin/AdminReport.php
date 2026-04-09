@@ -1,8 +1,10 @@
 <?php
 header('Content-Type: application/json');
 session_start();
-include_once "../model/readOperations.php";
-include_once "../model/createOperations.php";
+include_once "../../model/reportModel.php";
+include_once "../../model/admin/AdminDashboardModel.php";
+include_once "../../model/admin/readOperations.php";
+include_once "../../model/admin/createOperations.php";
 
 // --- Controller: Only business logic, no DB or direct response formatting ---
 
@@ -12,7 +14,7 @@ function getUserInfoController() {
     }
     $username = $_SESSION['username'];
     $user_role = $_SESSION['role'];
-    $is_admin = (intval($user_role) === 1000);
+    $is_admin = in_array(intval($user_role), [3000, 3001, 3002]);
     return [
         "success" => true,
         "message" => "",

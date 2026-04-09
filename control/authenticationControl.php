@@ -1,6 +1,6 @@
 <?php
 
-    include("../model/readOperations.php");
+    include(__DIR__ . "/../model/authenticationModel.php");
 
     // getting what type of action
     $action = $_POST["action"];
@@ -91,16 +91,18 @@
         $_SESSION["role"] = getUserRoleID($username);
 
         $role_id = getUserRoleID($username);
-        if($role_id == "1000"){
-            $landing_page = "adminUI";
-        } else if($role_id == "1001"){
-            $landing_page = "voterUI";
+        if($role_id == "3000" || $role_id == "3001" || $role_id == "3002"){
+            $landing_page = "admin";
+            $dashboard = "dashboard.php";
+        } else if($role_id == "1000"){
+            $landing_page = "voter";
+            $dashboard = "dashboard.php";
         }
         
         echo json_encode([
             "message" => "youve successfully logged in",
             "status" => "success",
-            "redirect" => "view/$landing_page/dashboard.php",
+            "redirect" => "view/$landing_page/$dashboard",
             "role" => getUserRoleID($username)
         ]);
     }

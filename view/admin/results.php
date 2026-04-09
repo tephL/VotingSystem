@@ -6,7 +6,7 @@
         exit(); 
     }
 
-    if($_SESSION["role"] != "1000"){ 
+    if($_SESSION["role"] != "3000"){ 
         header("Location: ../unauthorized.html"); 
         exit(); 
     }
@@ -15,9 +15,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="../styles/dashboard.css">
-    <script src="../jquery.js"></script>
-    <script src="../chart.js"></script>
+    <link rel="stylesheet" href="./styles/Results.css">
+    <script src="../../src/jquery.js"></script>
+    <script src="../../src/chart.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
@@ -68,6 +68,6 @@
         </div>
  
     </div>
-    <script src="adminUtils.js"></script>
+    <script src="./scripts/adminUtils.js"></script>
 </body>
 </html>

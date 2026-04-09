@@ -1,3 +1,4 @@
+// UX effects
 $(".items").hover(function(){
     $(this).css("color", "red");
 });
@@ -6,12 +7,18 @@ $(".items").mouseout(function(){
     $(this).css("color", "black");
 });
 
+
+// electionForm
+
+
+
+// voterSettings
 $("#signout_btn").click(function(){
     
     if(!confirm("Are you sure you want to sign out?")) return;
 
     $.ajax({
-        url: "../../control/authorizationControl.php",
+        url: "../../control/authenticationControl.php",
         type: "POST",
         dataType: "json",
         data: {
