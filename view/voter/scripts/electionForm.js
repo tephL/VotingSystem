@@ -33,7 +33,7 @@ function intitializeData(){
         },
         error: function(response){  
             console.log("ERR");
-            console.log(response);
+            console.log(response.responseText);
         }
     });
 }

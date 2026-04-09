@@ -89,22 +89,5 @@
         $activated_status = $row["activated_status"];
         return $activated_status;
     }
-
-    function getDeactivatedUsers(){
-        global $conn;
-
-        $sql = "SELECT
-                    u.user_id,
-                    u.username,
-                    u.email,
-                    sv.student_id
-                FROM Users u
-                RIGHT JOIN StudentVoters sv
-                    ON sv.user_id = u.user_id
-                WHERE activated_status = 0;";
-        $r_sql = $conn->query($sql);
-
-        return $r_sql;
-    }
-
+    
 ?>

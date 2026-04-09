@@ -322,3 +322,9 @@ LEFT JOIN Positions p
 	ON p.position_id = c.position_id
 LEFT JOIN Students s
 	ON s.student_id = c.student_id
+
+
+-- ============ pagination example
+SELECT * FROM users LIMIT 10 OFFSET 0;  -- page 1
+SELECT * FROM users LIMIT 10 OFFSET 10; -- page 2
+SELECT * FROM users LIMIT 10 OFFSET 20; -- page 3

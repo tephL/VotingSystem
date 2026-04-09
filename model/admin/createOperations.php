@@ -16,7 +16,7 @@ function registerStudent($studentid, $username, $email, $password) {
     global $conn;
 
     $sql1 = "INSERT INTO Users (username, email, password, role_id) 
-            VALUES ('$username', '$email', '$password', 1001)";
+            VALUES ('$username', '$email', '$password', 1000)";
     $result = $conn->query($sql1);
 
     if ($result) {
