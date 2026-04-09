@@ -18,6 +18,7 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="./styles/adminUI.css">
+    <link rel="stylesheet" href="./styles/adminsManager.css">
     <script src="../../src/jquery.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,9 +54,36 @@
             <a class="items" id="signout_btn">Sign Out</a>
         </div>
     </div>
+
+    <div id="edit_window_bg">
+        <div id="edit_window">
+            <p id="edit_subtext">Edit User ID</p>
+            <div id="edit_hint">
+                <p id="edit_hint_text" hidden></p>
+            </div>
+            <input type="text" id="edit_user_id" hidden>
+            <input type="text" id="old_username" hidden>
+            <input type="text" id="edit_username" placeholder="New Username">
+            <input type="email" id="edit_email" placeholder="New Email">
+            <input type="text" id="edit_password" placeholder="New Password">
+            <select id="edit_status">
+                <option selected>Activate</option>
+                <option>Deactivate</option>
+            </select>
+            <select id="edit_role">
+                <option id="edit_master_admin">Master Admin</option>
+                <option id="edit_election_admin">Election Admin</option>
+                <option id="edit_voters_admin">Voters Admin</option>
+            </select>
+            <div id="edit_actions">
+                <button id="edit_cancel" onclick="cancelEdit()">Cancel</button>
+                <button id="edit_submit" onclick="submitUpdatedUserInfo()">Submit</button>
+            </div>
+        </div>
+    </div>
     
     <div id="main_content">
-        <div id="admins_container"></div>
+        <div id="admins"></div>
     </div>
 
     <script src="./scripts/adminUtils.js"></script>
