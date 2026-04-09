@@ -2,7 +2,6 @@
 header('Content-Type: application/json');
 session_start();
 include_once "../../model/reportModel.php";
-include_once "../../model/admin/AdminDashboardModel.php";
 include_once "../../model/admin/readOperations.php";
 include_once "../../model/admin/createOperations.php";
 
