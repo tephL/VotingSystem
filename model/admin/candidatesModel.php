@@ -19,7 +19,7 @@ function getElections($conn) {
     $query = "
         SELECT election_id, election_title 
         FROM Elections 
-        WHERE status != 'complete'
+        WHERE status != 'completed'
         ORDER BY election_id DESC
     ";
     $result = $conn->query($query);
