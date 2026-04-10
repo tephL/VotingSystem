@@ -136,6 +136,7 @@
                     FROM PoliticalParties pp
                     LEFT JOIN Candidates c ON pp.party_id = c.party_id AND c.position_id = $position_id AND c.election_id = $eid
                     LEFT JOIN Students s ON c.student_id = s.student_id
+                    WHERE pp.election_id = $eid
                     ORDER BY pp.party_id ASC, s.last_name ASC
                 ";
                 
