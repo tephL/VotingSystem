@@ -25,4 +25,16 @@
     * {
         padding: 10px;
     }
+
+    #upcoming_election_section{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .candidates{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
 }

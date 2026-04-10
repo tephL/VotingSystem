@@ -1,15 +1,14 @@
 
 //Charts and Tables
 $(document).ready(function(){
-    $("#no_election_section").hide();
+    $("#upcoming_election_section").hide();
     $("#ongoing_election_section").hide();
     $("#closed_election_section").hide();
  
     loadResults();
-
     setInterval(function(){
         loadResults();
-    }, 10000);
+    }, 5000);
  
     function loadResults(){
         $.ajax({
@@ -32,11 +31,14 @@ $(document).ready(function(){
                 $("#greeting").text("Good Day, " + username);
 
                 $("#no_election_section").hide();
+                $("#upcoming_election_section").hide();
                 $("#ongoing_election_section").hide();
                 $("#closed_election_section").hide();
 
-                if(status === "upcoming"){
-                    renderNoElection();
+                if(status === "no_elections"){
+                    $("#no_election_section").show();
+                } else if(status === "upcoming"){
+                    renderUpcoming(election_title, positions);
                 } else if(status === "active"){
                     renderOngoing(election_title, positions);
                 } else if(status === "completed"){
@@ -47,8 +49,68 @@ $(document).ready(function(){
         });
     }
 
-    function renderNoElection(){
-        $("#no_election_section").show();
+    function renderUpcoming(election_title, positions){
+        const upcoming_container = document.getElementById("upcoming_election_section");
+        const title_container = document.getElementById("upcoming_election_title");
+        
+        title_container.innerHTML = "";
+        let election_heading = document.createElement("h1");
+        election_heading.textContent = election_title;
+        title_container.appendChild(election_heading);
+        
+        $("#upcoming_election_section").show();
+
+        const candidates_container = document.getElementById("upcoming_charts_container");
+        candidates_container.innerHTML = "";
+
+        for(let i in positions){
+            const position = positions[i];
+            const position_name = position.position_name;
+            const max_votes = position.max_votes || 1;
+            const political_parties = position.political_parties || [];
+
+            let position_container = document.createElement("div");
+            position_container.className = "position";
+            position_container.id = position_name;
+
+            let position_header = document.createElement("h2");
+            position_header.className = "position_header";
+            position_header.textContent = position_name + " (" + max_votes + " max)";
+            position_container.appendChild(position_header);
+
+            let parties_container = document.createElement("div");
+            parties_container.className = "parties_container";
+            parties_container.style.display = "grid";
+            parties_container.style.gridTemplateColumns = "repeat(" + political_parties.length + ", 1fr)";
+
+            for(let j in political_parties){
+                const party = political_parties[j];
+                let party_container = document.createElement("div");
+                party_container.className = "party";
+
+                let party_header = document.createElement("h3");
+                party_header.textContent = party.party_name;
+                party_container.appendChild(party_header);
+
+                const candidates = party.candidates || [];
+                for(let k in candidates){
+                    const candidate = candidates[k];
+                    let candidate_container = document.createElement("div");
+                    candidate_container.className = "candidate_input";
+
+                    let candidate_label = document.createElement("label");
+                    candidate_label.textContent = candidate.first_name + " " + candidate.middle_name + " " + candidate.last_name;
+                    candidate_container.appendChild(candidate_label);
+
+                    party_container.appendChild(candidate_container);
+                }
+
+                parties_container.appendChild(party_container);
+            }
+
+            position_container.appendChild(parties_container);
+            candidates_container.appendChild(position_container);
+        }
     }
 
     function renderOngoing(election_title, positions){

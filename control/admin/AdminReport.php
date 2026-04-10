@@ -4,6 +4,7 @@ session_start();
 include_once "../../model/reportModel.php";
 include_once "../../model/admin/readOperations.php";
 include_once "../../model/admin/createOperations.php";
+include_once "../../model/admin/candidatesModel.php";
 
 // --- Controller: Only business logic, no DB or direct response formatting ---
 
@@ -26,7 +27,11 @@ function getUserInfoController() {
 }
 
 function getElectionController() {
-    $election = getCurrentElection();
+    try {
+        $election = getCurrentElection();
+    } catch (Exception $e) {
+        $election = null;
+    }
     if ($election === null) {
         return ["success" => false, "message" => "No election available", "data" => (object)[]];
     }
@@ -59,8 +64,12 @@ function checkElectionStatusController($election, $is_admin) {
     ];
 }
 
-function fetchResultsController($election_id) {
-    $results = getElectionResults($election_id);
+function fetchResultsController($election_id, $election_status) {
+    if ($election_status === 'upcoming') {
+        $results = getElectionCandidatesByParty($election_id);
+    } else {
+        $results = getElectionResults($election_id);
+    }
     if (!$results["success"]) {
         return ["success" => false, "message" => $results["message"], "data" => (object)[]];
     }
@@ -68,6 +77,9 @@ function fetchResultsController($election_id) {
 }
 
 function handleGetResultsController() {
+    global $conn;
+    syncElectionStatuses($conn);
+    
     $userResult = getUserInfoController();
     if (!$userResult["success"]) {
         return ["success" => false, "message" => $userResult["message"], "data" => (object)[]];
@@ -81,7 +93,7 @@ function handleGetResultsController() {
             "success" => true,
             "message" => $electionResult["message"],
             "data" => [
-                "election_status" => "upcoming",
+                "election_status" => "no_elections",
                 "username" => $username
             ]
         ];
@@ -102,7 +114,8 @@ function handleGetResultsController() {
     }
 
     $election_id = $statusResult["data"]["election_id"];
-    $resultsData = fetchResultsController($election_id);
+    $election_status = $statusResult["data"]["election_status"];
+    $resultsData = fetchResultsController($election_id, $election_status);
     if (!$resultsData["success"]) {
         return $resultsData;
     }

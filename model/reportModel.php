@@ -11,20 +11,35 @@
 
     function getCurrentElection() {
         global $conn;
-        $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'active' LIMIT 1";
-        $result = mysqli_query($conn, $sql);
         
-        if (!$result || mysqli_num_rows($result) == 0) {
-            // No active election, get the most recently completed one
-            $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'completed' ORDER BY end_date DESC LIMIT 1";
-            $result = mysqli_query($conn, $sql);
-            
-            if (!$result || mysqli_num_rows($result) == 0) {
-                return null;
-            }
+        // Priority 1: Active election (latest)
+        $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'active' ORDER BY start_date DESC LIMIT 1";
+        $result = mysqli_query($conn, $sql);
+        if ($result && mysqli_num_rows($result) > 0) {
+            return mysqli_fetch_assoc($result);
         }
         
-        return mysqli_fetch_assoc($result);
+        // Get latest completed and next upcoming
+        $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'completed' ORDER BY end_date DESC LIMIT 1";
+        $completed_result = mysqli_query($conn, $sql);
+        $completed = ($completed_result && mysqli_num_rows($completed_result) > 0) ? mysqli_fetch_assoc($completed_result) : null;
+        
+        $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'upcoming' ORDER BY start_date DESC LIMIT 1";
+        $upcoming_result = mysqli_query($conn, $sql);
+        $upcoming = ($upcoming_result && mysqli_num_rows($upcoming_result) > 0) ? mysqli_fetch_assoc($upcoming_result) : null;
+        
+        // If both exist, compare dates
+        if ($completed && $upcoming) {
+            if (strtotime($upcoming['start_date']) > strtotime($completed['end_date'])) {
+                return $upcoming;
+            }
+            return $completed;
+        }
+        
+        if ($completed) return $completed;
+        if ($upcoming) return $upcoming;
+        
+        return null;
     }
 
     function getPositions($election_id) {
@@ -93,6 +108,73 @@
             } else {
                 $candidate['percentage'] = 0;
             }
+        }
+    }
+
+    function getElectionCandidatesByParty($election_id) {
+        $eid = intval($election_id);
+        try {
+            $positions = getPositions($eid);
+            if ($positions === null) {
+                return ['success' => false, 'message' => 'No positions found', 'data' => []];
+            }
+            $positions_data = [];
+            foreach ($positions as $position) {
+                $position_id = intval($position['position_id']);
+                $position_name = $position['position_name'];
+                $max_votes = intval($position['max_votes']);
+                
+                global $conn;
+                $sql = "
+                    SELECT 
+                        pp.party_id,
+                        pp.party_name,
+                        c.candidate_id,
+                        s.first_name,
+                        s.middle_name,
+                        s.last_name
+                    FROM PoliticalParties pp
+                    LEFT JOIN Candidates c ON pp.party_id = c.party_id AND c.position_id = $position_id AND c.election_id = $eid
+                    LEFT JOIN Students s ON c.student_id = s.student_id
+                    ORDER BY pp.party_id ASC, s.last_name ASC
+                ";
+                
+                $result = mysqli_query($conn, $sql);
+                if (!$result) {
+                    return ['success' => false, 'message' => 'Error retrieving candidates', 'data' => []];
+                }
+                
+                $parties = [];
+                $current_party_id = null;
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $party_id = $row['party_id'];
+                    if ($current_party_id !== $party_id) {
+                        $parties[] = [
+                            'party_name' => $row['party_name'],
+                            'candidates' => []
+                        ];
+                        $current_party_id = $party_id;
+                    }
+                    if ($row['candidate_id'] !== null) {
+                        $parties[count($parties)-1]['candidates'][] = [
+                            'first_name' => $row['first_name'],
+                            'middle_name' => $row['middle_name'],
+                            'last_name' => $row['last_name']
+                        ];
+                    }
+                }
+                
+                $positions_data[] = [
+                    'position_id' => $position_id,
+                    'position_name' => $position_name,
+                    'max_votes' => $max_votes,
+                    'political_parties' => $parties
+                ];
+            }
+            return ['success' => true, 'message' => '', 'data' => $positions_data];
+        } catch (Exception $e) {
+            error_log('getElectionCandidatesByParty error: ' . $e->getMessage());
+            return ['success' => false, 'message' => 'Server error: ' . $e->getMessage(), 'data' => []];
         }
     }
 
