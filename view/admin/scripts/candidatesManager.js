@@ -14,6 +14,7 @@ $(document).ready(function () {
         hideAllTabsAndViews();
         loadElections();
     }
+    setInterval(loadElections, 5000);
 
     function hideAllTabsAndViews() {
         $("#manage_view, #student_view, #slate_view").hide();
