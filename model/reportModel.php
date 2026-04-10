@@ -24,7 +24,7 @@
         $completed_result = mysqli_query($conn, $sql);
         $completed = ($completed_result && mysqli_num_rows($completed_result) > 0) ? mysqli_fetch_assoc($completed_result) : null;
         
-        $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'upcoming' ORDER BY start_date ASC LIMIT 1";
+        $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'upcoming' ORDER BY start_date DESC LIMIT 1";
         $upcoming_result = mysqli_query($conn, $sql);
         $upcoming = ($upcoming_result && mysqli_num_rows($upcoming_result) > 0) ? mysqli_fetch_assoc($upcoming_result) : null;
         

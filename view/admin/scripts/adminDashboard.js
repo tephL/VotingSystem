@@ -6,7 +6,6 @@ $(document).ready(function(){
     $("#closed_election_section").hide();
  
     loadResults();
-
     setInterval(function(){
         loadResults();
     }, 10000);
@@ -31,11 +30,14 @@ $(document).ready(function(){
 
                 $("#greeting").text("Good Day, " + username);
 
+                $("#no_election_section").hide();
                 $("#upcoming_election_section").hide();
                 $("#ongoing_election_section").hide();
                 $("#closed_election_section").hide();
 
-                if(status === "upcoming"){
+                if(status === "no_elections"){
+                    $("#no_election_section").show();
+                } else if(status === "upcoming"){
                     renderUpcoming(election_title, positions);
                 } else if(status === "active"){
                     renderOngoing(election_title, positions);

@@ -89,7 +89,7 @@ function handleGetResultsController() {
             "success" => true,
             "message" => $electionResult["message"],
             "data" => [
-                "election_status" => "upcoming",
+                "election_status" => "no_elections",
                 "username" => $username
             ]
         ];
