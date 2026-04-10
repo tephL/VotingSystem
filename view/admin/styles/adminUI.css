@@ -44,3 +44,67 @@ body{
     height: 250px;
     margin: 20px;
 }
+
+#upcoming_election_section{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+
+    #upcoming_election_title{
+        h1{
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+    }
+
+    .position{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+
+        h2{
+            font-size: 20px;
+            color: #555;
+            margin: 0;
+        }
+
+        .parties_container{
+            display: grid;
+            gap: 15px;
+
+            .party{
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                padding: 12px;
+                background-color: white;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+
+                h3{
+                    font-size: 16px;
+                    color: #333;
+                    margin: 0;
+                    font-weight: 600;
+                }
+
+                .candidate_input{
+                    display: flex;
+                    padding: 8px;
+                    background-color: #f0f0f0;
+                    border-radius: 3px;
+
+                    label{
+                        font-size: 14px;
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+}

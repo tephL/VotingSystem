@@ -50,7 +50,14 @@ $(document).ready(function(){
     }
 
     function renderUpcoming(election_title, positions){
-        $("#upcoming_election_title").text(election_title);
+        const upcoming_container = document.getElementById("upcoming_election_section");
+        const title_container = document.getElementById("upcoming_election_title");
+        
+        title_container.innerHTML = "";
+        let election_heading = document.createElement("h1");
+        election_heading.textContent = election_title;
+        title_container.appendChild(election_heading);
+        
         $("#upcoming_election_section").show();
 
         const candidates_container = document.getElementById("upcoming_charts_container");
@@ -66,7 +73,7 @@ $(document).ready(function(){
             position_container.className = "position";
             position_container.id = position_name;
 
-            let position_header = document.createElement("p");
+            let position_header = document.createElement("h2");
             position_header.className = "position_header";
             position_header.textContent = position_name + " (" + max_votes + " max)";
             position_container.appendChild(position_header);
@@ -81,7 +88,7 @@ $(document).ready(function(){
                 let party_container = document.createElement("div");
                 party_container.className = "party";
 
-                let party_header = document.createElement("p");
+                let party_header = document.createElement("h3");
                 party_header.textContent = party.party_name;
                 party_container.appendChild(party_header);
 
