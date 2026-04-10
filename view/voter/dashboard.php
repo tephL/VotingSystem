@@ -16,7 +16,9 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="./styles/voterUI.css">
+    <link rel="stylesheet" href="../admin/styles/Results.css">
     <script src="../../src/jquery.js"></script>
+    <script src="../../src/chart.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
@@ -36,9 +38,35 @@
     </div>
     
     <div id="main_content">
-        
+ 
+        <h2 id="greeting">Good Day,</h2>
+
+        <div id="no_election_section">
+            <h2>No Election have been started yet</h2>
+            <p>Check back later for upcoming elections</p>
+        </div>
+
+        <!-- Upcoming Election: Candidates Only -->
+        <div id="upcoming_election_section">
+            <div id="upcoming_election_title"></div>
+          
+            <div id="upcoming_charts_container"></div>
+        </div>
+ 
+        <!-- Closed Election: Dynamicaly Filled -->
+        <div id="closed_election_section">
+            <div id="closed_election_title">Results</div>
+ 
+            <!-- Winner Cards -->
+            <div id="winners_container"></div>
+ 
+            <!-- Charts -->
+            <div id="closed_charts_container"></div>
+        </div>
+ 
     </div>
 
     <script src="./scripts/voterUtils.js"></script>
+    <script src="./scripts/voterDashboard.js"></script>
 </body>
 </html>
