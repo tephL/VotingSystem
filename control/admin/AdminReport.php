@@ -4,6 +4,7 @@ session_start();
 include_once "../../model/reportModel.php";
 include_once "../../model/admin/readOperations.php";
 include_once "../../model/admin/createOperations.php";
+include_once "../../model/admin/candidatesModel.php";
 
 // --- Controller: Only business logic, no DB or direct response formatting ---
 
@@ -76,6 +77,9 @@ function fetchResultsController($election_id, $election_status) {
 }
 
 function handleGetResultsController() {
+    global $conn;
+    syncElectionStatuses($conn);
+    
     $userResult = getUserInfoController();
     if (!$userResult["success"]) {
         return ["success" => false, "message" => $userResult["message"], "data" => (object)[]];

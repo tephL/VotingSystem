@@ -8,7 +8,7 @@ $(document).ready(function(){
     loadResults();
     setInterval(function(){
         loadResults();
-    }, 10000);
+    }, 5000);
  
     function loadResults(){
         $.ajax({
