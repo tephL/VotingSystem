@@ -177,7 +177,7 @@ $(document).ready(function () {
                 let list = $("#candidates_list").empty();
 
                 if (!res.success || res.data.length === 0) {
-                    list.append('<p id="no_candidates_yet">No candidates yet for this position.</p>');
+                    list.append('<p>No candidates yet for this position.</p>');
                     return;
                 }
 

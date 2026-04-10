@@ -57,6 +57,11 @@ $(document).ready(function () {
 
         if (e.status === "Completed") {
             actionBtn = `<button class="view-btn" id="view_${e.election_id}">View</button>`;
+
+        } else if (e.status === "Active") {
+            actionBtn = `
+            <button class="view-btn" id="view_${e.election_id}">View</button>
+        `;
         } else {
             actionBtn = `
                 <button class="edit-btn" id="edit_${e.election_id}">Edit</button>
@@ -228,16 +233,16 @@ $(document).ready(function () {
         let d = new Date(dateStr.replace(" ", "T") + "+08:00");
 
         let datePart = d.toLocaleDateString('en-US', {
-            month: 'long', 
-            day: 'numeric', 
-            year: 'numeric', 
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
             timeZone: 'Asia/Manila'
         });
 
         let timePart = d.toLocaleTimeString('en-US', {
-            hour: '2-digit', 
-            minute: '2-digit', 
-            hour12: true, 
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
             timeZone: 'Asia/Manila'
         });
 
@@ -248,7 +253,7 @@ $(document).ready(function () {
         $.ajax({
             url: "../../control/admin/electionControl.php?action=getAll",
             method: "GET",
-            success: function (response) {   
+            success: function (response) {
                 console.log("Raw response from server:", response);
                 let elections = JSON.parse(response);
                 $("#history-list").empty();
@@ -258,7 +263,7 @@ $(document).ready(function () {
                     return;
                 }
 
-                elections.forEach(function(e) {
+                elections.forEach(function (e) {
                     $("#history-list").append(electionRow(e));
                 });
 
@@ -364,7 +369,7 @@ $(document).ready(function () {
                 if (positions.length === 0) {
                     $("#positions-box").append(newPositionRow());
                 } else {
-                    positions.forEach(function(pos) {
+                    positions.forEach(function (pos) {
                         $("#positions-box").append(newPositionRow(pos.position_name, pos.max_votes, pos.position_id));
                     });
                 }
@@ -383,7 +388,7 @@ $(document).ready(function () {
                 if (parties.length === 0) {
                     $("#parties-box").append(newPartyRow());
                 } else {
-                    parties.forEach(function(p) {
+                    parties.forEach(function (p) {
                         $("#parties-box").append(newPartyRow(p.party_name, p.party_id));
                     });
                 }
@@ -399,16 +404,16 @@ $(document).ready(function () {
         currentEditId = null;
         $("#create-btn").show().text("Create");
         $("#create-panel h1").text("Create Election");
-        
+
         $("#title-input, #start-date, #end-date").val('').prop("disabled", false);
-        
+
         $("#add-position-btn, #add-party-btn").show();
         $(".remove-pos-btn, .remove-party-btn").show();
         $(".pos-name, .pos-max, .party-name").prop("disabled", false);
-        
+
         $("#positions-box").html(newPositionRow());
         $("#parties-box").html(newPartyRow());
-        
+
         showElectionPanel();
     }
 

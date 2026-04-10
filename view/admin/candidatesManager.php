@@ -72,16 +72,28 @@
        
         <div id="manage_view">
 
+<<<<<<< HEAD
+=======
+            <h3>Party List</h3>
+>>>>>>> MigrationElectCandidate
             <div id="party_tabs_section">
                 <div id="party_tabs_container"></div>
             </div>
 
+<<<<<<< HEAD
+=======
+            <h3>Positions</h3>
+>>>>>>> MigrationElectCandidate
             <div id="tabs_section">
                 <div id="tabs_container"></div>
             </div>
 
             <div id="candidates_section">
+<<<<<<< HEAD
                 <h3>Candidates</h3>
+=======
+                <h3>Current Candidates</h3>
+>>>>>>> MigrationElectCandidate
                 <div id="candidates_list"></div>
             </div>
 

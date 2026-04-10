@@ -37,3 +37,6 @@ $("#start_election").click(function(){
     alert("YOURE AB TO dieeee");
     window.location.href = "https://ddlc.moe/";
 });
+
+
+console.log("adminUtils loaded");

@@ -12,11 +12,11 @@ function getStatus($start, $end) {
     $end   = date('Y-m-d H:i:s', strtotime($end));
 
     if ($now < $start) {
-        return "upcoming";
+        return "Upcoming";
     } else if ($now >= $end) { 
-        return "completed";
+        return "Completed";
     } else {
-        return "active";
+        return "Active";
     }
 }
 
