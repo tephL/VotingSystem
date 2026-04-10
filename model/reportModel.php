@@ -11,26 +11,35 @@
 
     function getCurrentElection() {
         global $conn;
-        $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'active' LIMIT 1";
-        $result = mysqli_query($conn, $sql);
         
-        if (!$result || mysqli_num_rows($result) == 0) {
-            // No active election, get the most recently completed one
-            $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'completed' ORDER BY end_date DESC LIMIT 1";
-            $result = mysqli_query($conn, $sql);
-            
-            if (!$result || mysqli_num_rows($result) == 0) {
-                // No completed election, get the most recent upcoming one
-                $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'upcoming' ORDER BY start_date ASC LIMIT 1";
-                $result = mysqli_query($conn, $sql);
-                
-                if (!$result || mysqli_num_rows($result) == 0) {
-                    return null;
-                }
-            }
+        // Priority 1: Active election (latest)
+        $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'active' ORDER BY start_date DESC LIMIT 1";
+        $result = mysqli_query($conn, $sql);
+        if ($result && mysqli_num_rows($result) > 0) {
+            return mysqli_fetch_assoc($result);
         }
         
-        return mysqli_fetch_assoc($result);
+        // Get latest completed and next upcoming
+        $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'completed' ORDER BY end_date DESC LIMIT 1";
+        $completed_result = mysqli_query($conn, $sql);
+        $completed = ($completed_result && mysqli_num_rows($completed_result) > 0) ? mysqli_fetch_assoc($completed_result) : null;
+        
+        $sql = "SELECT election_id, election_title, status, start_date, end_date FROM Elections WHERE status = 'upcoming' ORDER BY start_date ASC LIMIT 1";
+        $upcoming_result = mysqli_query($conn, $sql);
+        $upcoming = ($upcoming_result && mysqli_num_rows($upcoming_result) > 0) ? mysqli_fetch_assoc($upcoming_result) : null;
+        
+        // If both exist, compare dates
+        if ($completed && $upcoming) {
+            if (strtotime($upcoming['start_date']) > strtotime($completed['end_date'])) {
+                return $upcoming;
+            }
+            return $completed;
+        }
+        
+        if ($completed) return $completed;
+        if ($upcoming) return $upcoming;
+        
+        return null;
     }
 
     function getPositions($election_id) {

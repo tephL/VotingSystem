@@ -61,13 +61,6 @@
  
         <h2 id="greeting">Good Day,</h2>
  
-        <!-- No Election -->
-        <div id="no_election_section">
-            <h2>No Election have been started yet</h2>
-            <p>Create your first election to get Started</p>
-            <button onclick="window.location.href='./electionManager.php';">Election Manager</button>
-        </div>
-
         <!-- Upcoming Election: Candidates Only -->
         <div id="upcoming_election_section">
             <div id="upcoming_election_title"></div>
