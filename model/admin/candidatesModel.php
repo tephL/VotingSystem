@@ -8,12 +8,18 @@ function fetchAll($result) {
     return $data;
 }
 
+function syncElectionStatuses($conn) {
+    $conn->query("UPDATE Elections SET status = 'upcoming'  WHERE NOW() < start_date");
+    $conn->query("UPDATE Elections SET status = 'active'    WHERE NOW() >= start_date AND NOW() <= end_date");
+    $conn->query("UPDATE Elections SET status = 'completed' WHERE NOW() > end_date");
+}
 // ELECTIONS
 function getElections($conn) {
+    syncElectionStatuses($conn);
     $query = "
         SELECT election_id, election_title 
         FROM Elections 
-        WHERE status != 'Completed'
+        WHERE status != 'completed'
         ORDER BY election_id DESC
     ";
     $result = $conn->query($query);

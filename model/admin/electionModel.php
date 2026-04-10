@@ -27,15 +27,8 @@ function createElections() {
     $start = date('Y-m-d H:i:s', strtotime($_POST['start']));
     $end   = date('Y-m-d H:i:s', strtotime($_POST['end']));
     
-    $positions = array();
-    if (isset($_POST['positions'])) {
-        $positions = $_POST['positions'];
-    }
-    
-    $parties = array();
-    if (isset($_POST['parties'])) {
-        $parties = $_POST['parties'];
-    }
+    $positions = $_POST['positions'] ?? [];
+    $parties   = $_POST['parties'] ?? [];
 
     if (count($parties) < 2) {
         echo "min_parties";
@@ -53,16 +46,21 @@ function createElections() {
         echo "invalid";
         return;
     }
+    $check = $conn->query("
+        SELECT * FROM Elections 
+        WHERE (
+            ('$start' BETWEEN start_date AND end_date)
+            OR ('$end' BETWEEN start_date AND end_date)
+            OR (start_date BETWEEN '$start' AND '$end')
+        )
+    ");
+
+    if ($check->num_rows > 0) {
+        echo "active";
+        return;
+    }
 
     $status = getStatus($start, $end);
-
-    if ($status === "Active") {
-        $check = $conn->query("SELECT * FROM Elections WHERE start_date <= '$now' AND end_date >= '$now'");
-        if ($check->num_rows > 0) {
-            echo "active";
-            return;
-        }
-    }
 
     $sql = "INSERT INTO Elections (election_title, status, start_date, end_date)
             VALUES ('$title', '$status', '$start', '$end')";
@@ -116,20 +114,22 @@ function updateElection() {
         echo "invalid";
         return;
     }
+    $check = $conn->query("
+        SELECT * FROM Elections 
+        WHERE (
+            ('$start' BETWEEN start_date AND end_date)
+            OR ('$end' BETWEEN start_date AND end_date)
+            OR (start_date BETWEEN '$start' AND '$end')
+        )
+        AND election_id != $id
+    ");
+
+    if ($check->num_rows > 0) {
+        echo "active";
+        return;
+    }
 
     $status = getStatus($start, $end);
-
-    if ($status === "Active") {
-        $now = date('Y-m-d H:i:s');
-        $check = $conn->query("SELECT * FROM Elections 
-                               WHERE start_date <= '$now' 
-                               AND end_date >= '$now' 
-                               AND election_id != $id");
-        if ($check->num_rows > 0) {
-            echo "active";
-            return;
-        }
-    }
 
     $sql = "UPDATE Elections SET 
             election_title = '$title',
@@ -161,7 +161,7 @@ function updateElection() {
                 $incomingPositionIds[] = $conn->insert_id;
             }
         }
-
+        
         if (count($incomingPositionIds) > 0) {
             $sql_delete_pos = "DELETE FROM Positions WHERE election_id = $id AND position_id NOT IN (";
             $i = 0;
