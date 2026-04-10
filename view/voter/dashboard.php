@@ -52,6 +52,18 @@
           
             <div id="upcoming_charts_container"></div>
         </div>
+
+        <!-- Ongoing Election: Wait Message -->
+        <div id="ongoing_election_section">
+            <div id="ongoing_election_content">
+                <h2 id="ongoing_election_title"></h2>
+                <div class="ongoing_message">
+                    <p>The election is currently ongoing.</p>
+                    <p>Results will be displayed after the election is completed.</p>
+                    <p>Please check back later.</p>
+                </div>
+            </div>
+        </div>
  
         <!-- Closed Election: Dynamicaly Filled -->
         <div id="closed_election_section">

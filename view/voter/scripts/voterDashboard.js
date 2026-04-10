@@ -1,6 +1,7 @@
 //Charts and Tables
 $(document).ready(function(){
     $("#upcoming_election_section").hide();
+    $("#ongoing_election_section").hide();
     $("#closed_election_section").hide();
  
     loadResults();
@@ -30,12 +31,15 @@ $(document).ready(function(){
 
                 $("#no_election_section").hide();
                 $("#upcoming_election_section").hide();
+                $("#ongoing_election_section").hide();
                 $("#closed_election_section").hide();
 
                 if(status === "no_elections"){
                     renderNoElection();
                 } else if(status === "upcoming"){
                     renderUpcoming(election_title, positions);
+                } else if(status === "active"){
+                    renderOngoing(election_title);
                 } else if(status === "completed"){
                     renderClosed(election_title, positions);
                 }
@@ -46,6 +50,12 @@ $(document).ready(function(){
 
     function renderNoElection(){
         $("#no_election_section").show();
+    }
+
+    function renderOngoing(election_title){
+        const title_container = document.getElementById("ongoing_election_title");
+        title_container.textContent = election_title;
+        $("#ongoing_election_section").show();
     }
 
     function renderUpcoming(election_title, positions){
