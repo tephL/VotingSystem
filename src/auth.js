@@ -62,7 +62,10 @@ $("#registerBtn").click(function(){
                 alert("Registered successfully!");
                 window.location.href = "index.html"
             } else {
-                $("#hint").text(response.message[0]);
+                
+                $("#hint")
+                    .fadeIn(3000)
+                    .text(response.message[0]);
             }
         },
         error: function(response) {

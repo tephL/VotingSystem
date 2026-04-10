@@ -182,7 +182,7 @@ function returnTypeOfUsers($type){
 
     $page = $_POST["page"];
     
-    $limit = 8;
+    $limit = 10;
     $offset = ($page - 1) * $limit;
     
     $type_of_users = getTypeOfUsers($is_activated, $limit, $offset);

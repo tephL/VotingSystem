@@ -6,9 +6,6 @@ let USERS_PAGE_MAX = false;
 
 
 function loadUsers(page){
-    // clear out the page
-    let users_container = $("#users");
-    users_container.empty();
 
     // action handler
     let action;
@@ -27,6 +24,9 @@ function loadUsers(page){
             page: page
         },
         success: function(response){
+            // clear out the page
+            let users_container = $("#users");
+            users_container.empty();
             if(response.status){
                 // next button handler
                 if(response.is_last_page){
@@ -162,11 +162,13 @@ function renderUsers(users){
         if(!is_activated_users){
             let accept_button = $("<button>")
                 .text("Accept")
+                .addClass("accept_button")
                 .on("click", function() {
                     acceptUser(user.user_id, user.username);
                 });
             let reject_button = $("<button>")
                 .text("Reject")
+                .addClass("reject_button")
                 .on("click", function() {
                     rejectUser(user.user_id, user.username);
                 });
@@ -176,11 +178,13 @@ function renderUsers(users){
         } else if(is_activated_users){
             let delete_button = $("<button>")
                 .text("Delete")
+                .addClass("delete_button")
                 .on("click", function() {
                     deleteUser(user.user_id, user.username);
                 });
             let edit_button = $("<button>")
                 .text("Edit")
+                .addClass("edit_button")
                 .on("click", function() {
                     editUser(user.user_id, user.username, user.student_id, user.email);
                 });

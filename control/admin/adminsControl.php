@@ -245,7 +245,7 @@ function returnAdmins(){
 
     $page = $_POST["page"];
     
-    $limit = 8;
+    $limit = 10;
     $offset = ($page - 1) * $limit;
     
     $admin_users = getAdminUsers($limit, $offset);

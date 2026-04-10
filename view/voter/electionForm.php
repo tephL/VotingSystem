@@ -15,7 +15,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="./styles/voterUI.css">
+    <link rel="stylesheet" href="./styles/mainUI.css">
     <link rel="stylesheet" href="./styles/electionForm.css">
     <script src="../../src/jquery.js"></script>
     <meta charset="UTF-8">
@@ -26,19 +26,22 @@
 
     <div id="sidebar">
         <div id="title">
-            <h1>Voting System</h1>
+            <h1>UniVote</h1>
             <p id="role_name">Student Voter</p>
         </div>
         <div id="menu_items">
             <a class="items" href="dashboard.php">Dashboard</a>
             <a class="items" href="./electionForm.php">Election Form</a>
+            <a class="items" href="./voteHistory.php">Vote History</a>
             <a class="items" id="signout_btn">Sign Out</a>
         </div>
     </div>
     
     <div id="main_content">
-        <h1 id="election_title"></h1>
-        <p id="election_year"></p>
+        <div id="election_header">
+            <h1 id="election_title"></h1>
+            <p id="election_year"></p>
+        </div>
     </div>
 
 

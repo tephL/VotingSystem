@@ -16,7 +16,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="./styles/adminUI.css">
+    <link rel="stylesheet" href="./styles/mainUI.css">
     <link rel="stylesheet" href="./styles/candidatesManager.css">
     <script src="../../src/jquery.js"></script>
     <meta charset="UTF-8">
@@ -27,7 +27,7 @@
 
     <div id="sidebar">
         <div id="title">
-            <h1>Voting System</h1>
+            <h1>UniVote</h1>
             <?php
                 if($role_id == 3000){
                     echo "<p id='role_name'>Master Admin</p>";
@@ -72,18 +72,16 @@
        
         <div id="manage_view">
 
-            <h3>Party List</h3>
             <div id="party_tabs_section">
                 <div id="party_tabs_container"></div>
             </div>
 
-            <h3>Positions</h3>
             <div id="tabs_section">
                 <div id="tabs_container"></div>
             </div>
 
             <div id="candidates_section">
-                <h3>Current Candidates</h3>
+                <h3>Candidates</h3>
                 <div id="candidates_list"></div>
             </div>
 

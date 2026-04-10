@@ -60,4 +60,5 @@ body{
     height: 100vh;
     overflow-y: auto;
     display: grid;
+    grid-template-columns: repeat(2, 1fr);
 }

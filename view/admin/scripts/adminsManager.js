@@ -203,19 +203,23 @@ function renderAdmins(admins){
         let created_date_col = $("<td>").text(created_date);
 
         // actions
+        let actions_column = $("<td>");
         let actions_container;
         let view_button = $("<button>")
             .text("View")
+            .addClass("view_button")
             .on("click", function(){
                 viewAdminDetails(role_id, role_name, user_id, username, email, first_name, middle_name, last_name, contact_number, admin.activated_status);
             });
         let edit_button = $("<button>")
             .text("Edit")
+            .addClass("edit_button")
             .on("click", function(){
                 editAdmin(role_id, role_name, user_id, username, email, first_name, middle_name, last_name, contact_number, admin.activated_status);
             });
         let delete_button = $("<button>")
             .text("Delete")
+            .addClass("delete_button")
             .on("click", function(){
                 deleteAdmin(user_id, username);
             });
@@ -232,6 +236,8 @@ function renderAdmins(admins){
                 .append(delete_button);
         }
 
+        actions_column.append(actions_container);
+
         // appending to row
         let row = $("<tr>")
             .append(status_col)
@@ -240,7 +246,7 @@ function renderAdmins(admins){
             .append(username_col)
             .append(email_col)
             .append(created_date_col)
-            .append(actions_container);
+            .append(actions_column);
 
 
         // appending to table

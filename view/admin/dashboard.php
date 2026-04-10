@@ -17,7 +17,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="./styles/adminUI.css">
+    <link rel="stylesheet" href="./styles/mainUI.css">
     <link rel="stylesheet" href="./styles/Results.css">
     <script src="../../src/jquery.js"></script>
     <script src="../../src/chart.js"></script>
@@ -29,7 +29,7 @@
 
     <div id="sidebar">
         <div id="title">
-            <h1>Voting System</h1>
+            <h1>UniVote</h1>
             <?php
                 if($role_id == 3000){
                     echo "<p id='role_name'>Master Admin</p>";

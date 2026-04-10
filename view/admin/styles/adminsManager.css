@@ -1,120 +1,231 @@
 #main_content{
-    border: 2px solid red;
+    display: flex;
+    justify-content: center;
+}
+
+#users_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+#admins {
     width: 100%;
-    padding: 60px;
-    height: 100vh;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
+    height: 100%;         
+    padding-bottom: 24px; 
+}
+
+#admins_title {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+#users_header button {
+    padding: 7px 16px;
+    background-color: #2d6a4f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+}
+
+#table_body {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+#table_body th {
+    text-align: center;
+    padding: 8px 12px;
+    font-weight: 500;
+    color: #888;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+}
+
+#table_body td {
+    padding: 10px 12px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+    color: #222;
+    text-align: center;
+}
+
+#table_body tr:last-child td {
+    border-bottom: none;
+}
+
+#table_body tr:hover td {
+    background-color: #fafafa;
+}
+
+#table_body div {
+    display: flex;
+    gap: 6px;
+}
+
+.view_button, .edit_button, .delete_button {
+    padding: 4px 10px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    background: none;
+}
+
+.view_button {
+    color: #2d6a4f;
+    border: 1px solid #2d6a4f;
+}
+
+.edit_button {
+    color: #888;
+    border: 1px solid #bbb;
+}
+
+.delete_button {
+    color: #c0392b;
+    border: 1px solid #c0392b;
+}
+
+.pagination{
+    display: flex;
+    justify-content: center;
+    
+    * {
+        width: 40px;
+    }
+}
+
+#table_body th:nth-child(6),
+#table_body td:nth-child(6) {
+    min-width: 160px;
 }
 
 
 /*  edit admin windpw  */
-#users_header{
-    display: flex;
-    justify-content: space-between;
-}
-
-#edit_window_bg {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-
-    justify-content: center;
-    align-items: center;
-}
-
-#edit_window{
-    height: 300px;
-    width: 500px;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    * {
-        width: 300px;
-    }
-}
-
-#edit_subtext{
-    text-align: center;
-}
-
-#edit_actions{
-    display: flex;
-    justify-content: space-between;
-}
-
-/*  new admin windpw  */
-#new_window_bg {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-
-    justify-content: center;
-    align-items: center;
-}
-
-#new_window {
-    height: 500px;
-    width: 500px;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    * {
-        width: 300px;
-    }
-}
-
-#new_subtext {
-    text-align: center;
-}
-
-#new_actions {
-    display: flex;
-    justify-content: space-between;
-}
-
-/*  view adminn window  */
+/* ── shared modal bg ── */
+#edit_window_bg,
+#new_window_bg,
 #view_window_bg {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.35);
     z-index: 1000;
-
     justify-content: center;
     align-items: center;
 }
 
+/* ── shared modal window ── */
+#edit_window,
+#new_window,
 #view_window {
-    height: 500px;
-    width: 500px;
     background-color: white;
+    border-radius: 16px;
+    width: 460px;
+    padding: 32px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    * {
-        width: 300px;
-    }
+    gap: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
+/* ── shared modal subtext ── */
+#edit_subtext,
+#new_subtext,
 #view_subtext {
+    font-size: 13px;
+    color: #888;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+/* ── inputs inside modals ── */
+#edit_window input,
+#edit_window select,
+#new_window input,
+#new_window select {
+    width: 100%;
+    height: 40px;
+    padding: 0 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    cursor: pointer;
+}
+
+#edit_window input:focus,
+#new_window input:focus {
+    border-color: rgba(0, 0, 0, 0.35);
+    background-color: white;
+}
+
+#view_window input {
+    color: #888;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* ── modal titles ── */
+#edit_window h2,
+#new_window h2,
+#view_window h2 {
+    font-size: 1.1rem;
+    font-weight: 500;
     text-align: center;
 }
 
+/* ── action rows ── */
+#edit_actions,
+#new_actions,
 #view_actions {
     display: flex;
-    justify-content: space-between;
+    gap: 8px;
+    margin-top: 8px;
 }
+
+#edit_actions button,
+#new_actions button,
+#view_actions button {
+    flex: 1;
+    height: 38px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
+    background: white;
+    transition: background 0.12s, transform 0.1s;
+}
+
+#edit_actions button:last-child,
+#new_actions button:last-child {
+    background-color: #2d6a4f;
+    color: white;
+    border: none;
+}
+
+#edit_actions button:last-child:hover,
+#new_actions button:last-child:hover {
+    background-color: #245a42;
+}
+
+#edit_actions button:active,
+#new_actions button:active,
+#view_actions button:active {
+    transform: scale(0.98);
+}
+

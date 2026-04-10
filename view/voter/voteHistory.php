@@ -16,10 +16,11 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="./styles/mainUI.css">
+    <link rel="stylesheet" href="./styles/voteHistory.css">
     <script src="../../src/jquery.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Election Form</title>
 </head>
 <body>
 
@@ -37,9 +38,11 @@
     </div>
     
     <div id="main_content">
-        
+
     </div>
 
+
     <script src="./scripts/voterUtils.js"></script>
+    <script src="./scripts/voteHistory.js"></script>
 </body>
 </html>

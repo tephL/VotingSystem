@@ -22,7 +22,7 @@ function intitializeData(){
                 renderTitle("Election hasnt started yet");
                 return;
             } else if(response.status == "already_voted"){
-                renderElectionTitleAndYear("no u alr voted nigga", "", "");
+                renderElectionTitleAndYear("You have already Voted", "", "");
                 return;
             }
 
@@ -43,6 +43,11 @@ function initializePositions(positions){
         POSITIONS.push(position.position_id);
     });
 };
+
+function renderTitle(title){
+    $("#election_title")
+        .text(title);
+}
 
 function renderElectionTitleAndYear(title, year, election_id){
     $("#election_title")
@@ -89,7 +94,8 @@ function renderCandidatesGoatedly(positions){
         
             // party header
             let party_header = $("<p>")
-                .text(party.party_name);
+                .text(party.party_name)
+                .addClass("party_header");
             party_container.append(party_header);
 
             // party candidates under that partylist
@@ -145,7 +151,7 @@ function renderCandidatesGoatedly(positions){
 function renderSubmitButton(){
     let submit_button = $("<button>")
         .attr("id", "submit_button")
-        .text("Submit Button");
+        .text("Submit Form");
     
     $("#main_content").append(submit_button);
 }

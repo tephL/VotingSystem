@@ -1,10 +1,10 @@
 // UX effects
 $(".items").hover(function(){
-    $(this).css("color", "red");
+    $(this).css("color", "rgb(230, 230, 230)");
 });
 
 $(".items").mouseout(function(){
-    $(this).css("color", "black");
+    $(this).css("color", "white");
 });
 
 

@@ -1,320 +1,383 @@
-/* candidatesManager.css */
-
 #main_content.candidates-page {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-/* ── Section 1: Select Election ── */
-#election_select_section {
-    margin-bottom: 30px;
-}
+/* ── Election Dropdown ── */
 
 #election_select_section label {
     display: block;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #333;
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
 }
 
 #election_dropdown {
     width: 100%;
-    padding: 12px 16px;
-    font-size: 16px;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    background-color: #fff;
-    cursor: pointer;
-}
-
-#election_dropdown:focus {
+    height: 40px;
+    padding: 0 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    background: #f5f5f5;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
     outline: none;
-    border-color: #555;
+    cursor: pointer;
+    appearance: none;           /* Cleaner dropdown look */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592c.86 0 1.32 1.013.753 1.658l-4.796 5.482c-.3.342-.8.342-1.1 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
 }
 
 /* ── View Toggle ── */
+
 #view_toggle_section {
     display: flex;
-    gap: 0px;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #ccc;
+    border-bottom: 1.5px solid rgba(0, 0, 0, 0.1);
+    gap: 0;
 }
 
 .view_toggle_btn {
-    padding: 10px 28px;
-    font-size: 15px;
-    background-color: #eee;
-    border: 1px solid #ccc;
-    border-bottom: none;
+    padding: 9px 20px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1.5px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    color: #888;
+    transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .view_toggle_btn:hover {
-    background-color: #ddd;
-}
-
-.view_toggle_btn.active {
-    background-color: #fff;
-    border-bottom: 2px solid #fff;
-    font-weight: bold;
-    margin-bottom: -2px;
-}
-
-/* ── Party Tabs ── */
-#party_tabs_section {
-    display: none;
-    margin-bottom: 15px;
-}
-
-#party_tabs_container {
-    display: flex;
-    gap: 4px;
-}
-
-.party_tab_btn {
-    flex: 1;
-    padding: 14px 20px;
-    font-size: 15.5px;
-    font-weight: 600;
-    background-color: #f4f6f9;
-    border: 1px solid #d0d4d9;
-    border-bottom: 3px solid transparent;   
-    border-radius: 8px 8px 0 0;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    min-width: 140px;
-    text-align: center;
-}
-
-.party_tab_btn:hover {
-    background-color: #e9edf4;
-}
-
-.party_tab_btn.active {
-    background-color: #fdfdfd ;
-    color: white ;
-    border-bottom: 3px solid #3498db;  
-    box-shadow: 0 2px 8px rgba(255, 255, 255);
-    font-weight: 700;
-}
-
-/* ── Position Tabs ── */
-#tabs_section {
-    display: none;
-    margin-bottom: 25px;
-}
-
-#tabs_container {
-    display: flex;
-    gap: 4px;
-}
-
-.tab_btn {
-    flex: 1;
-    padding: 13px 18px;
-    font-size: 15px;
-    font-weight: 600;
-    background-color: #f8f9fa;
-    color: #444;
-    border: 1px solid #d0d4d9;
-    border-bottom: 3px solid transparent;
-    border-radius: 8px 8px 0 0;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    text-align: center;
-}
-
-.tab_btn:hover {
-    background-color: #eef1f5;
-}
-
-.tab_btn.active {
-    background-color: #3498db ;
-    color: white ;
-    border-color: #3498db;
-    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
-    font-weight: 700;
-}
-
-/* ── Candidates List ── */
-#candidates_section {
-    display: none;
-    margin-bottom: 30px;
-}
-
-#candidates_section h3 {
-    font-size: 16px;
-    margin-bottom: 12px;
     color: #333;
 }
 
+.view_toggle_btn.active {
+    color: #2d6a4f;
+    border-bottom: 2px solid #2d6a4f;
+    font-weight: 500;
+}
+
+/* ── Party + Position Tabs ── */
+
+#party_tabs_section,
+#tabs_section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+#party_tabs_section::before,
+#tabs_section::before {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Better to use data-label instead of hard-coded ::before content */
+#party_tabs_section::before {
+    content: "Party";
+}
+
+#tabs_section::before {
+    content: "Position";
+}
+
+#party_tabs_container,
+#tabs_container {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tab_btn,
+.party_tab_btn {
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    background: white;
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.12s ease;
+}
+
+.tab_btn:hover,
+.party_tab_btn:hover {
+    background: #f5f5f5;
+    border-color: rgba(0, 0, 0, 0.25);
+}
+
+.tab_btn.active,
+.party_tab_btn.active {
+    background: #2d6a4f;
+    color: white;
+    border-color: #2d6a4f;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(45, 106, 79, 0.2);
+}
+
+/* ── Candidates Section ── */
+
+#no_candidates_yet{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#candidates_list{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.candidate_item{
+    width: 100%;
+}
+
+#candidates_section h3,
+#add_candidate_section h3,
+#manage_view h3 {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+#manage_view{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 #candidates_list {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    min-height: 60px;
-    padding: 10px;
-    background-color: #fafafa;
+    background: white;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 50px;
 }
 
 .candidate_item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 12px;
-    border-bottom: 1px solid #eee;
-    font-size: 15px;
+    padding: 10px 16px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+    transition: background 0.12s ease;
 }
 
 .candidate_item:last-child {
     border-bottom: none;
 }
 
+.candidate_item:hover {
+    background: #fafafa;
+}
+
 .candidate_name {
+    font-size: 13px;
+    font-weight: 500;
     color: #222;
-    font-weight: bold;
 }
 
 .candidate_meta {
-    font-size: 13px;
-    color: #777;
-    margin-left: 8px;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 1px;
 }
 
 .remove_btn {
-    padding: 5px 14px;
-    font-size: 13px;
-    background-color: #e74c3c;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    border-radius: 6px;
+    border: 1px solid #c0392b;
+    color: #c0392b;
+    background: none;
     cursor: pointer;
+    transition: all 0.12s ease;
 }
 
 .remove_btn:hover {
-    background-color: #c0392b;
-}
-
-#no_candidates_msg {
-    color: #999;
-    font-size: 14px;
-    text-align: center;
-    padding: 16px 0;
+    background: #c0392b;
+    color: white;
 }
 
 /* ── Add Candidate Panel ── */
+
 #add_candidate_section {
-    display: none;
-    background-color: #f0f0f0;
+    background: #f9f9f9;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
     border-radius: 12px;
-    padding: 24px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-#add_candidate_section h3 {
-    font-size: 16px;
-    margin-bottom: 16px;
-    color: #333;
-}
-
-#student_search_input {
-    width: 100%;
-    padding: 10px 14px;
-    font-size: 15px;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    outline: none;
-}
-
+#student_search_input,
 #student_dropdown {
     width: 100%;
-    padding: 10px 14px;
-    font-size: 15px;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    margin-bottom: 14px;
-    display: none;
-    background-color: #fff;
+    height: 40px;
+    padding: 0 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    background: white;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
     outline: none;
+    transition: border-color 0.15s ease;
+}
+
+#student_search_input:focus,
+#student_dropdown:focus {
+    border-color: rgba(0, 0, 0, 0.3);
 }
 
 #selected_student_display {
-    padding: 10px 14px;
-    background-color: #fff;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 16px;
-    min-height: 42px;
+    padding: 9px 14px;
+    background: white;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #666;           /* Slightly darker than before */
+    min-height: 40px;
+    display: flex;
+    align-items: center;
 }
 
 #add_candidate_btn {
-    padding: 10px 24px;
-    font-size: 15px;
-    background-color: #2c3e50;
-    color: #fff;
+    align-self: flex-start;
+    height: 38px;
+    padding: 0 20px;
+    background: #2d6a4f;
+    color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
     cursor: pointer;
+    transition: background 0.15s ease;
 }
 
 #add_candidate_btn:hover {
-    background-color: #1a252f;
+    background: #245a42;
 }
 
-/* ── Status message ── */
+/* ── Status Message ── */
+
 #status_message {
-    margin-top: 14px;
-    font-size: 14px;
+    font-size: 13px;
     padding: 8px 12px;
-    border-radius: 4px;
+    border-radius: 8px;
     display: none;
+    margin-top: 4px;
 }
 
 #status_message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background: #eaf3e8;
+    color: #2d6a4f;
+    border: 0.5px solid #a8d5b5;
 }
 
 #status_message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background: #fdf0ef;
+    color: #c0392b;
+    border: 0.5px solid #f0b8b2;
+}
+
+/* ── Student Table ── */
+
+#student_view h3 {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+#student_reference_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: white;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#student_reference_table th {
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: #fafafa;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+}
+
+#student_reference_table td {
+    padding: 10px 16px;
+    text-align: center;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+    color: #222;
+}
+
+#student_reference_table tr:last-child td {
+    border-bottom: none;
+}
+
+#student_reference_table tr:hover td {
+    background: #fafafa;
 }
 
 /* ── Slate View ── */
-#slate_view {
-    padding-top: 10px;
-}
 
-.slate_row {
+#slate_container {
     display: flex;
-    gap: 16px;
-    align-items: flex-start;
+    gap: 12px;
 }
 
 .slate_col {
     flex: 1;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    background: white;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
     overflow: hidden;
-    background-color: #fafafa;
 }
 
 .slate_party_name {
-    background-color: #597da1;
-    color: #fff;
-    font-size: 15px;
-    font-weight: bold;
-    padding: 12px 16px;
+    background: #2d6a4f;
+    color: white;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 500;
     text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .slate_position_block {
-    border-bottom: 1px solid #000000;
-    padding: 10px 16px;
+    padding: 10px 14px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
 }
 
 .slate_position_block:last-child {
@@ -322,26 +385,36 @@
 }
 
 .slate_position_label {
-    font-size: 12px;
-    font-weight: bold;
-    color: #000000;
+    font-size: 10px;
+    color: #aaa;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
     margin-bottom: 4px;
 }
 
 .slate_candidate_name {
-    font-size: 14px;
+    font-size: 13px;
     color: #222;
-    padding: 2px 0;
+    font-weight: 500;
+}
+
+.slate_candidate_name small {
+    display: block;
+    font-size: 11px;
+    color: #aaa;
+    font-weight: 400;
+    margin-top: 1px;
 }
 
 .slate_candidate_name.empty {
-    color: #000000;
+    color: #ccc;
+    font-weight: 400;
 }
 
-.no_slate_msg {
-    color: #000000;
-    font-size: 14px;
+.no_slate_msg,
+.no-elect {
     text-align: center;
-    padding: 40px 0;
+    padding: 40px 20px;
+    color: #aaa;
+    font-size: 13px;
 }
