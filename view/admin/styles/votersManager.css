@@ -1,3 +1,13 @@
+#main_content{
+    border: 2px solid red;
+    width: 100%;
+    padding: 60px;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
 #users_header{
     display: flex;
     justify-content: space-between;

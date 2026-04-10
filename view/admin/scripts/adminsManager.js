@@ -433,6 +433,7 @@ function submitUpdatedAdminInfo(){
             if(response.status){
                 cancelEdit();
                 loadAdminAccounts(ADMINS_PAGE);
+                alert("Updated Successfully.");
             }
         },
         error: function(response){

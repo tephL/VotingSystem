@@ -49,7 +49,6 @@
             $row = $r_sql->fetch_assoc();
             $passwordFromDB = $row["password"];
 
-            // check if incorrect
             if($password != $passwordFromDB){
                 return false;
             }

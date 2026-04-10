@@ -88,5 +88,6 @@
  
     </div>
     <script src="./scripts/adminUtils.js"></script>
+    <script src="./scripts/adminDashboard.js"></script>
 </body>
 </html>
