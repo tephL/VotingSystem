@@ -126,7 +126,12 @@ INSERT INTO Users (username, email, password, role_id) VALUES
 
 -- Admins (admin_id: 1000)
 INSERT INTO Admins (first_name, middle_name, last_name, contact_number, user_id) VALUES
-('Steph', NULL, 'L', '09000000000', 1000);              -- admin_id: 1000
+('Stephen', 'Lee', 'Astrera', '09000000000', 1000),
+('Justine', NULL, 'Dimla', '09000000000', 1001),
+('Sandra', NULL, 'Cabasal', '09000000000', 1002),
+('Luigi', NULL, 'Cato', '09000000000', 1003),
+('John Paul', NULL, 'Sarmiento', '09000000000', 1004),
+('Mark Joseph', NULL, 'Galino', '09000000000', 1005);              -- admin_id: 1000
 
 -- StudentVoters (studentvoter_id: 1000–1015)
 INSERT INTO StudentVoters (user_id, student_id) VALUES
