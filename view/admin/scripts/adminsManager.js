@@ -301,7 +301,27 @@ function deleteAdmin(user_id, username){
 
 
 function viewAdminDetails(role_id, role_name, user_id, username, email, first_name, middle_name, last_name, contact_number, status){
-    
+
+    let display_status = status == 1 ? "Activated" : "Deactivated";
+
+    $("#view_subtext").text(`Viewing Admin: ${username} (${user_id})`);
+
+    $("#view_status").text(display_status);
+    $("#view_role_name").text(role_name);
+    $("#view_first_name").text(first_name);
+    $("#view_middle_name").text(middle_name);
+    $("#view_last_name").text(last_name);
+    $("#view_contact_number").text(contact_number);
+    $("#view_email").text(email);
+
+    let view_window_bg = $("#view_window_bg")
+        .css("display", "flex");
+}
+
+
+function cancelView(){
+    let view_window_bg = $("#view_window_bg")
+        .css("display", "none");
 }
 
 

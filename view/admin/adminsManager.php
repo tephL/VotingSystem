@@ -61,26 +61,17 @@
     <div id="view_window_bg">
         <div id="view_window">
             <p id="view_subtext">View User ID</p>
-            
-            <input type="text" id="view_first_name" placeholder="First Name">
-            <input type="text" id="view_middle_name" placeholder="Middle Name">
-            <input type="text" id="view_last_name" placeholder="Last Name">
-            <input type="text" id="view_contact_number" placeholder="Contact Number">
-            <input type="text" id="view_user_id" hidden>
-            <input type="text" id="view_username" placeholder="New Username">
-            <input type="email" id="view_email" placeholder="New Email">
-            <input type="text" id="view_password" placeholder="New Password">
-            <select id="view_status">
-                <option id="view_activated" value="1">Activated</option>
-                <option id="view_deactivated" value="0" selected>Deactivated</option>
-            </select>
-            <select id="view_role">
-                <option id="view_master_admin" value="3000">Master Admin</option>
-                <option id="view_election_admin" value="3001">Election Admin</option>
-                <option id="view_voters_admin" value="3002">Voters Admin</option>
-            </select>
+            <div id="view_data">
+                <p id="view_status"></p>
+                <p id="view_role_name"></p>
+                <p id="view_first_name"></p>
+                <p id="view_middle_name"></p>
+                <p id="view_last_name"></p>
+                <p id="view_contact_number"></p>
+                <p id="view_email"></p>
+            </div>
             <div id="view_actions">
-                <button id="view_cancel" onclick="cancelCreation()">Cancel</button>
+                <button id="view_cancel" onclick="cancelView()">Cancel</button>
             </div>
         </div>
     </div>

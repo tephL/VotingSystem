@@ -72,3 +72,38 @@
     display: flex;
     justify-content: space-between;
 }
+
+/*  view adminn window  */
+#view_window_bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+
+    justify-content: center;
+    align-items: center;
+}
+
+#view_window {
+    height: 500px;
+    width: 500px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    * {
+        width: 300px;
+    }
+}
+
+#view_subtext {
+    text-align: center;
+}
+
+#view_actions {
+    display: flex;
+    justify-content: space-between;
+}
