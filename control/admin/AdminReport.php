@@ -26,7 +26,11 @@ function getUserInfoController() {
 }
 
 function getElectionController() {
-    $election = getCurrentElection();
+    try {
+        $election = getCurrentElection();
+    } catch (Exception $e) {
+        $election = null;
+    }
     if ($election === null) {
         return ["success" => false, "message" => "No election available", "data" => (object)[]];
     }
@@ -59,8 +63,12 @@ function checkElectionStatusController($election, $is_admin) {
     ];
 }
 
-function fetchResultsController($election_id) {
-    $results = getElectionResults($election_id);
+function fetchResultsController($election_id, $election_status) {
+    if ($election_status === 'upcoming') {
+        $results = getElectionCandidatesByParty($election_id);
+    } else {
+        $results = getElectionResults($election_id);
+    }
     if (!$results["success"]) {
         return ["success" => false, "message" => $results["message"], "data" => (object)[]];
     }
@@ -102,7 +110,8 @@ function handleGetResultsController() {
     }
 
     $election_id = $statusResult["data"]["election_id"];
-    $resultsData = fetchResultsController($election_id);
+    $election_status = $statusResult["data"]["election_status"];
+    $resultsData = fetchResultsController($election_id, $election_status);
     if (!$resultsData["success"]) {
         return $resultsData;
     }

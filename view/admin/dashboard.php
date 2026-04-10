@@ -67,6 +67,13 @@
             <p>Create your first election to get Started</p>
             <button onclick="window.location.href='./electionManager.php';">Election Manager</button>
         </div>
+
+        <!-- Upcoming Election: Candidates Only -->
+        <div id="upcoming_election_section">
+            <div id="upcoming_election_title"></div>
+          
+            <div id="upcoming_charts_container"></div>
+        </div>
  
         <!-- Ongoing Election: Dynamically Filled -->
         <div id="ongoing_election_section">
