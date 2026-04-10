@@ -18,7 +18,9 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="./styles/adminUI.css">
+    <link rel="stylesheet" href="./styles/Results.css">
     <script src="../../src/jquery.js"></script>
+    <script src="../../src/chart.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
@@ -54,15 +56,37 @@
         </div>
     </div>
     
+        
     <div id="main_content">
-        <div class="graph" id="live_report_president">Live standing of President</div>
-        <div class="graph" id="live_report_vicepresident">Live standing of Vice President</div>
-        <div class="graph" id="live_report_mayors">Live standing of Mayors</div>
-        <div class="graph" id="live_report_boardmembers">Live standing of Board Members</div>
-        <div class="graph" id="live_report_brainrots">Live standing of Brainrots</div>
-        <div class="graph" id="live_report_animals">Live standing of Animals</div>
+ 
+        <h2 id="greeting">Good Day,</h2>
+ 
+        <!-- No Election -->
+        <div id="no_election_section">
+            <h2>No Election have been started yet</h2>
+            <p>Create your first election to get Started</p>
+            <button onclick="window.location.href='./electionManager.php';">Election Manager</button>
+        </div>
+ 
+        <!-- Ongoing Election: Dynamically Filled -->
+        <div id="ongoing_election_section">
+            <div id="ongoing_election_title"></div>
+          
+            <div id="ongoing_charts_container"></div>
+        </div>
+ 
+        <!-- Closed Election: Dynamicaly Filled -->
+        <div id="closed_election_section">
+            <div id="closed_election_title">Results</div>
+ 
+            <!-- Winner Cards -->
+            <div id="winners_container"></div>
+ 
+            <!-- Charts -->
+            <div id="closed_charts_container"></div>
+        </div>
+ 
     </div>
-
     <script src="./scripts/adminUtils.js"></script>
 </body>
 </html>

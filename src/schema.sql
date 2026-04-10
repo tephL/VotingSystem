@@ -215,6 +215,7 @@ INSERT INTO Elections (election_title, status, start_date, end_date) VALUES
 INSERT INTO Elections (election_title, status, start_date, end_date) VALUES
 ('Student Council Election 2024', 'completed', '2024-06-01 08:00:00', '2024-06-01 17:00:00');
 
+
 -- Positions (position_id: 1000–1003)
 INSERT INTO Positions (position_name, max_votes, election_id) VALUES
 ('President', 1,      1000),                               -- position_id: 1000

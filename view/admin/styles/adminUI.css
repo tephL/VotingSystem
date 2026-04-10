@@ -38,15 +38,6 @@ body{
 
 }
 
-#main_content{
-    border: 2px solid red;
-    width: 100%;
-    padding: 60px;
-    height: 100vh;
-    overflow-y: auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-}
 
 .graph{
     border: 1px solid black;

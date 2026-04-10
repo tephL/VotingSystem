@@ -140,4 +140,3 @@ END //
 DELIMITER ;
 
 -- CALL RegisterAdmin($first_name, $middle_name, $last_name, $contact_number, $email, $username, $password, $role_id)
-CALL RegisterAdmin('Stephen', '', 'Astrera', '09159298250', 'Stephen@', 'stepHL', 'bruhh12', 3000)

@@ -1,0 +1,28 @@
+#deactivated_users_table{
+    border: 1px solid;
+    width: 100%;
+
+    th {
+        border: 1px solid;
+        width: 400px;
+    }
+    
+    td {
+        border: 1px solid;
+        width: 100px;
+        height: 40px;
+    }
+
+    .action_box{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .actions {
+        width: 70px;
+    }
+
+    * {
+        padding: 10px;
+    }
+}
