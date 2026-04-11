@@ -24,6 +24,7 @@ function loadUsers(page){
             page: page
         },
         success: function(response){
+            console.log(response);
             // clear out the page
             let users_container = $("#users");
             users_container.empty();
@@ -107,6 +108,7 @@ function renderTableBody(){
     let email_col = $("<th>").text("Email");
     let date_col = $("<th>").text("Created Date");
     let student_id_col = $("<th>").text("Student ID");
+    let existtence_col = $("<th>").text("Student Existence");
     let actions_col = $("<th>").text("Actions");
     header
         .append(user_id_col)
@@ -114,6 +116,7 @@ function renderTableBody(){
         .append(email_col)
         .append(date_col)
         .append(student_id_col)
+        .append(existtence_col)
         .append(actions_col);
     table
         .append(header);
@@ -125,22 +128,26 @@ function renderTableBody(){
 }
 
 
-function renderEmptyUsers(){
-    let subtext;
-    if(is_activated_users){
-        subtext = "No Activated Users";
-    } else{
-        subtext = "No Deactivated Users";
-    }
+function renderEmptyUsers() {
+    let subtext = is_activated_users
+        ? "No Activated Users"
+        : "No Deactivated Users";
 
-    let subtext_message = $("<p>")
-        .text(subtext);
-    let subtext_container = $("<div>")
-        .append(subtext_message);
+    let subtext_container = $("<td>")
+        .text(subtext)
+        .attr("colspan", 7) // adjust to your column count
+        .css({
+            "text-align": "center",
+            "padding": "20px",
+            "color": "#888",
+            "font-style": "italic",
+            "background-color": "#fafafa"
+        });
+
     let table_row = $("<tr>")
         .append(subtext_container);
-    let table = $("#table_body")
-        .append(table_row);
+
+    $("#table_body").append(table_row);
 }
 
 
@@ -156,6 +163,18 @@ function renderUsers(users){
         let email = $("<td>").text(user.email);
         let date = $("<td>").text(user.created_date);
         let student_id = $("<td>").text(user.student_id);
+
+        // existence orb
+        let orb = $("<button>")
+            .addClass("orb");
+
+        if(!user.student_exists){
+            orb.attr("id", "no_exist");
+        } else{
+            orb.attr("id", "yes_exist");
+        }
+        
+        let existence = $("<td id='orb_column'>").append(orb);
 
         // actions for deactivated users
         let actions_container;
@@ -201,6 +220,7 @@ function renderUsers(users){
             .append(email)
             .append(date)
             .append(student_id)
+            .append(existence)
             .append(actions);
         table.append(new_data_row);   
     });
@@ -287,7 +307,7 @@ function rejectUser(user_id, username){
 
 
 function deleteUser(user_id, username){
-    if(!confirm(`Are you sure you want to DELETE ${username} (${user_id})?`)) return;
+    if(!confirm(`Are you sure you want to DELETE ${username} (${user_id})? Their VOTES will be deleted too.`)) return;
 
     $.ajax({
         url: "../../control/admin/votersControl.php",
@@ -387,6 +407,7 @@ function submitUpdatedUserInfo(){
             $("#edit_hint_text").text(response.message);
               
             if(response.status){
+                alert("Successfully edited Voter");
                 cancelEdit();
                 loadUsers(USERS_PAGE);
             }

@@ -62,3 +62,20 @@ body{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
 }
+
+.orb{
+    background-color: black;
+    width: 10px;
+    height: 10px;
+    bottom: 10px;
+    border: none;
+    border-radius: 10px;
+}
+
+#yes_exist{
+    background-color: green;
+}
+
+#no_exist{
+    background-color: red;
+}

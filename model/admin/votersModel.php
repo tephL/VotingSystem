@@ -75,6 +75,19 @@ function getPasswordWithUserId($user_id){
     return $password;
 }
 
+
+function isUserInStudentsDb($student_id){
+    $conn = instantiateDbForUser("root", "");
+    
+    $sql = "SELECT * FROM Students WHERE student_id = '$student_id'";
+    $r_sql = $conn->query($sql);
+
+    if($r_sql->num_rows > 0){
+        return true;
+    }
+    return false;
+}
+
 // ===========================UPDATE OPERATIONS================================
 function acceptUser($user_id){
     $conn = instantiateDbForUser("root", "");

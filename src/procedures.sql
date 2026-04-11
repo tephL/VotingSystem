@@ -19,12 +19,30 @@ DELIMITER ;
 -- ====================================
 
 DELIMITER //
-CREATE PROCEDURE DeleteUser(
-    IN input_user_id INT
-)
+CREATE PROCEDURE DeleteUser(IN input_user_id INT)
 BEGIN
-    DELETE FROM StudentVoters WHERE user_id = input_user_id;
-    DELETE FROM Users WHERE user_id = input_user_id;
+    DECLARE v_studentvoter_id INT;
+
+    -- get studentvoter_id linked to the user
+    SELECT studentvoter_id
+    INTO v_studentvoter_id
+    FROM StudentVoters
+    WHERE user_id = input_user_id
+    LIMIT 1;
+
+    -- delete dependent votes
+    IF v_studentvoter_id IS NOT NULL THEN
+        DELETE FROM Votes 
+        WHERE studentvoter_id = v_studentvoter_id;
+    END IF;
+
+    -- delete from StudentVoters
+    DELETE FROM StudentVoters 
+    WHERE user_id = input_user_id;
+
+    -- finally delete from Users
+    DELETE FROM Users 
+    WHERE user_id = input_user_id;
 END //
 DELIMITER ;
 

@@ -207,12 +207,15 @@ function returnTypeOfUsers($type){
         $student_id = $row["student_id"];
         $created_date = $row["created_date"];
 
+        $student_exists = isUserInStudentsDb($student_id);
+
         $account = array(
             "user_id" => $user_id,
             "username" => $username,
             "email" => $email,
             "student_id" => $student_id,
-            "created_date" => $created_date
+            "created_date" => $created_date,
+            "student_exists" => $student_exists
         );
 
         array_push($users, $account);
