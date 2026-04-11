@@ -229,3 +229,9 @@
     transform: scale(0.98);
 }
 
+#view_data{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    
+}

@@ -22,7 +22,7 @@ CREATE TABLE `VotingSystem`.`Students` (
 `college_id`  INT          NOT NULL,
 PRIMARY KEY (`student_id`),
 FOREIGN KEY (`college_id`) REFERENCES `College`(`college_id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 2024000000;
+) ENGINE = InnoDB AUTO_INCREMENT = 2026000000;
 
 -- ============================================================
 -- EXTERNAL INFO : DATA
@@ -30,30 +30,37 @@ FOREIGN KEY (`college_id`) REFERENCES `College`(`college_id`)
 
 -- Colleges (college_id: 1000–1004)
 INSERT INTO College (college_name) VALUES
-('College of Engineering'),                              -- college_id: 1000
-('College of Information Technology'),                   -- college_id: 1001
+('College of Information Technology'),                              -- college_id: 1000
+('College of Engineering'),                   -- college_id: 1001
 ('College of Arts and Letters'),                         -- college_id: 1002
 ('College of Social Sciences and Philosophy'),           -- college_id: 1003
 ('College of Education');                                -- college_id: 1004
 
 -- Students (student_id: 1000–1015)
-INSERT INTO Students (first_name, middle_name, last_name, college_id) VALUES
-('Juan',      'Santos',     'Dela Cruz', 1000),          -- student_id: 1000
-('Maria',     'Reyes',      'Garcia',    1001),          -- student_id: 1001
-('Carlos',    'Mendoza',    'Lopez',     1002),          -- student_id: 1002
-('Ana',       'Cruz',       'Martinez',  1003),          -- student_id: 1003
-('Jose',      'Bautista',   'Rodriguez', 1004),          -- student_id: 1004
-('Luisa',     'Villanueva', 'Hernandez', 1000),          -- student_id: 1005
-('Miguel',    'Aquino',     'Gonzales',  1001),          -- student_id: 1006
-('Sofia',     'Ramos',      'Perez',     1002),          -- student_id: 1007
-('Ramon',     'Torres',     'Castillo',  1003),          -- student_id: 1008
-('Elena',     'Flores',     'Morales',   1004),          -- student_id: 1009
-('Diego',     'Pascual',    'Navarro',   1000),          -- student_id: 1010
-('Isabella',  'Aguilar',    'Reyes',     1001),          -- student_id: 1011
-('Marco',     'Domingo',    'Santiago',  1002),          -- student_id: 1012
-('Gabrielle', 'Espinosa',   'Valdez',    1003),          -- student_id: 1013
-('Rafael',    'Mercado',    'Salazar',   1004),          -- student_id: 1014
-('Camille',   'Ocampo',     'Fuentes',   1000);          -- student_id: 1015
+INSERT INTO Students (student_id, first_name, middle_name, last_name, college_id) VALUES
+('2025100001', 'Jonathan',      'Santos',     'Tomacruz', 1000),          
+('2025100002', 'Ramon',     'Reyes',      'Castillo',    1001),          
+('2025100003', 'Carlos',    'Mendoza',    'Lopez',     1002),          
+('2025100004', 'Ana',       'Cruz',       'Martinez',  1003),          
+('2025100005', 'Jose',      'Bautista',   'Rodriguez', 1004),          
+('2025100006', 'Luisa',     'Villanueva', 'Hernandez', 1000),          
+('2025100007', 'Miguel',    'Aquino',     'Gonzales',  1001),          
+('2025100008', 'Sofia',     'Ramos',      'Perez',     1002),          
+('2025100009', 'Robethel',     'Torres',     'Reyes',  1000),          
+('2025100010', 'Elena',     'Flores',     'Morales',   1004),          
+('2025100011', 'Diego',     'Pascual',    'Navarro',   1000),          
+('2025100012', 'Isabella',  'Aguilar',    'Reyes',     1001),          
+('2025100013', 'Marco',     'Domingo',    'Santiago',  1002),          
+('2025100014', 'Gabrielle', 'Espinosa',   'Valdez',    1003),          
+('2025100015', 'Rafael',    'Mercado',    'Salazar',   1004),          
+('2025100016', 'Camille',   'Ocampo',     'Fuentes',   1000),
+-- start for dummy studentvoters               
+('2025100017', 'John',   'Bruh',     'Doe',   1000), 
+('2025100018', 'Jane', 'Bruh',   'Smith',    1003),          
+('2025100019', 'Mike',    'Bruh',    'Ross',   1004),          
+('2025100020', 'Rachel',   'Bruh',     'Zane',   1000),          
+('2025100021', 'Harvey',   'Ocampo',     'Specter',   1000); 
+
 
 -- ============================================================
 -- ACCOUNTS 
@@ -102,10 +109,11 @@ FOREIGN KEY (`user_id`)    REFERENCES `Users`(`user_id`)
 -- ============================================================
 
 -- Roles (role_id: 1000 = admin, 1001 = student_voter)
-INSERT INTO Roles (role_id, role_name) VALUES ('3000', 'master_admin');  -- role_id: 3000
-INSERT INTO Roles (role_id, role_name) VALUES ('3001', 'election_admin');  -- role_id: 3001
-INSERT INTO Roles (role_id, role_name) VALUES ('3002', 'voters_admin');  -- role_id: 3002
-INSERT INTO Roles (role_id, role_name) VALUES ('1000', 'student_voter');  -- role_id: 1000
+INSERT INTO Roles (role_id, role_name) VALUES 
+('3000', 'master_admin'),  -- role_id: 3000
+('3001', 'election_admin'),  -- role_id: 3001
+('3002', 'voters_admin'),  -- role_id: 3002
+('1000', 'student_voter');  -- role_id: 1000
 
 -- Users: Admin (user_id: 1000)
 INSERT INTO Users (username, email, password, role_id, activated_status) VALUES
@@ -117,12 +125,12 @@ INSERT INTO Users (username, email, password, role_id, activated_status) VALUES
 ('markjoseph', 'mj@example.com', '1234567878', 3002, 1); 
 
 -- Users: Student Voters (user_id: 1001–1016)
-INSERT INTO Users (username, email, password, role_id) VALUES
-('john_doe', 'john.doe@example.com', '321321321', 1000), -- 1006
-('jane_smith', 'jane.smith@example.com', '321321321', 1000), -- 1007
-('mike_ross', 'mike.ross@example.com', '321321321', 1000), -- 1008
-('rachel_zane', 'rachel.zane@example.com', '321321321', 1000), -- 1009
-('harvey_specter', 'harvey.specter@example.com', '321321321', 1000); -- 1010
+INSERT INTO Users (username, email, password, role_id, activated_status) VALUES
+('john_doe', 'john.doe@example.com', '321321321', 1000, 1), -- 1006
+('jane_smith', 'jane.smith@example.com', '321321321', 1000, 1), -- 1007
+('mike_ross', 'mike.ross@example.com', '321321321', 1000, 1), -- 1008
+('rachel_zane', 'rachel.zane@example.com', '321321321', 1000, 1), -- 1009
+('harvey_specter', 'harvey.specter@example.com', '321321321', 1000, 1); -- 1010
 
 -- Admins (admin_id: 1000)
 INSERT INTO Admins (first_name, middle_name, last_name, contact_number, user_id) VALUES
@@ -131,15 +139,15 @@ INSERT INTO Admins (first_name, middle_name, last_name, contact_number, user_id)
 ('Sandra', NULL, 'Cabasal', '09000000000', 1002),
 ('Luigi', NULL, 'Cato', '09000000000', 1003),
 ('John Paul', NULL, 'Sarmiento', '09000000000', 1004),
-('Mark Joseph', NULL, 'Galino', '09000000000', 1005);              -- admin_id: 1000
+('Mark Joseph', NULL, 'Galino', '09000000000', 1005);      
 
--- StudentVoters (studentvoter_id: 1000–1015)
+-- StudentVoters (studentvoter_id: 1006–1010)
 INSERT INTO StudentVoters (user_id, student_id) VALUES
-(1006, 2023000001),
-(1007, 2023000002),
-(1008, 2023000003),
-(1009, 2023000004),
-(1010, 2023000005);
+(1006, 2025100017), -- 1000
+(1007, 2025100018), -- 1001
+(1008, 2025100019), -- 1002
+(1009, 2025100020), -- 1003
+(1010, 2025100021); -- 1004
 
 
 -- ============================================================
@@ -202,49 +210,86 @@ CREATE TABLE `VotingSystem`.`Votes` (
   FOREIGN KEY (`election_id`)     REFERENCES `Elections`(`election_id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1;
 
-
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ============================================================
 -- VOTING PROCESS: DATA
 -- ============================================================
 
--- Elections (election_id: 1000)
+-- Sample Election (1000)
 INSERT INTO Elections (election_title, status, start_date, end_date) VALUES
-('Student Council Election 2025', 'active', '2025-06-01 08:00:00', '2025-06-01 17:00:00');
-INSERT INTO Elections (election_title, status, start_date, end_date) VALUES
-('Student Council Election 2024', 'completed', '2024-06-01 08:00:00', '2024-06-01 17:00:00');
+('Student Council Election 2025', 'completed', '2025-06-01 08:00:00', '2025-06-15 17:00:00'); 
 
-
--- Positions (position_id: 1000–1003)
+-- Sample Positions for Election 1000
 INSERT INTO Positions (position_name, max_votes, election_id) VALUES
-('President', 1,      1000),                               -- position_id: 1000
-('Vice-President', 1, 1000),                               -- position_id: 1001
-('Senator', 4,       1000),                               -- position_id: 1002
-('Vice-Governor', 1,  1000),                               -- position_id: 1003
-('Tung Master', 1,      1001),                               -- position_id: 1000
-('Brainrot Lord', 2, 1001),                               -- position_id: 1001
-('Bracolocococo', 4,        1001);                                -- position_id: 1002
+('President', 1,      1000), -- 1000
+('Vice-President', 1, 1000), -- 1001
+('Senator', 4,       1000), -- 1002
+('Vice-Governor', 1,  1000); -- 1003
 
--- PoliticalParties (party_id: 1000–1001)
+-- Sample Parties for Election 1000
 INSERT INTO PoliticalParties (party_name, election_id) VALUES
-('Partido Uno', 1000),                                  -- partylist_id: 1000
-('Partido Dos', 1000);                                  -- partylist_id: 1001
+('Partido Uno', 1000), -- 1000
+('Partido Dos', 1000); -- 1001
 
--- Candidates (candidate_id: 1000–1013)
+-- Sample Candidates for Election 1000
 INSERT INTO Candidates (party_id, student_id, election_id, position_id) VALUES
--- Partido Uno (party_id: 1000)
-(1000, 2024000000, 1000, 1000),  -- candidate_id: 1000 | Juan Dela Cruz   -> President
-(1000, 2024000001, 1000, 1001),  -- candidate_id: 1001 | Maria Garcia     -> Vice-President
-(1000, 2024000002, 1000, 1002),  -- candidate_id: 1002 | Carlos Lopez     -> Senator
-(1000, 2024000003, 1000, 1002),  -- candidate_id: 1003 | Ana Martinez     -> Senator
-(1000, 2024000004, 1000, 1002),  -- candidate_id: 1004 | Jose Rodriguez   -> Senator
-(1000, 2024000005, 1000, 1003),  -- candidate_id: 1005 | Luisa Hernandez  -> Vice-Governor
-(1000, 2024000006, 1000, 1002),  -- candidate_id: 1006 | Miguel Gonzales  -> Senator
-(1001, 2024000008, 1000, 1000),  -- candidate_id: 1007 | Ramon Castillo   -> President
-(1001, 2024000009, 1000, 1001),  -- candidate_id: 1008 | Elena Morales    -> Vice-President
-(1001, 2024000010, 1000, 1002),  -- candidate_id: 1009 | Diego Navarro    -> Senator
-(1001, 2024000011, 1000, 1002),  -- candidate_id: 1010 | Isabella Reyes   -> Senator
-(1001, 2024000012, 1000, 1002),  -- candidate_id: 1011 | Marco Santiago   -> Senator
-(1001, 2024000013, 1000, 1003),  -- candidate_id: 1012 | Gabrielle Valdez -> Vice-Governor
-(1001, 2024000015, 1000, 1002); 
+-- Patido Uno
+(1000, 2025100001, 1000, 1000), -- President
+(1000, 2025100002, 1000, 1001), -- Vice President
+(1000, 2025100003, 1000, 1002), -- Senators
+(1000, 2025100004, 1000, 1002), -- Senators
+(1000, 2025100005, 1000, 1002), -- Senators
+(1000, 2025100006, 1000, 1002), -- Senators
+(1000, 2025100007, 1000, 1003), -- Vice Governor
+-- Partido Dos
+(1001, 2025100009, 1000, 1000), -- President
+(1001, 2025100008, 1000, 1001), -- Vice President
+(1001, 2025100010, 1000, 1002), -- Senators
+(1001, 2025100011, 1000, 1002), -- Senators
+(1001, 2025100012, 1000, 1002), -- Senators
+(1001, 2025100013, 1000, 1002), -- Senators
+(1001, 2025100014, 1000, 1003);  -- Vice Governor
+
+-- Sample Dummy Votes
+INSERT INTO Votes(vote_date, studentvoter_id, candidate_id, position_id, election_id) VALUES
+-- john doe votes (Uno Suporter)
+('2025-06-01 14:00:00', 1000, 1000, 1000, 1000),
+('2025-06-01 14:00:00', 1000, 1001, 1001, 1000),
+('2025-06-01 14:00:00', 1000, 1002, 1002, 1000),
+('2025-06-01 14:00:00', 1000, 1003, 1002, 1000),
+('2025-06-01 14:00:00', 1000, 1004, 1002, 1000),
+('2025-06-01 14:00:00', 1000, 1005, 1002, 1000),
+('2025-06-01 14:00:00', 1000, 1006, 1003, 1000),
+-- jane votes (Dos Supporter)
+('2025-06-01 14:00:00', 1001, 1007, 1000, 1000),
+('2025-06-01 14:00:00', 1001, 1008, 1001, 1000),
+('2025-06-01 14:00:00', 1001, 1009, 1002, 1000),
+('2025-06-01 14:00:00', 1001, 1010, 1002, 1000),
+('2025-06-01 14:00:00', 1001, 1011, 1002, 1000),
+('2025-06-01 14:00:00', 1001, 1012, 1002, 1000),
+('2025-06-01 14:00:00', 1001, 1013, 1003, 1000),
+-- mike votes (Dos Supporter)
+('2025-06-01 14:00:00', 1002, 1007, 1000, 1000),
+('2025-06-01 14:00:00', 1002, 1008, 1001, 1000),
+('2025-06-01 14:00:00', 1002, 1009, 1002, 1000),
+('2025-06-01 14:00:00', 1002, 1010, 1002, 1000),
+('2025-06-01 14:00:00', 1002, 1011, 1002, 1000),
+('2025-06-01 14:00:00', 1002, 1012, 1002, 1000),
+('2025-06-01 14:00:00', 1002, 1013, 1003, 1000),
+-- rachel votes (Uno Suporter)
+('2025-06-01 14:00:00', 1003, 1000, 1000, 1000),
+('2025-06-01 14:00:00', 1003, 1001, 1001, 1000),
+('2025-06-01 14:00:00', 1003, 1002, 1002, 1000),
+('2025-06-01 14:00:00', 1003, 1003, 1002, 1000),
+('2025-06-01 14:00:00', 1003, 1004, 1002, 1000),
+('2025-06-01 14:00:00', 1003, 1005, 1002, 1000),
+('2025-06-01 14:00:00', 1003, 1006, 1003, 1000),
+-- harvey votes (Uno Suporter)
+('2025-06-01 14:00:00', 1004, 1000, 1000, 1000),
+('2025-06-01 14:00:00', 1004, 1001, 1001, 1000),
+('2025-06-01 14:00:00', 1004, 1002, 1002, 1000),
+('2025-06-01 14:00:00', 1004, 1003, 1002, 1000),
+('2025-06-01 14:00:00', 1004, 1004, 1002, 1000),
+('2025-06-01 14:00:00', 1004, 1005, 1002, 1000),
+('2025-06-01 14:00:00', 1004, 1006, 1003, 1000);

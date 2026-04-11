@@ -16,6 +16,7 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="./styles/mainUI.css">
+    <link rel="stylesheet" href="../admin/styles/Results.css">
     <script src="../../src/jquery.js"></script>
     <script src="../../src/chart.js"></script>
     <meta charset="UTF-8">

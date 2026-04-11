@@ -9,7 +9,7 @@ function initializeVotesHistory(){
         success: function(response){
             console.log(response);
 
-            if (response.success) {
+            if (response.data.length > 0) {
                 renderVotingHistory(response.data);
             } else {
                 $("#main_content").html("<p>No voting history found.</p>");

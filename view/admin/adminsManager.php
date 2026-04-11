@@ -86,7 +86,7 @@
             <input type="text" id="new_first_name" placeholder="First Name">
             <input type="text" id="new_middle_name" placeholder="Middle Name">
             <input type="text" id="new_last_name" placeholder="Last Name">
-            <input type="text" id="new_contact_number" placeholder="Contact Number">
+            <input type="text" maxLength="12" id="new_contact_number" placeholder="Contact Number">
             <input type="text" id="new_user_id" hidden>
             <input type="text" id="new_username" placeholder="New Username">
             <input type="email" id="new_email" placeholder="New Email">

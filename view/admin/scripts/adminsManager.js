@@ -312,13 +312,13 @@ function viewAdminDetails(role_id, role_name, user_id, username, email, first_na
 
     $("#view_subtext").text(`Viewing Admin: ${username} (${user_id})`);
 
-    $("#view_status").text(display_status);
-    $("#view_role_name").text(role_name);
-    $("#view_first_name").text(first_name);
-    $("#view_middle_name").text(middle_name);
-    $("#view_last_name").text(last_name);
-    $("#view_contact_number").text(contact_number);
-    $("#view_email").text(email);
+    $("#view_status").text(`Status: ${display_status}`);
+    $("#view_role_name").text(`Role: ${role_name}`);
+    $("#view_first_name").text(`First name: ${first_name}`);
+    $("#view_middle_name").text(`Middle name: ${middle_name}`);
+    $("#view_last_name").text(`Last name: ${last_name}`);
+    $("#view_contact_number").text(`Contact name: ${contact_number}`);
+    $("#view_email").text(`Email: ${email}`);
 
     let view_window_bg = $("#view_window_bg")
         .css("display", "flex");
