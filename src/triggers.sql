@@ -20,25 +20,3 @@ BEGIN
 END $$
 
 DELIMITER ;
-
-
-=======================
-
-CREATE TRIGGER prevent_multiple_votes_per_election
-BEFORE INSERT ON Votes
-FOR EACH ROW
-BEGIN
-    DECLARE existing_votes INT;
-
-    SELECT COUNT(*) INTO existing_votes
-    FROM Votes
-    WHERE studentvoter_id = NEW.studentvoter_id
-      AND election_id = NEW.election_id;
-
-    IF existing_votes > 0 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'You have already voted in this election';
-    END IF;
-END $$
-
-DELIMITER ;
